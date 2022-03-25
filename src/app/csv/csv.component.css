@@ -12,5 +12,16 @@ p {
   max-height: 100px;
 }
 
+/* text for importing a file */
+.card-header{
+  font-family: Helvetica, sans-serif	;
+  font-weight: bold;
+  font-size: 30px;
+}
 
-
+.card-header2{
+  font-family: Georgia;
+  font-weight: 500;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}

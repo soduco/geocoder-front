@@ -13,8 +13,8 @@
 <div class="container-sm">
   <div class="card-body" >
     <div class="card">
-      <div class="card-header">
-        Upload csv to read
+      <div class="card-header" id="1">
+        1. Choisir un fichier
       </div>
       <div class="card-body" >
 
@@ -25,12 +25,11 @@
     <br>
 
   <div class="card">
-    <div class="card-header">
-      Adresses du csv
+    <div class="card-header" id="2">
+      2. Aperçu du fichier et vérification de l’encodage
     </div>
 
-
-  {{jsondatadisplay}}
+    {{jsondatadisplay}}
   <div class="table-responsive">
     <table class="table table-bordered"  *ngIf="records.length > 0">
       <thead class="thead-dark" >
@@ -52,6 +51,11 @@
       </tbody>
     </table>
   </div>
+
+    <div class="card-header" id="3">
+      3. Choisir les colonnes à utiliser pour construire les adresses
+    </div>
+
 
   </div>
   </div>
