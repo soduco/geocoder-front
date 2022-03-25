@@ -4,7 +4,7 @@ name: Deploy to QA server with SSH and RSYNC
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Triggers the workflow on push or pull request events but only for the dev branch 
   push:
     branches: [ dev ]
     tags:
@@ -35,4 +35,4 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       
       - name: Deploy with rsync
-        run: rsync -avz -relative /app/ . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/
+        run: rsync -avz . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/frontend/
