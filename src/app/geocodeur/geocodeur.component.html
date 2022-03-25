@@ -1,0 +1,7 @@
+<p>
+    <button class="btn btn-primary btn-sm"  (click)="geocodage()" [disabled]="display_button_geo">geocodage</button>
+</p>
+
+<app-export *ngIf="display_button_exp" ></app-export>
+<app-map [data_available]="geocodage_done" ></app-map>
+

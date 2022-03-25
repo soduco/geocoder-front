@@ -1,0 +1,22 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+
+  constructor(private http: HttpClient) { }
+
+  public getAdress(adress: string, startingTime: number, endingTime: number, softTime: number ): Observable<any> {
+    const url = "http://dev-geocode.geohistoricaldata.org/api/v1/search?";
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("size",5);
+    queryParams = queryParams.append("text",adress);
+    queryParams = queryParams.append("time.window.start",startingTime);
+    queryParams = queryParams.append("time.window.end",endingTime);
+    queryParams = queryParams.append("time.softness",softTime);
+    return this.http.get<any>(url,{params:queryParams});
+  }
+}

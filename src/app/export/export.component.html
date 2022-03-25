@@ -1,0 +1,14 @@
+<p>
+  geocodage terminé
+</p>
+  <!--add button to export file-->
+  <!--<div class="right">
+    <label id="download">Export</label> <br>
+    <select (click)="" name="format" id="format-choice">
+        <option value="CSV">CSV</option>
+        <option value="Json">Json</option>
+    </select>
+  </div>-->
+
+
+<angular2csv [data]="data" filename="resultats.csv" [options]="options" name="export">Export</angular2csv>
