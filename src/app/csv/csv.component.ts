@@ -54,16 +54,45 @@ export class CsvComponent  {
         let csvData = reader.result;
         if(typeof csvData == "string"){
           let csvRecordsArray = (csvData).split(/\r\n|\n/);
-
+          // console.log(csvRecordsArray);
           this.headersRow = this.getHeaderArray(csvRecordsArray);
+          // console.log(this.headersRow);
+          if (isValidCSVrows(csvRecordsArray)) {
 
-          this.records = this.getDataRecordsArrayFromCSVFile2(csvRecordsArray, this.headersRow.length);
-          console.log(this.records);
+            this.records = this.getDataRecordsArrayFromCSVFile2(csvRecordsArray, this.headersRow.length);
+            // console.log(this.records);
+          }else {
+            this.display_button_geo=true;
+            alert("Please import valid .csv file.");
+            this.fileReset();
+          }
         }
       };
       
+      console.log("---------------------------")
 
+      const inputCSV = document.getElementById("txtFileUpload");
+    //   console.log(inputCSV)
+      if(inputCSV){
+        // console.log("OK 1/2");
+    //     inputCSV.addEventListener("click", function(){console.log('a')});
+    //     inputCSV.addEventListener('load', function () {
+    //       console.log("OK 2/3")
+        const text2 = document.querySelector<HTMLElement>("#two");
+        const text3 = document.querySelector<HTMLElement>("#three");
 
+        // console.log(text2);
+        if(text2){
+          // console.log("OK 2/2");
+          text2.style.color = "black";
+          text2.style.fontWeight = "bold";
+        }
+        if(text3){
+          // console.log("OK 2/2");
+          text3.style.color = "black";
+          text3.style.fontWeight = "bold";
+        }
+      };
       reader.onerror = function () {
         console.log('error is occured while reading file!');
       };
@@ -164,4 +193,22 @@ export class CsvComponent  {
     return -1;
     };
   }
+}
+
+//Check if the csv is valid
+function isValidCSVrows(csvRecordsArray: string[]) {
+  let isValidData: boolean = true;
+  let headersRow = (csvRecordsArray[0]).split(';');
+  // console.log(headersRow);
+  let numOfCols = headersRow.length;
+  // console.log(numOfCols);
+  for (let i = 1; i < csvRecordsArray.length-1; i++) {
+    let row = (csvRecordsArray[i]).split(';');
+    // console.log(row);
+    if (row.length !== numOfCols) {
+      isValidData = false;
+      break;
+    }
+  }
+  return isValidData;
 }

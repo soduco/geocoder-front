@@ -1,6 +1,5 @@
 .map-wrapper{
-  position: absolute;
-  width: auto;
-  height: auto;
-  left: 25%;
+  position:absolute;
+  left:50%;
+  top:50%;
 }
