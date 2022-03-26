@@ -29,6 +29,7 @@ export class CsvDataGeo {
 export class CsvComponent  {
   name = 'Angular ' + VERSION.major;
   public records: any[] = [];
+  public headersRow: any[] = [];
   @ViewChild('csvReader') csvReader: any;
   jsondatadisplay:any;
   public display_button_geo:boolean = false;
@@ -54,9 +55,10 @@ export class CsvComponent  {
         if(typeof csvData == "string"){
           let csvRecordsArray = (csvData).split(/\r\n|\n/);
 
-          let headersRow = this.getHeaderArray(csvRecordsArray);
+          this.headersRow = this.getHeaderArray(csvRecordsArray);
 
-          this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+          this.records = this.getDataRecordsArrayFromCSVFile2(csvRecordsArray, this.headersRow.length);
+          console.log(this.records);
         }
       };
       
@@ -89,6 +91,27 @@ export class CsvComponent  {
         csvRecord.softTime = curruntRecord[3].trim();
         csvArr.push(csvRecord);
         this.adresses_service.addAdresse(csvRecord);
+      }
+    }
+    
+    return csvArr;
+  }
+
+  getDataRecordsArrayFromCSVFile2(csvRecordsArray: any, headerLength: any) {
+    let csvArr = [];
+
+    for (let i = 1; i < csvRecordsArray.length; i++) {
+      // console.log((csvRecordsArray[i]).split(';'));
+      let curruntRecord = (csvRecordsArray[i]).split(';');
+      // console.log(curruntRecord.length);
+      // console.log(headerLength);
+      if (curruntRecord.length == headerLength) {
+        let csvRecord = [];
+        for(let j = 0; j<curruntRecord.length; j++){
+          csvRecord.push(curruntRecord[j].trim());
+        }
+        csvArr.push(csvRecord);
+        // this.adresses_service.addAdresse(csvRecord);
       }
     }
     

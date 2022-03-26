@@ -38,16 +38,16 @@
         </th>
       </thead>
       <tbody>
-        <td *ngFor="let record of records;let i = index;">
-          <tr *ngFor="let cell of record;let j = index;">
+        <tr *ngFor="let record of records;let i = index;">
+          <td *ngFor="let cell of record;let i = index;">
             {{cell}}
-          </tr>
+          </td>
           <!-- {{record}} -->
           <!-- <th scope="row">{{record.text}}</th>
           <td>{{record.startingTime}}</td>
           <td>{{record.endingTime}}</td>
           <td>{{record.softTime}}</td> -->
-        </td>
+        </tr>
 
       </tbody>
     </table>
