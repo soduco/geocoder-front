@@ -4,6 +4,7 @@ import { ParseSpan } from '@angular/compiler';
 import { Component, VERSION ,ViewChild } from '@angular/core';
 import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 const Papa = require('papaparse');
 
 // Exports
@@ -66,6 +67,9 @@ export class CsvComponent  {
       let reader = new FileReader();
       reader.readAsText(input.files[0]); // Avec ces 3 lignes on lit le fichier importé par l'utilisateur
 
+      reader.onerror = function () { // Si le fichier n'est pas valide on affiche un message d'erreur dans la console pour les développeurs :)
+        console.log('error is occured while reading file!');};
+
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
@@ -95,30 +99,37 @@ export class CsvComponent  {
           });
 
           this.records = resultat; // L'objet records prend les données parsées par papa.parse
+
+          // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
+
+          const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
+          
+          if(inputCSV){ // On vérifie que l'objet existe
+
+            const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
+            const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
+
+            if(text2){ // On vérifie que l'objet existe
+
+              text2.style.color = "black"; // On change la couleur et l'épaisseur du texte 
+              text2.style.fontWeight = "bold";
+            }
+            if(text3){ // On vérifie que l'objet existe
+
+              text3.style.color = "black"; // On change la couleur et l'épaisseur du texte
+              text3.style.fontWeight = "bold";
+            }
+          };
+
+        } else {
+
+          // Ici les données ne son pas des chaînes de caractères
+
+          alert("Les données dans le fichier ne sont pas valides. \n \n Veuillez importer un fichier contenant uniquement des chiffres et des lettres."); // On affiche un message d'erreur
+          this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
         }
       };
 
-      const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
-
-      if(inputCSV){ // On vérifie que l'objet existe
-
-        const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
-        const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
-
-        if(text2){ // On vérifie que l'objet existe
-
-          text2.style.color = "black"; // On change la couleur et l'épaisseur du texte 
-          text2.style.fontWeight = "bold";
-        }
-        if(text3){ // On vérifie que l'objet existe
-
-          text3.style.color = "black"; // On change la couleur et l'épaisseur du texte
-          text3.style.fontWeight = "bold";
-        }
-      };
-      reader.onerror = function () { // Si le fichier n'est pas valide on affiche un message d'erreur dans la console pour les développeurs :)
-        console.log('error is occured while reading file!');
-      };
 
     } else {
 
@@ -126,6 +137,28 @@ export class CsvComponent  {
 
       alert("Le fichier n'est pas valide. \n \n Veuillez importer un fichier csv (finissant par .csv)."); // On affiche un message d'erreur
       this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
+
+      // On change alors les couleurs des textes pour montrer que le fichier n'est pas valide
+
+      const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
+          
+      if(inputCSV){ // On vérifie que l'objet existe
+
+        const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
+        const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
+
+        if(text2){ // On vérifie que l'objet existe
+
+          text2.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
+          text2.style.fontWeight = "300";
+        }
+        if(text3){ // On vérifie que l'objet existe
+
+          text3.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte
+          text3.style.fontWeight = "300";
+        }
+      };
+
     }
   }
 

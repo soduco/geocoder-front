@@ -57,6 +57,12 @@
     <div class="card-header" id="three">
       3. Choisir les colonnes à utiliser pour construire les adresses
     </div>
+    <mat-button-toggle-group name="column" aria-label="Selected Column" multiple>
+
+      <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header>
+        {{header}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
 
 
   </div>

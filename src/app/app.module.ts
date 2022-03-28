@@ -15,6 +15,8 @@ import { ExportComponent } from './export/export.component';
 
 import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { CommonModule } from "@angular/common";
     HttpClientModule,
     AppRoutingModule,
     Angular2CsvModule,
-    CommonModule
+    CommonModule,
+    MatButtonToggleModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AdressesService
