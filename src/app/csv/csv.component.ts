@@ -1,4 +1,6 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, VERSION ,ViewChild } from '@angular/core';
+import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
 
 
@@ -68,8 +70,6 @@ export class CsvComponent  {
           }
         }
       };
-      
-      console.log("---------------------------")
 
       const inputCSV = document.getElementById("txtFileUpload");
     //   console.log(inputCSV)
@@ -106,10 +106,15 @@ export class CsvComponent  {
 
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
     let csvArr = [];
-
+    let header
     for (let i = 1; i < csvRecordsArray.length; i++) {
       // console.log((csvRecordsArray[i]).split(';'));
+      // console.log((csvRecordsArray[i]).split(','));
+
       let curruntRecord = (csvRecordsArray[i]).split(';');
+      if(curruntRecord.length == 0){
+        curruntRecord = (csvRecordsArray[i]).split(',');
+      }      
       // console.log(curruntRecord.length);
       // console.log(headerLength);
       if (curruntRecord.length == headerLength) {
@@ -127,23 +132,84 @@ export class CsvComponent  {
   }
 
   getDataRecordsArrayFromCSVFile2(csvRecordsArray: any, headerLength: any) {
-    let csvArr = [];
+    let csvArr = []; // Liste des lignes du csv traitée qu'on va renvoyer 
 
-    for (let i = 1; i < csvRecordsArray.length; i++) {
-      // console.log((csvRecordsArray[i]).split(';'));
-      let curruntRecord = (csvRecordsArray[i]).split(';');
-      // console.log(curruntRecord.length);
-      // console.log(headerLength);
-      if (curruntRecord.length == headerLength) {
+    let headerRaw = csvRecordsArray[0]; // Entête "brut" du fichier CSV
+
+    if(headerRaw.split(',').length > headerRaw.split(';').length){ // On regarde si le csv est séparé par des virgules ou des points-virgules
+      
+      // Dans ce cas, le header est séparé par des virgules
+      
+      headerLength = headerRaw.split(',').length;
+      for (let i = 1; i < csvRecordsArray.length; i++) { // On parcourt les lignes du csv
+        const curruntRecord = (csvRecordsArray[i]).split(',');
+
         let csvRecord = [];
-        for(let j = 0; j<curruntRecord.length; j++){
-          csvRecord.push(curruntRecord[j].trim());
+
+        if (curruntRecord.length == headerLength) { // On vérifie qu'il y a le bon nombre d'information dans la ligne du csv
+
+          for (let j = 0; j < curruntRecord.length; j++) { // On parcourt les colonnes de la ligne
+
+            if(curruntRecord[j].includes('"')){ // On regarde si les éléments du csv sont entre guillemets ou pas
+
+              // Ici on a un élément entre guillemets
+
+              csvRecord.push(curruntRecord[j].split('"')[1]);
+            }else{  
+              
+              // Ici l'élément n'est pas entre guillemets
+
+              csvRecord.push(curruntRecord[j].trim());
+            }
+          }
+          csvArr.push(csvRecord); // On ajoute la ligne traitée au tableau
+          // this.adresses_service.addAdresse(csvRecord);
+
+        }else{ // Ici il n'y a pas le bon nombre d'information dans la ligne du csv
+          alert("Le fichier selectionné n'est pas valide : l'entête du fichier ne correspond pas au contenu du fichier. \n \n Une information est manquante ou en trop à la ligne " + (i+1) + ".");
+          this.fileReset();
+          break;
         }
-        csvArr.push(csvRecord);
-        // this.adresses_service.addAdresse(csvRecord);
+      }
+
+    }else{
+
+      // Dans ce cas, le header est séparé par des points-virgules
+
+      headerLength = headerRaw.split(';').length;
+
+ 
+      for (let i = 1; i < csvRecordsArray.length; i++) { // On parcourt les lignes du csv
+        const curruntRecord = (csvRecordsArray[i]).split(';');
+
+        let csvRecord = [];
+
+        if (curruntRecord.length == headerLength) { // On vérifie qu'il y a le bon nombre d'information dans la ligne du csv
+
+          for (let j = 0; j < curruntRecord.length; j++) { // On parcourt les colonnes de la ligne
+
+            if(curruntRecord[j].includes('"')){ // On regarde si les éléments du csv sont entre guillemets ou pas
+
+              // Ici on a un élément entre guillemets
+
+              csvRecord.push(curruntRecord[j].split('"')[1]);
+            }else{  
+              
+              // Ici l'élément n'est pas entre guillemets
+
+              csvRecord.push(curruntRecord[j].trim());
+            }
+          }
+          csvArr.push(csvRecord); // On ajoute la ligne traitée au tableau
+          // this.adresses_service.addAdresse(csvRecord);
+
+        }else{ // Ici il n'y a pas le bon nombre d'information dans la ligne du csv
+          alert("Le fichier selectionné n'est pas valide : l'entête du fichier ne correspond pas au contenu du fichier. \n \n Une information est manquante ou en trop à la ligne " + (i+1) + ".");
+          this.fileReset();
+          break;
+        }
       }
     }
-    
     return csvArr;
   }
 
@@ -153,12 +219,54 @@ export class CsvComponent  {
   }
 
   getHeaderArray(csvRecordsArr: any) {
-    let headers = (csvRecordsArr[0]).split(';');
-    let headerArray = [];
-    for (let j = 0; j < headers.length; j++) {
-      headerArray.push(headers[j]);
+    let headerArray = []; // Liste contenant les éléments du header qu'on va renvoyer
+
+    if((csvRecordsArr[0]).split(';').length > (csvRecordsArr[0]).split(',').length){ // On regarde si le csv est séparé par des virgules ou des points-virgules
+
+      // Dans ce cas, le header est séparé par des points-virgules
+
+      let headers = (csvRecordsArr[0]).split(';');
+
+      for (let j = 0; j < headers.length; j++) { // On parcourt les éléments du header
+
+        if(headers[j].includes('"')){ // On regarde si les éléments du csv sont entre guillemets ou pas
+
+          // Ici on a un élément entre guillemets
+
+          headerArray.push(headers[j].split('"')[1]);
+        }else{  
+          
+          // Ici l'élément n'est pas entre guillemets
+
+          headerArray.push(headers[j].trim());
+        }
+
+      }
+      return headerArray; // On renvoie le tableau contenant les éléments traités du header
+
+    } else {
+
+      // Dans ce cas, le header est séparé par des virgules
+
+      let headers = (csvRecordsArr[0]).split(',');
+
+      for (let j = 0; j < headers.length; j++) { // On parcourt les éléments du header
+
+        if(headers[j].includes('"')){ // On regarde si les éléments du csv sont entre guillemets ou pas
+
+          // Ici on a un élément entre guillemets
+
+          headerArray.push(headers[j].split('"')[1]);
+        }else{  
+          
+          // Ici l'élément n'est pas entre guillemets
+
+          headerArray.push(headers[j].trim());
+        }
+
+      }
+      return headerArray; // On renvoie le tableau contenant les éléments traités du header
     }
-    return headerArray;
   }
 
   fileReset() {
@@ -201,14 +309,18 @@ function isValidCSVrows(csvRecordsArray: string[]) {
   let headersRow = (csvRecordsArray[0]).split(';');
   // console.log(headersRow);
   let numOfCols = headersRow.length;
-  // console.log(numOfCols);
-  for (let i = 1; i < csvRecordsArray.length-1; i++) {
-    let row = (csvRecordsArray[i]).split(';');
-    // console.log(row);
-    if (row.length !== numOfCols) {
-      isValidData = false;
-      break;
-    }
+  if(numOfCols <= 1){
+    headersRow = (csvRecordsArray[0]).split(',');
+    numOfCols = (csvRecordsArray[0]).split(',').length;
   }
+  // console.log(headersRow);
+  // for (let i = 1; i < csvRecordsArray.length-1; i++) {
+  //   let row = (csvRecordsArray[i]).split(';');
+  //   // console.log(row);
+  //   if (row.length !== numOfCols) {
+  //     isValidData = false;
+  //     break;
+  //   }
+  // }
   return isValidData;
 }
