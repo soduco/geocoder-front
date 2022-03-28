@@ -1,8 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
+import { ParseSpan } from '@angular/compiler';
 import { Component, VERSION ,ViewChild } from '@angular/core';
 import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
-
+// import { Papa }  from './node_modules/papaparse/papaparse.js';
+const Papa = require('papaparse');
 
 export class CsvData {
     public text: any;
@@ -43,6 +45,7 @@ export class CsvComponent  {
   uploadListener($event: any): void {
     
     let files = $event.srcElement.files;
+    // console.log(files);
 
     if (this.isValidCSVFile(files[0])) {
       this.csv_valid=true;
@@ -54,41 +57,62 @@ export class CsvComponent  {
 
       reader.onload = () => {
         let csvData = reader.result;
+        let resultat: any[] = [];
         if(typeof csvData == "string"){
           let csvRecordsArray = (csvData).split(/\r\n|\n/);
           // console.log(csvRecordsArray);
           this.headersRow = this.getHeaderArray(csvRecordsArray);
           // console.log(this.headersRow);
           if (isValidCSVrows(csvRecordsArray)) {
-
-            this.records = this.getDataRecordsArrayFromCSVFile2(csvRecordsArray, this.headersRow.length);
+            Papa.parse(files[0], {
+              download: true,
+              header: false,
+              complete: function(results: { data: any[]; }) {
+                results.data.map((data, index)=> {
+                  if(index == 0){
+                    return;
+                  }else{
+                  // console.log(index);
+                  // console.log(data);
+                    resultat.push(data);
+                  // console.log(resultat);
+                  }
+                });
+              }
+            });
+            // console.log(resultat);
+            // this.records = resultat;
+            
+            // this.records = this.getDataRecordsArrayFromCSVFile2(csvRecordsArray, this.headersRow.length);
             // console.log(this.records);
           }else {
             this.display_button_geo=true;
             alert("Please import valid .csv file.");
             this.fileReset();
           }
+          setTimeout(() =>{
+            // this.records = resultat;
+            console.log(this.records);
+          }, 500);
+          this.records = resultat;
+          // console.log(resultat);
         }
       };
 
       const inputCSV = document.getElementById("txtFileUpload");
-    //   console.log(inputCSV)
+
       if(inputCSV){
-        // console.log("OK 1/2");
-    //     inputCSV.addEventListener("click", function(){console.log('a')});
-    //     inputCSV.addEventListener('load', function () {
-    //       console.log("OK 2/3")
+
         const text2 = document.querySelector<HTMLElement>("#two");
         const text3 = document.querySelector<HTMLElement>("#three");
 
-        // console.log(text2);
         if(text2){
-          // console.log("OK 2/2");
+
           text2.style.color = "black";
           text2.style.fontWeight = "bold";
         }
         if(text3){
-          // console.log("OK 2/2");
+
           text3.style.color = "black";
           text3.style.fontWeight = "bold";
         }
