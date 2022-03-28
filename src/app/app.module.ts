@@ -15,6 +15,11 @@ import { ExportComponent } from './export/export.component';
 
 import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
+import { FormsModule } from '@angular/forms';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+
 
 @NgModule({
   declarations: [
@@ -24,14 +29,19 @@ import { CommonModule } from "@angular/common";
     MapComponent,
     CsvComponent,
     GeocodeurComponent,
-    ExportComponent
+    ExportComponent,
+    
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     Angular2CsvModule,
-    CommonModule
+    CommonModule,
+    FormsModule,
+    MatProgressBarModule,
+   
+   
   ],
   providers: [
     AdressesService

@@ -57,9 +57,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
     this.createMap();
   };
 
-  ngOnInit() {   
-  }
-
   ngOnChanges(changes: SimpleChanges) {
 
     if (changes['data_available'].currentValue == true){
@@ -78,13 +75,13 @@ export class MapComponent implements AfterViewInit, OnChanges {
       fillOpacity: 0.8
   };
 
-    this.adresseService.getAdresseGeo().subscribe(response => {
-      const adressesGeo = response 
-      for (var ad of adressesGeo){
-        var circle = L.circleMarker([ad.lat,ad.long], MarkerOptions);
-        circle.addTo(this.map).bindPopup(ad.text);
-      }
-    })
+  this.adresseService.getAdresseGeo().subscribe(response => {
+    const adressesGeo = response 
+    for (var ad of adressesGeo){
+      var circle = L.circleMarker([ad.lat,ad.long], MarkerOptions);
+      circle.addTo(this.map).bindPopup(ad.text);
+    }
+  })
     
   }
 }
