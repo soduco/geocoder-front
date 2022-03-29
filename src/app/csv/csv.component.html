@@ -21,6 +21,15 @@
         <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
 
       </div>
+      <mat-card *ngIf="showSpinner">
+        <mat-card-content >      
+          <mat-progress-spinner 
+              class="example-margin"
+              [color]="'primary'"
+              [mode]="'indeterminate'">
+          </mat-progress-spinner>
+        </mat-card-content>
+      </mat-card>
     </div>
     <br>
 
@@ -39,7 +48,7 @@
         </th>
       </thead>
       <tbody>
-        <tr *ngFor="let record of records;let i = index;">
+        <tr *ngFor="let record of displayRecords;let i = index;">
           <td *ngFor="let cell of record;let i = index;">
             {{cell}}
           </td>

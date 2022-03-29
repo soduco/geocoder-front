@@ -39,13 +39,19 @@ export class CsvComponent  {
 
   public headersRow: any[] = []; // Attribut qui va contenir l'entête du CSV s'il existe
 
-  @ViewChild('csvReader') csvReader: any; // Lecteur du CSV qu'on ré-initialise au besoin (exemple le fichier n'est pas un csv, on ré-initialise le lecteur)
-
   jsondatadisplay:any; // Attribut qui gère si l'on veut afficher en JSON les données, pas utilisé pour le moment
 
   public display_button_geo:boolean = false; // Attribut qui gère l'affichage ou non du boutton géocodage
 
   public csv_valid:boolean = false; // Attribut qui représente la validité ou non du fichier uploadé par l'utilisateur
+
+  public showSpinner:boolean = false; // Attribut qui gère l'affichage ou non du cercle de chargement du fichier
+
+  public displayLimit:number = 10; // Nombre de lignes qu'on affiche dans l'aperçu du fichier
+
+  public displayRecords: any[] = []; // Attribut qui va contenir les données du CSV qu'on va afficher dans l'aperçu
+
+  @ViewChild('csvReader') csvReader: any; // Lecteur du CSV qu'on ré-initialise au besoin (exemple le fichier n'est pas un csv, on ré-initialise le lecteur)
 
   constructor(private adresses_service : AdressesService){
   }
@@ -71,16 +77,22 @@ export class CsvComponent  {
         console.log('error is occured while reading file!');};
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
+        console.log("loading start")
+        this.showSpinner=true; // On affiche le cercle de chargement
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
         let resultat: any[] = []; // On crée l'objet resultat qui contient les données traitées. Records deviendra resultat à la fin du traitement
+
+        let display: any[] = []; // On crée l'objet qui va contenir les données à afficher dans l'aperçu
 
         if(typeof csvData == "string"){ // On vérifie que les données sont bien des chaînes de caractères
 
           let csvRecordsArray = (csvData).split(/\r\n|\n/); // On sépare les lignes du fichier
 
           this.headersRow = this.getHeaderArray(csvRecordsArray); // On récupere l'entête du fichier avec la méthode getHeaderArray
+
+          const limite = this.displayLimit;
 
           Papa.parse(files[0], { // On utilise papa.parse pour parser le fichier
 
@@ -92,13 +104,34 @@ export class CsvComponent  {
                 if(index == 0){
                   return;
                 }else{
-                  resultat.push(data); // On ajoute les données parsées par papa.parse dans l'objet résultat
+                  if(results.data.length < limite){ // On vérifie que le nombre de lignes du fichier est inférieur à la limite d'affichage
+
+                    // Ici on a moins de lignes que la limite d'affichage dans notre fichier
+      
+                    resultat.push(data); // On ajoute toutes les autres données parsées dans l'objet résultat
+                    // console.log(resultat);
+                    display.push(data); // On met les données dans l'objet qui va être affiché dans l'aperçu
+                    // console.log(display);
+                  } else {
+
+                    // Ici on a plus de lignes que la limite d'affichage dans notre fichier
+                    while(index <= limite){ // On boucle tant que l'on a pas atteint la limite d'affichage
+                      display.push(data); // On ajoute les données parsées par papa.parse dans l'objet qui va contenir les données à afficher dans l'aperçu
+                      break;
+                    }
+                    resultat.push(data); // On continue d'ajouter les données parsées par papa.parse dans l'objet résultat
+                  }
                 }
               });
             }
           });
 
           this.records = resultat; // L'objet records prend les données parsées par papa.parse
+
+          this.displayRecords = display; // L'objet displayRecords prend les données à afficher dans l'aperçu du fichier
+
+          // setTimeout(()=> console.log(this.records), 3000); // On attend 3 secondes pour que papa.parse ait fini de parser le fichier
+          // setTimeout(()=> console.log(this.displayRecords), 10000); // On attend 3 secondes pour que papa.parse ait fini de parser le fichier
 
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
@@ -130,6 +163,11 @@ export class CsvComponent  {
         }
       };
 
+      reader.onloadend = () => { // Une fois le fichier chargé on arrête le cercle de chargement
+        this.showSpinner=false; // On cache le cercle de chargement
+        console.log('done');
+      } 
+      
 
     } else {
 
