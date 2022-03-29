@@ -5,6 +5,7 @@ import { Component, VERSION ,ViewChild } from '@angular/core';
 import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import Swal from 'sweetalert2';
 const Papa = require('papaparse');
 
 // Exports
@@ -51,6 +52,8 @@ export class CsvComponent  {
 
   public displayRecords: any[] = []; // Attribut qui va contenir les données du CSV qu'on va afficher dans l'aperçu
 
+  public showAdvanced:boolean = false; // Attribut qui gère l'affichage ou non du boutton paramètre avancé
+
   @ViewChild('csvReader') csvReader: any; // Lecteur du CSV qu'on ré-initialise au besoin (exemple le fichier n'est pas un csv, on ré-initialise le lecteur)
 
   constructor(private adresses_service : AdressesService){
@@ -58,6 +61,8 @@ export class CsvComponent  {
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait
     
+    this.displayLoader(); // On affiche le loader
+
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
 
@@ -78,7 +83,6 @@ export class CsvComponent  {
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
         console.log("loading start")
-        this.showSpinner=true; // On affiche le cercle de chargement
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
@@ -92,7 +96,7 @@ export class CsvComponent  {
 
           this.headersRow = this.getHeaderArray(csvRecordsArray); // On récupere l'entête du fichier avec la méthode getHeaderArray
 
-          const limite = this.displayLimit;
+          const limite = this.displayLimit; // On donne à limite la limite de ligne à afficher dans l'aperçu
 
           Papa.parse(files[0], { // On utilise papa.parse pour parser le fichier
 
@@ -109,9 +113,8 @@ export class CsvComponent  {
                     // Ici on a moins de lignes que la limite d'affichage dans notre fichier
       
                     resultat.push(data); // On ajoute toutes les autres données parsées dans l'objet résultat
-                    // console.log(resultat);
+
                     display.push(data); // On met les données dans l'objet qui va être affiché dans l'aperçu
-                    // console.log(display);
                   } else {
 
                     // Ici on a plus de lignes que la limite d'affichage dans notre fichier
@@ -130,8 +133,7 @@ export class CsvComponent  {
 
           this.displayRecords = display; // L'objet displayRecords prend les données à afficher dans l'aperçu du fichier
 
-          // setTimeout(()=> console.log(this.records), 3000); // On attend 3 secondes pour que papa.parse ait fini de parser le fichier
-          // setTimeout(()=> console.log(this.displayRecords), 10000); // On attend 3 secondes pour que papa.parse ait fini de parser le fichier
+          // setTimeout(()=>this.getSelectedColumns(),2500); // Test de la nouvelle méthode 
 
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
@@ -141,6 +143,8 @@ export class CsvComponent  {
 
             const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
             const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
+            const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 4.
+            const button1 = document.querySelector<HTMLElement>("#five"); // On récupère l'objet HTML correspondant au bouton 1.
 
             if(text2){ // On vérifie que l'objet existe
 
@@ -152,19 +156,31 @@ export class CsvComponent  {
               text3.style.color = "black"; // On change la couleur et l'épaisseur du texte
               text3.style.fontWeight = "bold";
             }
+            if(text4){ // On vérifie que l'objet existe
+
+              text4.style.display = "block"; // On affiche le texte
+              // setTimeout(()=>console.log(text4.innerText),2000);
+            }
+            if(button1){ // On vérifie que l'objet existe
+
+              button1.style.display = "block"; // On affiche le bouton
+            }
           };
 
         } else {
 
           // Ici les données ne son pas des chaînes de caractères
 
-          alert("Les données dans le fichier ne sont pas valides. \n \n Veuillez importer un fichier contenant uniquement des chiffres et des lettres."); // On affiche un message d'erreur
+          Swal.fire("Les données dans le fichier ne sont pas valides.", "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."); // On affiche un message d'erreur
+
+          this.hideLoader(); // On cache le loader
+
           this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
         }
       };
 
       reader.onloadend = () => { // Une fois le fichier chargé on arrête le cercle de chargement
-        this.showSpinner=false; // On cache le cercle de chargement
+        this.hideLoader();
         console.log('done');
       } 
       
@@ -173,7 +189,10 @@ export class CsvComponent  {
 
       // Ici le fichier est invalide
 
-      alert("Le fichier n'est pas valide. \n \n Veuillez importer un fichier csv (finissant par .csv)."); // On affiche un message d'erreur
+      Swal.fire( "Le fichier n'est pas valide.", "Veuillez importer un fichier csv (finissant par .csv).") // On affiche un message d'erreur
+
+      this.hideLoader(); // On cache le loader
+
       this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
 
       // On change alors les couleurs des textes pour montrer que le fichier n'est pas valide
@@ -199,7 +218,6 @@ export class CsvComponent  {
 
     }
   }
-
 
   isValidCSVFile(file: any) { // On vérifie que le fichier importé est bien un fichier csv
     return file.name.endsWith(".csv");
@@ -261,6 +279,45 @@ export class CsvComponent  {
     this.records = [];
     this.jsondatadisplay = '';
   }
+
+  hideLoader(){ // On cache le loader
+    const loader = document.getElementById('loading'); // On récupère l'objet HTML correspondant au loader
+    if(loader){ // On vérifie que l'objet existe
+
+      loader.style.display = "none"; // On cache le loader
+    }
+  }  
+
+  displayLoader(){ // On affiche le loader
+    const loader = document.getElementById('loading'); // On récupère l'objet HTML correspondant au loader
+    if(loader){ // On vérifie que l'objet existe
+      loader.style.display = "flex"; // On affiche le loader
+    }
+  }
+
+  getSelectedColumns(){ // on récupère les colonnes sélectionnées par l'utilisateur
+
+    const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
+
+    if(inputCSV){ // On vérifie que l'objet existe
+
+      const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 4.
+
+      if(text4){ // On vérifie que l'élément existe
+
+        const rawText = text4.innerHTML; // On récupère le texte brut de l'objet HTML
+
+        const rawColumns = rawText.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées
+
+        const columns = rawColumns.split(","); // On obtient la la liste des colonnes sélectionnées
+
+        return columns; // On renvoie cette liste
+      }
+    }
+    return null; // Dans le cas où les if ne sont pas respectés on renvoie null
+  }
+
+  
 }
 
 // ANCIEN CODE POUVANT ETRE UTILE

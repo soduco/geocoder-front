@@ -21,7 +21,7 @@
         <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
 
       </div>
-      <mat-card *ngIf="showSpinner">
+      <mat-card id="loading">
         <mat-card-content >      
           <mat-progress-spinner 
               class="example-margin"
@@ -52,11 +52,6 @@
           <td *ngFor="let cell of record;let i = index;">
             {{cell}}
           </td>
-          <!-- {{record}} -->
-          <!-- <th scope="row">{{record.text}}</th>
-          <td>{{record.startingTime}}</td>
-          <td>{{record.endingTime}}</td>
-          <td>{{record.softTime}}</td> -->
         </tr>
 
       </tbody>
@@ -66,7 +61,7 @@
     <div class="card-header" id="three">
       3. Choisir les colonnes à utiliser pour construire les adresses
     </div>
-    <mat-button-toggle-group name="column" aria-label="Selected Column" multiple>
+    <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group="matButtonToggleGroup">
 
       <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header>
         {{header}}
@@ -75,6 +70,32 @@
 
 
   </div>
+  <div id="four">
+    Colonnes sélectionnées : {{group.value}}
+  </div>
+<!-- Boutton paramètre avancé qui lorsqu'il est cliqué affiche un slider-->
+  <div class="card-header" id="five">
+    <button mat-button (click)="showAdvanced = !showAdvanced">
+      <mat-icon>settings</mat-icon>
+      <span>Paramètres avancés</span>
+    </button>
+    <div *ngIf="showAdvanced">
+      <h1>
+        Softness de la recherche : 
+      </h1>
+      <mat-slider min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
+    </div>
+  </div>
+  <!-- <div id="6" *ngIf="showAdvanced">
+    <mat-slider min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
+  </div> -->
+
+  <!-- <div class="card-header" id="five">
+    <button type="button" class="btn btn-primary" aria-expanded="false" aria-controls="collapseExample">
+      Paramètres avancés
+    </button>
+  </div> -->
+
   </div>
   <app-geocodeur  [parent]="csv_valid" ></app-geocodeur>
 
