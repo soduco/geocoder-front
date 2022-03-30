@@ -55,6 +55,10 @@ export class CsvComponent  {
   public showAdvanced:boolean = false; // Attribut qui gère l'affichage ou non du boutton paramètre avancé
 
   @ViewChild('csvReader') csvReader: any; // Lecteur du CSV qu'on ré-initialise au besoin (exemple le fichier n'est pas un csv, on ré-initialise le lecteur)
+  
+  selectedColumnsForAdress: any[] = []; // Colonnes séléctionnées par l'utilisateur pour construire l'adresse
+
+  selectedColumnsForDate: any[] = []; // Colonnes séléctionnées par l'utilisateur pour construire la date
 
   constructor(private adresses_service : AdressesService){
   }
@@ -133,7 +137,7 @@ export class CsvComponent  {
 
           this.displayRecords = display; // L'objet displayRecords prend les données à afficher dans l'aperçu du fichier
 
-          // setTimeout(()=>this.getSelectedColumns(),2500); // Test de la nouvelle méthode 
+          setTimeout(()=>console.log(this.selectedColumnsForAdress),5000); // Test de la nouvelle méthode 
 
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
@@ -143,7 +147,8 @@ export class CsvComponent  {
 
             const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
             const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
-            const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 4.
+            const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
+            const colonnes = document.querySelectorAll<HTMLElement>(".colonnes"); // On récupère l'objet HTML correspondant aux colonnes sélectionnées.
             const button1 = document.querySelector<HTMLElement>("#five"); // On récupère l'objet HTML correspondant au bouton 1.
 
             if(text2){ // On vérifie que l'objet existe
@@ -156,10 +161,17 @@ export class CsvComponent  {
               text3.style.color = "black"; // On change la couleur et l'épaisseur du texte
               text3.style.fontWeight = "bold";
             }
-            if(text4){ // On vérifie que l'objet existe
+            if(text4){// On vérifie que l'objet existe
+              
+              text4.style.color = "black"; // On change la couleur et l'épaisseur du texte
+              text4.style.fontWeight = "bold";
 
-              text4.style.display = "block"; // On affiche le texte
-              // setTimeout(()=>console.log(text4.innerText),2000);
+            }
+            if(colonnes){ // On vérifie que l'objet existe
+
+              colonnes[0].style.display = "block"; // On affiche les colonnes sélectionnées
+              colonnes[1].style.display = "block"; // On affiche les colonnes sélectionnées
+              // console.log(colonnes);
             }
             if(button1){ // On vérifie que l'objet existe
 
@@ -203,6 +215,7 @@ export class CsvComponent  {
 
         const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
         const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
+        const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
 
         if(text2){ // On vérifie que l'objet existe
 
@@ -213,6 +226,11 @@ export class CsvComponent  {
 
           text3.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte
           text3.style.fontWeight = "300";
+        }
+        if(text4){ // On vérifie que l'objet existe
+
+          text4.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
+          text4.style.fontWeight = "300";
         }
       };
 
@@ -295,23 +313,77 @@ export class CsvComponent  {
     }
   }
 
+  getColumnSelectedForAdresse(header: any){ // On récupère les colonnes sélectionnées par l'utilisateur pour l'adresse
+
+    for(let i=0; i<this.selectedColumnsForAdress.length+1; i++){ // On parcourt les éléments du tableau contenant les colonnes sélectionnées par l'utilisateur pour l'adresse
+
+      if(this.selectedColumnsForAdress[i] == header){ // On vérifie que la colonne n'est pas déjà dans le tableau
+
+        // Ici la colonne est déjà dans le tableau on la supprime donc
+
+        this.selectedColumnsForAdress.splice(i, 1); // On supprime l'élément du tableau
+        console.log("On supprime");
+
+        return; // On quitte la fonction
+      }
+    }  
+    // Ici la colonne n'est pas dans le tableau
+
+    this.selectedColumnsForAdress.push(header); // On ajoute la colonne sélectionnée dans le tableau des colonnes sélectionnées pour l'adresse
+    console.log("On ajoute");
+  }
+
+  getColumnSelectedForDate(header: any){ // On récupère les colonnes sélectionnées par l'utilisateur pour la date
+
+    for(let i=0; i<this.selectedColumnsForDate.length+1; i++){ // On parcourt les éléments du tableau contenant les colonnes sélectionnées par l'utilisateur pour la date 
+
+      if(this.selectedColumnsForDate[i] == header){ // On vérifie que la colonne n'est pas déjà dans le tableau
+
+        // Ici la colonne est déjà dans le tableau on la supprime donc
+
+        this.selectedColumnsForDate.splice(i, 1); // On supprime l'élément du tableau
+        console.log("On supprime");
+
+        return; // On quitte la fonction
+      }
+    }  
+    // Ici la colonne n'est pas dans le tableau
+
+    this.selectedColumnsForDate.push(header); // On ajoute la colonne sélectionnée dans le tableau des colonnes sélectionnées pour la date
+    console.log("On ajoute");
+  }
+
   getSelectedColumns(){ // on récupère les colonnes sélectionnées par l'utilisateur
 
     const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
 
     if(inputCSV){ // On vérifie que l'objet existe
 
-      const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 4.
+      const text4 = document.querySelectorAll<HTMLElement>(".colonnes"); // On récupère l'objet HTML correspondant au 4.
 
       if(text4){ // On vérifie que l'élément existe
 
-        const rawText = text4.innerHTML; // On récupère le texte brut de l'objet HTML
+        const rawTextAdress = text4[0].innerHTML; // On récupère le texte brut de l'objet HTML pour les adresses
 
-        const rawColumns = rawText.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées
+        const rawColumnsAdress = rawTextAdress.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées pour les adresses
 
-        const columns = rawColumns.split(","); // On obtient la la liste des colonnes sélectionnées
+        const columnsAdress = rawColumnsAdress.split(","); // On obtient la la liste des colonnes sélectionnées pour les adresses
 
-        return columns; // On renvoie cette liste
+        const rawTextDate = text4[1].innerHTML; // On récupère le texte brut de l'objet HTML pour les dates
+
+        const rawColumnsDate = rawTextDate.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées  pour les dates
+
+        const columnsDate = rawColumnsDate.split(","); // On obtient la la liste des colonnes sélectionnées pour les dates
+
+        const result = []; // On crée un tableau vide qui va contenir les colonnes sélectionnées
+
+        result.push(rawColumnsAdress); // On ajoute les colonnes sélectionnées pour les adresses
+
+        result.push(rawColumnsDate); // On ajoute les colonnes sélectionnées pour les dates
+
+        console.log(result);
+
+        return result; // On renvoie cette liste
       }
     }
     return null; // Dans le cas où les if ne sont pas respectés on renvoie null

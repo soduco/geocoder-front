@@ -34,7 +34,14 @@ p {
 }
 
 #four{
-  display : none;
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+.colonnes{
+  display: none;
   font-family: Helvetica, sans-serif	;
   font-weight: 300;
   font-size: 20px;

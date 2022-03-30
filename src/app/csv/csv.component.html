@@ -34,73 +34,76 @@
     <br>
 
 
-  <div class="card">
-    <div class="card-header" id="two">
-      2. Aperçu du fichier et vérification de l’encodage
+    <div class="card">
+      <div class="card-header" id="two">
+        2. Aperçu du fichier et vérification de l’encodage
+      </div>
+
+      {{jsondatadisplay}}
+      <div class="table-responsive">
+        <table class="table table-bordered"  *ngIf="records.length > 0">
+          <thead class="thead-dark" >
+            <th *ngFor="let headersRow of headersRow;let i = index;">
+              {{headersRow}}
+            </th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of displayRecords;let i = index;">
+              <td *ngFor="let cell of record;let i = index;">
+                {{cell}}
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
     </div>
+    <div class="card">
+      <div class="card-header" id="three">
+        3. Choisir les colonnes à utiliser pour construire l'adresse
+      </div>
+      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group="matButtonToggleGroup">
+        <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForAdresse(header)">
+          {{header}}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
 
-    {{jsondatadisplay}}
-  <div class="table-responsive">
-    <table class="table table-bordered"  *ngIf="records.length > 0">
-      <thead class="thead-dark" >
-        <th *ngFor="let headersRow of headersRow;let i = index;">
-          {{headersRow}}
-        </th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let record of displayRecords;let i = index;">
-          <td *ngFor="let cell of record;let i = index;">
-            {{cell}}
-          </td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-
-    <div class="card-header" id="three">
-      3. Choisir les colonnes à utiliser pour construire les adresses
+      <div class="colonnes">
+        Pour l'adresse : {{group.value}}
+      </div>
     </div>
-    <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group="matButtonToggleGroup">
+    <div class="card">
+      <div class="card-header" id="four">
+        4. Choisir les colonnes à utiliser pour la date ou les dates
+      </div>
+      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
+        <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header)">
+          {{header}}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
 
-      <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header>
-        {{header}}
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-
-
-  </div>
-  <div id="four">
-    Colonnes sélectionnées : {{group.value}}
-  </div>
-<!-- Boutton paramètre avancé qui lorsqu'il est cliqué affiche un slider-->
-  <div class="card-header" id="five">
-    <button mat-button (click)="showAdvanced = !showAdvanced">
-      <mat-icon>settings</mat-icon>
-      <span>Paramètres avancés</span>
-    </button>
-    <div *ngIf="showAdvanced">
-      <h1>
-        Softness de la recherche : 
-      </h1>
-      <mat-slider min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
+      <div class="colonnes">
+        Pour la ou les dates : {{group2.value}}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="five">
+        <button mat-button (click)="showAdvanced = !showAdvanced">
+          <mat-icon>settings</mat-icon>
+          <span>Paramètres avancés</span>
+        </button>
+        <div *ngIf="showAdvanced">
+          <h1>
+            Softness de la recherche : 
+          </h1>
+          <mat-slider min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- <div id="6" *ngIf="showAdvanced">
-    <mat-slider min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
-  </div> -->
+</div>
 
-  <!-- <div class="card-header" id="five">
-    <button type="button" class="btn btn-primary" aria-expanded="false" aria-controls="collapseExample">
-      Paramètres avancés
-    </button>
-  </div> -->
-
-  </div>
   <app-geocodeur  [parent]="csv_valid" ></app-geocodeur>
-
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 </body>
