@@ -40,6 +40,8 @@ export class CsvComponent  {
 
   public headersRow: any[] = []; // Attribut qui va contenir l'entête du CSV s'il existe
 
+  public headerRowMapped = new Map();
+
   jsondatadisplay:any; // Attribut qui gère si l'on veut afficher en JSON les données, pas utilisé pour le moment
 
   public display_button_geo:boolean = false; // Attribut qui gère l'affichage ou non du boutton géocodage
@@ -60,6 +62,10 @@ export class CsvComponent  {
 
   selectedColumnsForDate: any[] = []; // Colonnes séléctionnées par l'utilisateur pour construire la date
 
+  public isGeoClicked:boolean = false; // Booléen qui dit si le bouton géocodage est cliqué ou non
+
+  public CsvDataResult: CsvData[] = []; // Attribut qui va contenir les données du CSV s'il existe
+
   constructor(private adresses_service : AdressesService){
   }
 
@@ -68,7 +74,6 @@ export class CsvComponent  {
     this.displayLoader(); // On affiche le loader
 
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
-
 
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
 
@@ -99,6 +104,12 @@ export class CsvComponent  {
           let csvRecordsArray = (csvData).split(/\r\n|\n/); // On sépare les lignes du fichier
 
           this.headersRow = this.getHeaderArray(csvRecordsArray); // On récupere l'entête du fichier avec la méthode getHeaderArray
+
+          for(let k=0; k<this.headersRow.length; k++){
+
+            this.headerRowMapped.set(this.headersRow[k], k); // On crée un objet qui va contenir les clés et les valeurs de l'entête
+
+          }
 
           const limite = this.displayLimit; // On donne à limite la limite de ligne à afficher dans l'aperçu
 
@@ -137,7 +148,9 @@ export class CsvComponent  {
 
           this.displayRecords = display; // L'objet displayRecords prend les données à afficher dans l'aperçu du fichier
 
-          setTimeout(()=>console.log(this.selectedColumnsForAdress),5000); // Test de la nouvelle méthode 
+          this.hideLoader(); // On cache le loader
+
+          // setTimeout(()=>console.log(this.selectedColumnsForAdress),5000); // Test de la nouvelle méthode 
 
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
@@ -389,7 +402,56 @@ export class CsvComponent  {
     return null; // Dans le cas où les if ne sont pas respectés on renvoie null
   }
 
-  
+  isGeocodageClicked(){ // On regatde si le bouton de géocodage est cliqué
+
+    this.isGeoClicked = !this.isGeoClicked; // On inverse la valeur de la variable isGeoClicked
+
+    let csvArr: any[] = []; // On crée un tableau vide qui va contenir les objects CsvData
+
+
+    for(let i = 0; i<this.records.length; i++){ // On parcourt les lignes du fichier
+
+      let csvRecord: CsvData = new CsvData(); // On crée un objet CsvData qui va permettre de faire la requête
+
+      if(this.selectedColumnsForAdress.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
+
+        Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction de l'adresse."); // On affiche un message d'erreur
+
+      } else if(this.selectedColumnsForAdress.length == 1){
+
+        csvRecord.text = this.records[i][this.headerRowMapped.get(this.selectedColumnsForAdress[0])]; // On récupère la valeur de la colonne sélectionnée pour les adresses
+
+      } else if(this.selectedColumnsForAdress.length > 1){
+
+        csvRecord.text = '';
+
+        for(let j=0; j<this.selectedColumnsForAdress.length; j++){ // On parcourt les colonnes sélectionnées pour les adresses
+          csvRecord.text += this.records[i][this.headerRowMapped.get(this.selectedColumnsForAdress[j])] + " "; // On récupère la valeur de la colonne sélectionnée pour les adresses
+        }
+      }
+      if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
+
+        Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction des dates (années)."); // On affiche un message d'erreur
+
+      } else if(this.selectedColumnsForDate.length == 1){
+
+        csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
+
+      } else if(this.selectedColumnsForDate.length == 2){
+
+        for(let j=0; j<this.selectedColumnsForDate.length; j++){ // On parcourt les colonnes sélectionnées pour les adresses
+          csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date de début
+          csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[1])]; // On récupère la valeur de la colonne sélectionnée pour la date de fin
+        }
+      }
+
+      csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
+      csvArr.push(csvRecord);
+    }
+    this.CsvDataResult = csvArr; // On renvoie le tableau
+    this.adresses_service.addAdresse(this.CsvDataResult[0]); // On ajoute la première adresse et la date au service qui va faire la requête
+    // Il faudra toutes les ajouter cependant
+  }  
 }
 
 // ANCIEN CODE POUVANT ETRE UTILE

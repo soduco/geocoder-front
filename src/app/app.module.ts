@@ -21,6 +21,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSliderModule} from '@angular/material/slider';
+import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {MatSliderModule} from '@angular/material/slider';
   providers: [
     AdressesService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [  ]
 })
 export class AppModule { }
