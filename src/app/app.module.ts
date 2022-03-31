@@ -15,6 +15,13 @@ import { ExportComponent } from './export/export.component';
 
 import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSliderModule} from '@angular/material/slider';
+import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 
 @NgModule({
   declarations: [
@@ -31,11 +38,18 @@ import { CommonModule } from "@angular/common";
     HttpClientModule,
     AppRoutingModule,
     Angular2CsvModule,
-    CommonModule
+    CommonModule,
+    MatButtonToggleModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSliderModule
   ],
   providers: [
     AdressesService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [  ]
 })
 export class AppModule { }
