@@ -17,3 +17,46 @@ max-height: 100px;
 .geocodeur{
   padding: 100px;
 }
+
+/* text for importing a file */
+.card-header{
+  font-family: Helvetica, sans-serif	;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+#two{
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+#three{
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+#four{
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+.colonnes{
+  display: none;
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+#five{
+  display : none;
+}
+
+#loading{
+  display: none;
+}

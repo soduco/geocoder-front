@@ -3,6 +3,12 @@ th.mat-header-cell {
   text-align: left;
   max-width: 300px;
 }
+
+.map-wrapper{
+  position:absolute;
+  left:50%;
+  top:50%;
+}
 #Global {
   
   padding: 10px;

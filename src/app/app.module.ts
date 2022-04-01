@@ -20,6 +20,13 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import { AppMaterialModule } from "./app.material-module";
 import {DataTablesModule} from 'angular-datatables';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSliderModule} from '@angular/material/slider';
+import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 
 
 @NgModule({
@@ -43,10 +50,17 @@ import {DataTablesModule} from 'angular-datatables';
     MatProgressBarModule,
     AppMaterialModule,
     DataTablesModule,
+    MatButtonToggleModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSliderModule
   ],
   providers: [
     AdressesService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [  ]
 })
 export class AppModule { }
