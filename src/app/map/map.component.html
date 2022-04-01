@@ -1,8 +1,8 @@
 
  <button *ngIf="display_button_geo == false " (click)="graphic_display()" >Prévisualitation des resultas</button>
 
-<div class="container" >
-    <div id="Global" >
+<div class="container">
+    <div id="Global">
         <div id="gauche" *ngIf="display_table_geo || display_table_geo_details">
             <div *ngIf="display_table_geo" id="table_results" >
                 <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
@@ -54,9 +54,7 @@
         </div>
         <div id="droite">
             <div class="map-wrapper">
-                <div class="map-border">
                     <div class="map" id="map" ></div>
-                </div>
             </div>
         </div>
     </div>

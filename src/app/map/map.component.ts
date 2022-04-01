@@ -47,7 +47,8 @@ export class MapComponent implements  OnChanges, OnDestroy{
   //To get services 
   constructor(public apiService: ApiService, private adresseService : AdressesService) { }
 
-  
+
+ 
   /** 
    * Function to create and display a map in the web interface 
    */

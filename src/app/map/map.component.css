@@ -4,13 +4,8 @@ th.mat-header-cell {
   max-width: 300px;
 }
 
-.map-wrapper{
-  position:absolute;
-  left:50%;
-  top:50%;
-}
-#Global {
-  
+
+#Global { 
   padding: 10px;
 }
 
@@ -26,4 +21,10 @@ th.mat-header-cell {
   margin-right:0px;
   margin-left:0px;
   max-width: 100%;
+}
+
+#map {
+  height: 400px;
+  margin:0px;
+  padding:0px;
 }
