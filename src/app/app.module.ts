@@ -1,11 +1,8 @@
-import { AdressesService } from './adresses.service';
 import { NgModule } from '@angular/core';
-import { AdressesComponent } from './adresses.component'
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AdressComponent } from './adress/adress.component';
 import { MapComponent } from './map/map.component';
 
 import { CsvComponent } from './csv/csv.component';
@@ -32,8 +29,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 @NgModule({
   declarations: [
     AppComponent,
-    AdressesComponent,
-    AdressComponent,
     MapComponent,
     CsvComponent,
     GeocodeurComponent,
@@ -58,7 +53,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
     MatSliderModule
   ],
   providers: [
-    AdressesService
+    
   ],
   bootstrap: [AppComponent],
   schemas: [  ]
