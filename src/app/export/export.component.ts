@@ -14,41 +14,32 @@ export class ExportComponent implements OnInit{
 
   constructor(private AdressesService:AdressesService, public apiService: ApiService,) { }
   data! : CsvDataGeo[];
-
+  headers = ['text','startingTime','endingTime','softTime','lat','long','rang']
   ngOnInit(): void {
     this.AdressesService.getAdresseGeo().subscribe(response => {
       this.data = response
     })
   }
-
- 
   
   options = {
     
-    filename : "hello.csv",
+    filename : "results.csv",
     fieldSeparator: ';',
     quoteStrings: '"',
     decimalseparator: '.',
     showLabels: true,
-    headers: ['text', 'startingTime','endingTime','softTime','lat','long'],
+    headers: this.headers,
     showTitle: false,
     title: '',
     useBom: false,
     removeNewLines: true,
-    keys: ['text', 'startingTime','endingTime','softTime','lat','long']
+    keys: this.headers
   };
 
   ConvertToCSV( ) {
     var adressesGeo = this.AdressesService.getAdresseGeo()
     console.log(adressesGeo)
-    const headers = [
-        'text',
-        'startingTime',
-        'endingTime',
-        'softTime',
-        'lat',
-        'long',
-    ]
+    
     const Papa = require("papaparse");
     
     const features=[];

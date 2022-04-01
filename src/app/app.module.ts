@@ -15,6 +15,11 @@ import { ExportComponent } from './export/export.component';
 
 import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
+import { FormsModule } from '@angular/forms';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
+import { AppMaterialModule } from "./app.material-module";
+import {DataTablesModule} from 'angular-datatables';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -22,6 +27,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSliderModule} from '@angular/material/slider';
 import { NO_ERRORS_SCHEMA } from '@angular/compiler';
+
 
 @NgModule({
   declarations: [
@@ -31,7 +37,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
     MapComponent,
     CsvComponent,
     GeocodeurComponent,
-    ExportComponent
+    ExportComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -39,6 +46,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
     AppRoutingModule,
     Angular2CsvModule,
     CommonModule,
+    FormsModule,
+    MatProgressBarModule,
+    AppMaterialModule,
+    DataTablesModule,
     MatButtonToggleModule,
     BrowserAnimationsModule,
     MatCardModule,

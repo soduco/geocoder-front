@@ -23,6 +23,7 @@ export class CsvDataGeo {
   public softTime: any;
   public lat:any;
   public long:any;
+  public rang:any;
 }
 
 // Composent CsvComponent

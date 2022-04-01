@@ -1,7 +1,67 @@
 
-<div class="map-wrapper">
-    <div class="map-border">
-        <div class="map" id="map"></div>
+ <button *ngIf="display_button_geo == false " (click)="graphic_display()" >Prévisualitation des resultas</button>
+
+<div class="container" >
+    <div id="Global" >
+        <div id="gauche" *ngIf="display_table_geo || display_table_geo_details">
+            <div *ngIf="display_table_geo" id="table_results" >
+                <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
+                    <thead>
+                    <tr>
+                        <th>Adresse</th>
+                        <th>lat</th>
+                        <th>long</th>
+                        <th>rang</th>
+                        <th>action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of databaseGeo" (mouseover)="over(data)" (mouseout)="out()" (click)="zoom(data,14)">
+                        <td>{{ data.text }}</td>
+                        <td>{{ data.lat }}</td>
+                        <td>{{ data.long }}</td>
+                        <td>{{ data.rang }}</td>
+                        <td><button class="btn btn-sm btn-dark" (click)="details(data)">Details</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div *ngIf="display_table_geo_details" id="table_results_details" >
+                <button class="btn btn-primary btn-sm" (click)="retour()">  RETOUR </button>
+                <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
+                    <thead>
+                    <tr>
+                        <th>Adresse</th>
+                        <th>lat</th>
+                        <th>long</th>
+                        <th>rang</th>
+                        <th>action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of databaseGeoDetails" (mouseover)="over_details(data)" (mouseout)="out_details()" (click)="zoom(data,15)">
+                        <td>{{ data.text }}</td>
+                        <td>{{ data.lat }}</td>
+                        <td>{{ data.long }}</td>
+                        <td>{{ data.rang }}</td>
+                        <td><button class="btn btn-sm btn-dark" (click)="rang(data)"> Mettre au rang 1 </button></td>
+                        
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="droite">
+            <div class="map-wrapper">
+                <div class="map-border">
+                    <div class="map" id="map" ></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<button *ngIf="display_button_geo == false " (click)="graphic_display()" >Prévisualitation des resultas</button>
+
+
+
+

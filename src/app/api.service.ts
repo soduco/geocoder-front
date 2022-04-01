@@ -9,10 +9,10 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public getAdress(adress: string, startingTime: number, endingTime: number, softTime: number ): Observable<any> {
+  public getAdress(adress: string, startingTime: number, endingTime: number, softTime: number,size :number ): Observable<any> {
     const url = "http://dev-geocode.geohistoricaldata.org/api/v1/search?";
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("size",5);
+    queryParams = queryParams.append("size",size);
     queryParams = queryParams.append("text",adress);
     queryParams = queryParams.append("time.window.start",startingTime);
     queryParams = queryParams.append("time.window.end",endingTime);
