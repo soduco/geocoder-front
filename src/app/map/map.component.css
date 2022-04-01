@@ -1,6 +1,23 @@
-.map-wrapper{
-  position: absolute;
-  width: auto;
-  height: auto;
-  left: 25%;
+
+th.mat-header-cell {
+  text-align: left;
+  max-width: 300px;
+}
+#Global {
+  
+  padding: 10px;
+}
+
+#Global #gauche {
+  float:left;
+  width:50%;
+}
+#Global #droite {
+  margin-left:51%
+}
+
+.container{
+  margin-right:0px;
+  margin-left:0px;
+  max-width: 100%;
 }

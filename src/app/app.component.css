@@ -2,3 +2,9 @@ h1{
   text-align: center;
   background-color: blue;
 }
+
+.container-sm {
+  padding: 0;
+  margin: 0;
+}
+

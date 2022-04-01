@@ -1,16 +1,19 @@
+
+
 p {
-    font-family: Lato;
-  }
-  .table,.container{
-    margin-top:50px;
-  }
-  .btn{
-    margin-right:20px;
-    margin-top: 20px;
-  }
+  font-family: Lato;
+}
+.table,.container{
+  margin-top:px;
+}
+.btn{
+  margin-right:20px;
+  margin-top: 20px;
+}
 .table-responsive{
-  max-height: 100px;
+max-height: 100px;
 }
 
-
-
+.geocodeur{
+  padding: 100px;
+}

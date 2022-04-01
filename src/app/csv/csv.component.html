@@ -24,15 +24,15 @@
     </div>
     <br>
 
-  <div class="card">
-    <div class="card-header">
-      Adresses du csv
-    </div>
+    <div class="card">
+      <div class="card-header">
+        Adresses du csv
+      </div>
 
 
-  {{jsondatadisplay}}
-  <div class="table-responsive">
-    <table class="table table-bordered"  *ngIf="records.length > 0">
+      {{jsondatadisplay}}
+      <div class="table-responsive">
+      <table class="table table-bordered"  *ngIf="records.length > 0">
       <thead class="thead-dark" >
         <tr>
           <th scope="col">Adresse</th>
@@ -48,18 +48,18 @@
           <td>{{record.endingTime}}</td>
           <td>{{record.softTime}}</td>
         </tr>
-
       </tbody>
-    </table>
-  </div>
+      </table>
+      </div>
 
+    </div>
   </div>
-  </div>
-  <app-geocodeur  [parent]="csv_valid" ></app-geocodeur>
+</div>
 
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  
 
 </body>
+<app-geocodeur  id="geocodeur" [parent]="csv_valid" ></app-geocodeur>
 

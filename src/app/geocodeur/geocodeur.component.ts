@@ -1,9 +1,8 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { AdressesService } from '../adresses.service';
-import {  AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ApiService } from '../api.service';
 import { CsvDataGeo } from '../csv/csv.component';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -24,15 +23,13 @@ export class GeocodeurComponent implements  OnChanges {
   public chargement:boolean=false;
 
 
-
-
   constructor(private AdressesService:AdressesService, public apiService: ApiService,) { }
   
   selectChangeHandler (event: any) {
     this.selected_nb = event.target.value;
   }
-  ngOnChanges(changes: SimpleChanges): void {
 
+  ngOnChanges(changes: SimpleChanges): void {
     this.csv_valid = changes['parent'].currentValue;
     if (this.csv_valid == true){
       this.display_button_geo=false;
@@ -43,8 +40,12 @@ export class GeocodeurComponent implements  OnChanges {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-
+  
+  /**
+   * Function used when the button "geocodage" is presssed. It will fill the apiService by all the results. 
+   */
   async geocodage() {
+    this.AdressesService.cleanAdresseGeo()
     this.chargement=true;
 
     await this.sleep(1000);

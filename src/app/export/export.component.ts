@@ -14,15 +14,7 @@ export class ExportComponent implements OnInit{
 
   constructor(private AdressesService:AdressesService, public apiService: ApiService,) { }
   data! : CsvDataGeo[];
-  headers = [
-    'text',
-    'startingTime',
-    'endingTime',
-    'softTime',
-    'lat',
-    'long',
-    'rang'
-  ]
+  headers = ['text','startingTime','endingTime','softTime','lat','long','rang']
   ngOnInit(): void {
     this.AdressesService.getAdresseGeo().subscribe(response => {
       this.data = response

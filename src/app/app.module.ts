@@ -17,8 +17,9 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AppMaterialModule } from "./app.material-module";
+import {DataTablesModule} from 'angular-datatables';
 
 
 @NgModule({
@@ -40,8 +41,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     FormsModule,
     MatProgressBarModule,
-   
-   
+    AppMaterialModule,
+    DataTablesModule,
   ],
   providers: [
     AdressesService
