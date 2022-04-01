@@ -437,6 +437,7 @@ export class CsvComponent  {
       } else if(this.selectedColumnsForDate.length == 1){
 
         csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
+        csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
 
       } else if(this.selectedColumnsForDate.length == 2){
 
@@ -448,9 +449,9 @@ export class CsvComponent  {
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
+      this.adresses_service.addAdresse(csvRecord); // On ajoute la première adresse et la date au service qui va faire la requête
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau
-    this.adresses_service.addAdresse(this.CsvDataResult[0]); // On ajoute la première adresse et la date au service qui va faire la requête
     // Il faudra toutes les ajouter cependant
   }  
 }

@@ -1,6 +1,3 @@
-
-import { Component, OnInit } from '@angular/core';
-
 import { Component,  NgModule, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { AdressesService } from '../adresses.service';

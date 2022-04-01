@@ -52,6 +52,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Function to create and display a map in the web interface 
    */
   createMap() {
+    console.log("on créer la map")
     const paris_centre = {
       lat: 48.86651,
       lon: 2.34963
