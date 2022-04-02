@@ -67,6 +67,8 @@ export class CsvComponent  {
 
   public CsvDataResult: CsvData[] = []; // Attribut qui va contenir les données du CSV s'il existe
 
+  public previsualisation: string = '';
+
   constructor(private adresses_service : AdressesService){
   }
 
@@ -367,42 +369,6 @@ export class CsvComponent  {
     console.log("On ajoute");
   }
 
-  getSelectedColumns(){ // on récupère les colonnes sélectionnées par l'utilisateur
-
-    const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
-
-    if(inputCSV){ // On vérifie que l'objet existe
-
-      const text4 = document.querySelectorAll<HTMLElement>(".colonnes"); // On récupère l'objet HTML correspondant au 4.
-
-      if(text4){ // On vérifie que l'élément existe
-
-        const rawTextAdress = text4[0].innerHTML; // On récupère le texte brut de l'objet HTML pour les adresses
-
-        const rawColumnsAdress = rawTextAdress.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées pour les adresses
-
-        const columnsAdress = rawColumnsAdress.split(","); // On obtient la la liste des colonnes sélectionnées pour les adresses
-
-        const rawTextDate = text4[1].innerHTML; // On récupère le texte brut de l'objet HTML pour les dates
-
-        const rawColumnsDate = rawTextDate.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées  pour les dates
-
-        const columnsDate = rawColumnsDate.split(","); // On obtient la la liste des colonnes sélectionnées pour les dates
-
-        const result = []; // On crée un tableau vide qui va contenir les colonnes sélectionnées
-
-        result.push(rawColumnsAdress); // On ajoute les colonnes sélectionnées pour les adresses
-
-        result.push(rawColumnsDate); // On ajoute les colonnes sélectionnées pour les dates
-
-        console.log(result);
-
-        return result; // On renvoie cette liste
-      }
-    }
-    return null; // Dans le cas où les if ne sont pas respectés on renvoie null
-  }
-
   isGeocodageClicked(){ // On regatde si le bouton de géocodage est cliqué
 
     this.isGeoClicked = !this.isGeoClicked; // On inverse la valeur de la variable isGeoClicked
@@ -454,9 +420,56 @@ export class CsvComponent  {
     this.CsvDataResult = csvArr; // On renvoie le tableau
     // Il faudra toutes les ajouter cependant
   }  
+
+  previz(){ // On donne à l'utilisateur une prévisulisation de l'adresse qu'il construit
+
+    this.previsualisation = ''; // On vide la variable prévisualisation
+
+    for(let i = 0; i<this.selectedColumnsForAdress.length; i++){ // On parcourt les colonnes sélectionnées pour les adresses
+
+      let index = this.headerRowMapped.get(this.selectedColumnsForAdress[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
+      this.previsualisation += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+
+    }
+  }
 }
 
 // ANCIEN CODE POUVANT ETRE UTILE
+  // getSelectedColumns(){ // on récupère les colonnes sélectionnées par l'utilisateur
+
+  //   const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
+
+  //   if(inputCSV){ // On vérifie que l'objet existe
+
+  //     const text4 = document.querySelectorAll<HTMLElement>(".colonnes"); // On récupère l'objet HTML correspondant au 4.
+
+  //     if(text4){ // On vérifie que l'élément existe
+
+  //       const rawTextAdress = text4[0].innerHTML; // On récupère le texte brut de l'objet HTML pour les adresses
+
+  //       const rawColumnsAdress = rawTextAdress.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées pour les adresses
+
+  //       const columnsAdress = rawColumnsAdress.split(","); // On obtient la la liste des colonnes sélectionnées pour les adresses
+
+  //       const rawTextDate = text4[1].innerHTML; // On récupère le texte brut de l'objet HTML pour les dates
+
+  //       const rawColumnsDate = rawTextDate.split(":")[1]; // On récupère ce qu'il y a après "Colonnes sélectionnées : " soit les colonnes sélectionnées  pour les dates
+
+  //       const columnsDate = rawColumnsDate.split(","); // On obtient la la liste des colonnes sélectionnées pour les dates
+
+  //       const result = []; // On crée un tableau vide qui va contenir les colonnes sélectionnées
+
+  //       result.push(rawColumnsAdress); // On ajoute les colonnes sélectionnées pour les adresses
+
+  //       result.push(rawColumnsDate); // On ajoute les colonnes sélectionnées pour les dates
+
+  //       console.log(result);
+
+  //       return result; // On renvoie cette liste
+  //     }
+  //   }
+  //   return null; // Dans le cas où les if ne sont pas respectés on renvoie null
+  // }
  // getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
   //   let csvArr = [];
   //   let header

@@ -23,6 +23,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSliderModule} from '@angular/material/slider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule} from '@angular/material/select';
 import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 
 
@@ -50,7 +52,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatSliderModule
+    MatSliderModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   providers: [
     
