@@ -8,6 +8,7 @@ import { CsvData, CsvDataGeo } from './csv/csv.component';
 export class CsvServiceService {
 
   data: Array<string>[] = [];
+  header: string[] = [];
 
   constructor() { }
 
@@ -19,7 +20,16 @@ export class CsvServiceService {
     return this.data;
   }
 
+  setHeader(header: string[]) {
+    this.header = header;
+  }
+
+  getHeader() {
+    return this.header;
+  }
+
   cleanCsvData(){
     this.data = [];
+    this.header = [];
   }
 }

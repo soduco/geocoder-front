@@ -81,6 +81,8 @@ export class CsvComponent  {
     
     this.displayLoader(); // On affiche le loader
 
+    this.previsualisation = ''; // On vide la prévisualisation
+
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
@@ -112,6 +114,8 @@ export class CsvComponent  {
           let csvRecordsArray = (csvData).split(/\r\n|\n/); // On sépare les lignes du fichier
 
           this.headersRow = this.getHeaderArray(csvRecordsArray); // On récupere l'entête du fichier avec la méthode getHeaderArray
+
+          this.csvService.setHeader(this.headersRow); // On envoie l'entête au service csvService pour qu'il puisse le récupérer
 
           for(let k=0; k<this.headersRow.length; k++){
 
@@ -186,6 +190,7 @@ export class CsvComponent  {
               
               text4.style.color = "black"; // On change la couleur et l'épaisseur du texte
               text4.style.fontWeight = "bold";
+              // text4.style.height = "100px";
 
             }
             if(colonnes){ // On vérifie que l'objet existe
