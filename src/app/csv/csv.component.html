@@ -62,18 +62,29 @@
         3. Choisir les colonnes à utiliser pour construire l'adresse
       </div>
       <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group="matButtonToggleGroup">
-        <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForAdresse(header)">
+        <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForAdresse(header);previz()">
           {{header}}
         </mat-button-toggle>
       </mat-button-toggle-group>
 
       <div class="colonnes">
         Pour l'adresse : {{group.value}}
+        <div *ngIf="selectedColumnsForAdress.length>0" style="display:inline-flex; float:right;" >
+          Aperçu : {{ previsualisation }}
+        </div>
       </div>
     </div>
     <div class="card">
       <div class="card-header" id="four">
         4. Choisir les colonnes à utiliser pour la date ou les dates
+        <div *ngIf="csv_valid" class="date">
+          <mat-form-field appearance="fill">
+            <mat-label style="font-size:20px; ">Choisir une année</mat-label>
+            <input matInput [min]="startDate" [max]="endDate" [matDatepicker]="picker">
+            <mat-datepicker-toggle  matSuffix [for]="picker" ></mat-datepicker-toggle>
+            <mat-datepicker #picker startView="multi-year" [touchUi]="true"></mat-datepicker>
+          </mat-form-field>
+        </div>
       </div>
       <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
         <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header)">
@@ -89,9 +100,8 @@
       <div class="card-header" id="five">
         <button mat-button (click)="showAdvanced = !showAdvanced">
           <mat-icon>settings</mat-icon>
-          <span>Paramètres avancés</span>
         </button>
-        <div *ngIf="showAdvanced">
+        <div *ngIf="showAdvanced" style="display:inline-block; margin-left: 25px;">
           <h1>
             Softness de la recherche : 
           </h1>

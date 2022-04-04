@@ -25,12 +25,14 @@ export class GeocodeurComponent implements  OnChanges {
   public geocodage_done:boolean = false;
   selected_nb= 1;
   public chargement:boolean=false;
+  public numbers = [1,2,3,4,5,6,7,8,9,10];
 
 
   constructor(private AdressesService:AdressesService, public apiService: ApiService,) { }
   
-  selectChangeHandler (event: any) {
-    this.selected_nb = event.target.value;
+  selectChangeHandler (number: number) {
+    this.selected_nb = number;
+    console.log(this.selected_nb);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
