@@ -42,9 +42,8 @@ max-height: 300px;
   font-weight: 300;
   font-size: 30px;
   color: rgba(174, 191, 206, 0.76);
-  vertical-align: middle;
-  align-items:center;
 }
+
 
 .colonnes{
   display: none;
