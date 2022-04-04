@@ -422,8 +422,10 @@ export class CsvComponent  {
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
 
-      if(csvRecord.text.trim() != ''){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses est bien remplie
-        this.adresses_service.addAdresse(csvRecord); // On ajoute la première adresse et la date au service qui va faire la requête
+      if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
+        this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
+      } else {
+        console.log("-------------------------------------------")
       }
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau

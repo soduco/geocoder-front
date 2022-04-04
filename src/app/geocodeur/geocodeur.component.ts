@@ -78,7 +78,7 @@ export class GeocodeurComponent implements  OnChanges {
             dataGeo.rang=(i+1).toString();
             this.AdressesService.addAdresseGeo(dataGeo);
           } else {
-            console.log("------------------------------------------")
+            // console.log("------------------------------------------")
             break;
           }
         }
