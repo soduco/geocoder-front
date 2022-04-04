@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, throwError, catchError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,13 @@ export class ApiService {
     queryParams = queryParams.append("time.window.start",startingTime);
     queryParams = queryParams.append("time.window.end",endingTime);
     queryParams = queryParams.append("time.softness",softTime);
-    return this.http.get<any>(url,{params:queryParams});
+    const response =  this.http.get(url,{params:queryParams})
+                     .pipe(catchError(this.erroHandler));
+
+    return response;
+  }
+  
+  erroHandler(error: HttpErrorResponse) {
+    return throwError(error.message || 'server Error');
   }
 }

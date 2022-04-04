@@ -63,19 +63,28 @@ export class GeocodeurComponent implements  OnChanges {
       
       this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime,this.selected_nb).subscribe(response => {
         for(let i = 0; i<this.selected_nb; i++){ 
-     
-          const dataGeo: CsvDataGeo = new CsvDataGeo();
-          dataGeo.text = adresses[x].text
-          dataGeo.startingTime = adresses[x].startingTime 
-          dataGeo.endingTime = adresses[x].endingTime
-          dataGeo.softTime = adresses[x].softTime
-          dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
-          dataGeo.long=response.features[i].geometry.coordinates[0].toString();
-          dataGeo.rang=(i+1).toString();
-          this.AdressesService.addAdresseGeo(dataGeo);
+          
+          if(i<=response.features.length -1) {
+
+            // console.log(response.features.length + " - " + i);
+
+            const dataGeo: CsvDataGeo = new CsvDataGeo();
+            dataGeo.text = adresses[x].text
+            dataGeo.startingTime = adresses[x].startingTime 
+            dataGeo.endingTime = adresses[x].endingTime
+            dataGeo.softTime = adresses[x].softTime
+            dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
+            dataGeo.long=response.features[i].geometry.coordinates[0].toString();
+            dataGeo.rang=(i+1).toString();
+            this.AdressesService.addAdresseGeo(dataGeo);
+          } else {
+            console.log("------------------------------------------")
+            break;
+          }
         }
       });
-  }
+    }
+
     this.display_button_exp=true;
     this.geocodage_done=true;
     this.chargement=false;

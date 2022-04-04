@@ -81,8 +81,6 @@ export class CsvComponent  {
     
     this.displayLoader(); // On affiche le loader
 
-    this.previsualisation = ''; // On vide la prévisualisation
-
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
@@ -101,7 +99,10 @@ export class CsvComponent  {
         console.log('error is occured while reading file!');};
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
-        console.log("loading start")
+
+        this.previsualisation = ''; // On vide la prévisualisation
+
+        this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
@@ -381,7 +382,6 @@ export class CsvComponent  {
 
     let csvArr: any[] = []; // On crée un tableau vide qui va contenir les objects CsvData
 
-
     for(let i = 0; i<this.records.length; i++){ // On parcourt les lignes du fichier
 
       let csvRecord: CsvData = new CsvData(); // On crée un objet CsvData qui va permettre de faire la requête
@@ -421,10 +421,12 @@ export class CsvComponent  {
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
-      this.adresses_service.addAdresse(csvRecord); // On ajoute la première adresse et la date au service qui va faire la requête
+
+      if(csvRecord.text.trim() != ''){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses est bien remplie
+        this.adresses_service.addAdresse(csvRecord); // On ajoute la première adresse et la date au service qui va faire la requête
+      }
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau
-    // Il faudra toutes les ajouter cependant
   }  
 
   previz(){ // On donne à l'utilisateur une prévisulisation de l'adresse qu'il construit
