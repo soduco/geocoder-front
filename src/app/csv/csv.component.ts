@@ -4,6 +4,7 @@ import { ParseSpan } from '@angular/compiler';
 import { Component, VERSION ,ViewChild } from '@angular/core';
 import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
+import { CsvServiceService } from '../csv-service.service';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import Swal from 'sweetalert2';
 const Papa = require('papaparse');
@@ -67,9 +68,13 @@ export class CsvComponent  {
 
   public CsvDataResult: CsvData[] = []; // Attribut qui va contenir les données du CSV s'il existe
 
-  public previsualisation: string = '';
+  public previsualisation: string = ''; // Prévisulation de l'adresse construite par l'utilisateur avec les colonnes qu'il sélectionner
+  
+  public startDate: Date = new Date(1800,1,1); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
-  constructor(private adresses_service : AdressesService){
+  public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
+
+  constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){
   }
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait
@@ -149,11 +154,11 @@ export class CsvComponent  {
 
           this.records = resultat; // L'objet records prend les données parsées par papa.parse
 
+          this.csvService.setCsvData(this.records); // On met les données parsées dans le service csv pour pouvoir les utiliser lors de la génération du fichier résulat
+
           this.displayRecords = display; // L'objet displayRecords prend les données à afficher dans l'aperçu du fichier
 
           this.hideLoader(); // On cache le loader
-
-          // setTimeout(()=>console.log(this.selectedColumnsForAdress),5000); // Test de la nouvelle méthode 
 
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
@@ -209,7 +214,6 @@ export class CsvComponent  {
 
       reader.onloadend = () => { // Une fois le fichier chargé on arrête le cercle de chargement
         this.hideLoader();
-        console.log('done');
       } 
       
 
@@ -312,6 +316,7 @@ export class CsvComponent  {
     this.csvReader.nativeElement.value = "";
     this.records = [];
     this.jsondatadisplay = '';
+    this.csvService.cleanCsvData();
   }
 
   hideLoader(){ // On cache le loader
@@ -338,7 +343,6 @@ export class CsvComponent  {
         // Ici la colonne est déjà dans le tableau on la supprime donc
 
         this.selectedColumnsForAdress.splice(i, 1); // On supprime l'élément du tableau
-        console.log("On supprime");
 
         return; // On quitte la fonction
       }
@@ -346,7 +350,6 @@ export class CsvComponent  {
     // Ici la colonne n'est pas dans le tableau
 
     this.selectedColumnsForAdress.push(header); // On ajoute la colonne sélectionnée dans le tableau des colonnes sélectionnées pour l'adresse
-    console.log("On ajoute");
   }
 
   getColumnSelectedForDate(header: any){ // On récupère les colonnes sélectionnées par l'utilisateur pour la date
@@ -358,7 +361,6 @@ export class CsvComponent  {
         // Ici la colonne est déjà dans le tableau on la supprime donc
 
         this.selectedColumnsForDate.splice(i, 1); // On supprime l'élément du tableau
-        console.log("On supprime");
 
         return; // On quitte la fonction
       }
@@ -366,7 +368,6 @@ export class CsvComponent  {
     // Ici la colonne n'est pas dans le tableau
 
     this.selectedColumnsForDate.push(header); // On ajoute la colonne sélectionnée dans le tableau des colonnes sélectionnées pour la date
-    console.log("On ajoute");
   }
 
   isGeocodageClicked(){ // On regatde si le bouton de géocodage est cliqué
