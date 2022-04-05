@@ -14,7 +14,8 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { AppMaterialModule } from "./app.material-module";
 import {DataTablesModule} from 'angular-datatables';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -31,7 +32,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 import { ErrorIntercept } from './error.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import {MatButtonModule} from '@angular/material/button';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     CsvComponent,
     GeocodeurComponent,
     ExportComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -63,7 +64,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatButtonModule,
+    MatRadioModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorIntercept, multi: true }

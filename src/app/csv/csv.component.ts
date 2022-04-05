@@ -3,6 +3,9 @@ import { Component, VERSION ,ViewChild } from '@angular/core';
 import { AdressesService } from '../adresses.service';
 import { CsvServiceService } from '../csv-service.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import * as moment from 'moment';
 import Swal from 'sweetalert2';
 const Papa = require('papaparse');
 
@@ -24,11 +27,32 @@ export class CsvDataGeo {
   public rang:any;
 }
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'YYYY', 
+  },
+  display: {
+    dateInput: 'YYYY', // this is the format showing on the input element
+    monthYearLabel: 'YYYY', // this is showing on the calendar 
+    dateA11yLabel: 'LL', 
+    monthYearA11yLabel: 'YYYY',
+  },
+};
+
 // Composent CsvComponent
 @Component({
   selector: 'csv',
   templateUrl: './csv.component.html',
-  styleUrls: [ './csv.component.css' ]
+  styleUrls: [ './csv.component.css' ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 
 // Class CsvComponent où on définit les méthodes et les attributs de notre composent. Tout le code du component est dans cette classe.
@@ -75,6 +99,12 @@ export class CsvComponent  {
 
   public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
   
+  public UIForm = new FormGroup({
+    yearSelector: new FormControl(moment()),
+  }); 
+
+  date = new FormControl(moment());
+
   public dateRange = new FormGroup({ // On crée un objet DataRange pour récupérer les dates données par l'utilisateur
     start: new FormControl(),
     end: new FormControl()
@@ -179,7 +209,8 @@ export class CsvComponent  {
           const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
           
           if(inputCSV){ // On vérifie que l'objet existe
-
+            const radio1 = document.getElementById("radio-one"); // On récupère l'objet HTML radio 1
+            const radio2 = document.getElementById("radio-two"); // On récupère l'objet HTML radio 2
             const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
             const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
             const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
@@ -212,6 +243,10 @@ export class CsvComponent  {
             if(button1){ // On vérifie que l'objet existe
 
               button1.style.display = "block"; // On affiche le bouton
+            }
+            if(radio1){ // On vérifie que l'objet existe
+
+              console.log(radio1);
             }
           };
 

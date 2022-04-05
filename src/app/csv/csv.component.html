@@ -74,17 +74,30 @@
     <div class="card">
       <div class="card-header" id="four">
         4. Choisir la ou les colonnes à utiliser pour la date ou les dates
-        <div *ngIf="csv_valid" class="date">
-          <mat-form-field appearance="legacy">
-            <mat-label style="font-size: 25px;">Choisir une année</mat-label>
-            <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange" [min]="startDate" [max]="endDate">
-              <input matStartDate formControlName="start" placeholder="Début">
-              <input matEndDate formControlName="end" placeholder="Fin">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker startView="multi-year" [touchUi]="true"></mat-date-range-picker>
-          </mat-form-field>
-        </div>
+
+          <div *ngIf="csv_valid" class="date">
+
+            <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;">
+              <mat-radio-button value="1" style="margin: 10px 100px 10px 10px;" id="radio-one">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
+              <mat-radio-button value="2" id="radio-two">Distance temporelle (choisir une date)</mat-radio-button>
+            </mat-radio-group>
+
+            <div *ngIf="">
+              <div>
+                <mat-form-field appearance="legacy">
+                  <mat-label style="font-size: 25px;">Choisir une année</mat-label>
+                  <mat-date-range-input name="yearSelector" [rangePicker]="picker" [formGroup]="dateRange" [min]="startDate" [max]="endDate">
+                    <input matStartDate formControlName="start" placeholder="Début">
+                    <input matEndDate formControlName="end" placeholder="Fin">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker startView="multi-year" [startAt]="startDate" [touchUi]="true"></mat-date-range-picker>
+                </mat-form-field>
+                <p style="font-size:10px;font-family: Helvetica, sans-serif; font-weight: 200;"> Pour sélectionner la date, le jour et le mois ne sont pas importants </p>
+              </div>
+            </div>
+          </div>
+
       </div>
       <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
         <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header); previz()">
