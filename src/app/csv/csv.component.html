@@ -16,11 +16,9 @@
       <div class="card-header" id="1">
         1. Choisir un fichier
       </div>
-      <div class="card-body" >
 
         <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
 
-      </div>
       <mat-card id="loading">
         <mat-card-content >      
           <mat-progress-spinner 
@@ -31,7 +29,6 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <br>
 
     <div class="card">
       <div class="card-header" id="two">
@@ -70,30 +67,36 @@
       <div class="colonnes">
         Pour l'adresse : {{group.value}}
         <div *ngIf="selectedColumnsForAdress.length>0" style="display:inline-flex; float:right;" >
-          Aperçu : {{ previsualisation }}
+          Aperçu : {{ previsualisationAdress }}
         </div>
       </div>
     </div>
     <div class="card">
       <div class="card-header" id="four">
-        4. Choisir les colonnes à utiliser pour la date ou les dates
+        4. Choisir la ou les colonnes à utiliser pour la date ou les dates
         <div *ngIf="csv_valid" class="date">
-          <mat-form-field appearance="fill">
-            <mat-label style="font-size:20px; ">Choisir une année</mat-label>
-            <input matInput [min]="startDate" [max]="endDate" [matDatepicker]="picker">
-            <mat-datepicker-toggle  matSuffix [for]="picker" ></mat-datepicker-toggle>
-            <mat-datepicker #picker startView="multi-year" [touchUi]="true"></mat-datepicker>
+          <mat-form-field appearance="legacy">
+            <mat-label style="font-size: 25px;">Choisir une année</mat-label>
+            <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange" [min]="startDate" [max]="endDate">
+              <input matStartDate formControlName="start" placeholder="Début">
+              <input matEndDate formControlName="end" placeholder="Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker startView="multi-year" [touchUi]="true"></mat-date-range-picker>
           </mat-form-field>
         </div>
       </div>
       <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
-        <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header)">
+        <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header); previz()">
           {{header}}
         </mat-button-toggle>
       </mat-button-toggle-group>
 
       <div class="colonnes">
         Pour la ou les dates : {{group2.value}}
+        <div *ngIf="selectedColumnsForDate.length>0" style="display:inline-flex; float:right;" >
+          Aperçu : {{ previsualisationDate }}
+        </div>
       </div>
     </div>
     <div class="card">

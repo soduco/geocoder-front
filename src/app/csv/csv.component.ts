@@ -1,11 +1,8 @@
 // Imports
-import { CurrencyPipe } from '@angular/common';
-import { ParseSpan } from '@angular/compiler';
 import { Component, VERSION ,ViewChild } from '@angular/core';
-import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
 import { CsvServiceService } from '../csv-service.service';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { FormControl, FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 const Papa = require('papaparse');
 
@@ -38,6 +35,8 @@ export class CsvDataGeo {
 export class CsvComponent  {
   name = 'Angular ' + VERSION.major; // Nom (inutile)
 
+  public fileName:string= ''; // Nom du fichier importé
+
   public records: any[] = []; // Attribut qui va contenir les données du CSV
 
   public headersRow: any[] = []; // Attribut qui va contenir l'entête du CSV s'il existe
@@ -68,11 +67,18 @@ export class CsvComponent  {
 
   public CsvDataResult: CsvData[] = []; // Attribut qui va contenir les données du CSV s'il existe
 
-  public previsualisation: string = ''; // Prévisulation de l'adresse construite par l'utilisateur avec les colonnes qu'il sélectionner
-  
+  public previsualisationAdress: string = ''; // Prévisulation de l'adresse construite par l'utilisateur avec les colonnes qu'il sélectionner
+
+  public previsualisationDate: string = ''; // Prévisulation de la date construite par l'utilisateur avec les colonnes qu'il sélectionner
+
   public startDate: Date = new Date(1800,1,1); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
   public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
+  
+  public dateRange = new FormGroup({ // On crée un objet DataRange pour récupérer les dates données par l'utilisateur
+    start: new FormControl(),
+    end: new FormControl()
+  });
 
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){
   }
@@ -87,6 +93,8 @@ export class CsvComponent  {
 
       // Ici le fichier est valide
 
+      this.fileName = files[0].name; // On récupère le nom du fichier
+
       this.csv_valid=true; // On change l'attribut csv_valid car le fichier est valide 
 
       this.display_button_geo=true; // On affiche le boutton géocodage
@@ -100,7 +108,8 @@ export class CsvComponent  {
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
 
-        this.previsualisation = ''; // On vide la prévisualisation
+        this.previsualisationDate = ''; // On vide la prévisualisation
+        this.previsualisationAdress = ''; // On vide la prévisualisation
 
         this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
 
@@ -433,12 +442,21 @@ export class CsvComponent  {
 
   previz(){ // On donne à l'utilisateur une prévisulisation de l'adresse qu'il construit
 
-    this.previsualisation = ''; // On vide la variable prévisualisation
+    this.previsualisationDate = ''; // On vide la variable prévisualisation
+    this.previsualisationAdress = ''; // On vide la variable prévisualisation
 
     for(let i = 0; i<this.selectedColumnsForAdress.length; i++){ // On parcourt les colonnes sélectionnées pour les adresses
 
       let index = this.headerRowMapped.get(this.selectedColumnsForAdress[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
-      this.previsualisation += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+      this.previsualisationAdress += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+
+    }
+
+    for(let i = 0; i<this.selectedColumnsForDate.length; i++){ // On parcourt les colonnes sélectionnées pour les adresses
+
+      if(i==1){ this.previsualisationDate += " - "; } // On ajoute un tiret pour séparer les dates quand il y en a deux
+      let index = this.headerRowMapped.get(this.selectedColumnsForDate[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
+      this.previsualisationDate += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
 
     }
   }

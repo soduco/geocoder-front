@@ -7,7 +7,7 @@ import { MapComponent } from './map/map.component';
 
 import { CsvComponent } from './csv/csv.component';
 import { GeocodeurComponent } from './geocodeur/geocodeur.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ExportComponent } from './export/export.component';
 
 import { Angular2CsvModule } from 'angular2-csv';
@@ -28,6 +28,9 @@ import { MatSelectModule} from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NO_ERRORS_SCHEMA } from '@angular/compiler';
+import { ErrorIntercept } from './error.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -51,6 +54,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
     DataTablesModule,
     MatButtonToggleModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
@@ -58,10 +62,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/compiler';
     MatFormFieldModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatToolbarModule
   ],
   providers: [
-    
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorIntercept, multi: true }
   ],
   bootstrap: [AppComponent],
   schemas: [  ]
