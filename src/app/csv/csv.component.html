@@ -74,27 +74,46 @@
     <div class="card">
       <div class="card-header" id="four">
         4. Choisir la ou les colonnes à utiliser pour la date ou les dates
-
           <div *ngIf="csv_valid" class="date">
 
-            <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;">
-              <mat-radio-button value="1" style="margin: 10px 100px 10px 10px;" id="radio-one">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
-              <mat-radio-button value="2" id="radio-two">Distance temporelle (choisir une date)</mat-radio-button>
+            <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
+              <mat-radio-button value="1" style="margin: 10px 100px 10px 10px;" (click)="radioSelect(1)">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
+              <mat-radio-button value="2"(click)="radioSelect(2)">Distance temporelle (choisir une date)</mat-radio-button>
             </mat-radio-group>
 
-            <div *ngIf="">
+            <div *ngIf="dateSelection==1"> <!-- Ici c'est une fenêtre temporelle on l'utilisateur choisit deux dates -->
               <div>
                 <mat-form-field appearance="legacy">
                   <mat-label style="font-size: 25px;">Choisir une année</mat-label>
                   <mat-date-range-input name="yearSelector" [rangePicker]="picker" [formGroup]="dateRange" [min]="startDate" [max]="endDate">
-                    <input matStartDate formControlName="start" placeholder="Début">
-                    <input matEndDate formControlName="end" placeholder="Fin">
+                    <input matStartDate formControlName="start" placeholder="Début" (dateChange)="getStartDate($event)">
+                    <input matEndDate formControlName="end" placeholder="Fin" (dateChange)="getEndDate($event)">
                   </mat-date-range-input>
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker startView="multi-year" [startAt]="startDate" [touchUi]="true"></mat-date-range-picker>
                 </mat-form-field>
                 <p style="font-size:10px;font-family: Helvetica, sans-serif; font-weight: 200;"> Pour sélectionner la date, le jour et le mois ne sont pas importants </p>
               </div>
+            </div>
+
+            <div *ngIf="dateSelection==2"> <!-- Ici c'est une distance temporelle, l'utilisateur choisit une date et une distance -->
+              <mat-form-field appearance="legacy">
+                <mat-label style="font-size:20px;">Choisir une année</mat-label>
+                <input matInput [min]="startDate" [max]="endDate" [matDatepicker]="picker" (dateChange)="getDate($event)">
+                <mat-datepicker-toggle  matSuffix [for]="picker" ></mat-datepicker-toggle>
+                <mat-datepicker #picker startView="multi-year" [startAt]="startDate" [touchUi]="true" ></mat-datepicker>
+              </mat-form-field>
+              <p style="font-size:10px;font-family: Helvetica, sans-serif; font-weight: 200;"> Pour sélectionner la date, le jour et le mois ne sont pas importants </p>
+
+              <!-- <div *ngIf=""> -->
+                <mat-slider min="0" max="100" step="1" thumbLabel tickInterval="1" value="0" #slider [(ngModel)]="distanceValue"></mat-slider>
+                <div class="example-label-container">
+                  <label id="example-name-label" class="example-name-label" style="font-size:medium; font-weight:300; padding-right: 10px;">Distance temporelle </label>
+                  <label class="example-value-label" style="font-size:medium; font-weight:500;">{{distanceValue}}</label>
+                  <p style="display: inline-block;font-size:medium; font-weight:300; padding-left: 5px;"> ans.</p>
+                  <!-- <p style="font-size:medium; font-weight:300; padding-left: 5px;"> {{ startDistDate }} - {{ endDistDate }}</p> -->
+                </div>
+              <!-- </div> -->
             </div>
           </div>
 
