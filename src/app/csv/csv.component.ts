@@ -25,6 +25,8 @@ export class CsvDataGeo {
   public lat:any;
   public long:any;
   public rang:any;
+  public row_data:any;
+  public properties: any;
 }
 
 // Composent CsvComponent

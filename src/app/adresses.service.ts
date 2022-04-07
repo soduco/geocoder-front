@@ -12,6 +12,9 @@ export class AdressesService {
   
   constructor() { }
 
+  setDatasetGeo(full_database_geo : CsvDataGeo[]){
+    this.adresses_geo = full_database_geo
+  }
   addAdresse(adress:CsvData){
     this.adresses.push(adress) 
   }
@@ -25,7 +28,6 @@ export class AdressesService {
   }
 
   getAdresseGeo() : Observable<CsvDataGeo[]> {
-    
     return of(this.adresses_geo)
   }
 
@@ -61,5 +63,4 @@ export class AdressesService {
   cleanAdresseGeo(){
     this.adresses_geo = [];
   }
-
 }

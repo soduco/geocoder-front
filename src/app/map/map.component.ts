@@ -1,5 +1,5 @@
 import { ApiService } from './../api.service';
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit } from '@angular/core';
+import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet'
 import { environment } from 'src/environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,8 @@ import { AdressesService } from '../adresses.service';
 import { CsvDataGeo } from '../csv/csv.component';
 
 import {Subject} from 'rxjs';
+import { CsvServiceService } from '../csv-service.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-map',
@@ -17,6 +19,8 @@ import {Subject} from 'rxjs';
 // https://blog.logrocket.com/angular-datatables-feature-rich-tables/
 
 export class MapComponent implements  OnChanges, OnDestroy{
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement!: DataTableDirective;
 
   
   readonly ROOT_URL = "http://dev-geocode.geohistoricaldata.org/v1/search?";
@@ -34,7 +38,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   public databaseGeo : CsvDataGeo[] = [];
   public databaseGeoDetails : CsvDataGeo[] = [];
   //simple headers --> TO BE CHANGE
-  public headers = ['text','startingTime','endingTime','softTime'];
+  public headers: string[] =[];
   //components used to display datatables 
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
@@ -45,7 +49,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   markers:any = [];
 
   //To get services 
-  constructor(public apiService: ApiService, private adresseService : AdressesService) { }
+  constructor(public apiService: ApiService, private adresseService : AdressesService,public csvService : CsvServiceService) { }
 
 
  
@@ -53,7 +57,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Function to create and display a map in the web interface 
    */
   createMap() {
-    console.log("on créer la map")
+    
     const paris_centre = {
       lat: 48.86651,
       lon: 2.34963
@@ -93,23 +97,31 @@ export class MapComponent implements  OnChanges, OnDestroy{
     this.dtTrigger.unsubscribe();
   }
 
-  
   /**
    * Function used when the button "Prévisualisation des résultats" is pressed. 
    * Create the databse for the datatable and create the map.
    */
   graphic_display(){
+
+    this.dtOptions={
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      processing: true,
+      order:[],
+    };
+
+    this.headers=this.csvService.getHeader()
     this.adresseService.getAdresseGeoByRang(1).subscribe((response:any) => {
       this.databaseGeo = response;
-      this.dtOptions={
-        pagingType: 'full_numbers',
-        pageLength: 5,
-        processing: true,
-        order:[],
-      };
+    
     })
+
     this.display_table_geo = true;
-    this.createMap();
+    try {
+      this.createMap();
+    } catch (error) {
+      console.log(error)
+    }
   }
   
   /**
@@ -129,13 +141,13 @@ export class MapComponent implements  OnChanges, OnDestroy{
   zoom(data : any,zoom : number){
     this.map.setView([data.lat, data.long], zoom);
   }
-
   
   /**
    * Function use to bring the details of one adresse and display it in the details datatable.
    * @param  {any} data : data selected 
    */
   details(data : any){
+    
     this.cleanMap()
     var MarkerOptions = {radius: 8,fillColor: "#ff7800",color: "#000",weight: 1,opacity: 1,fillOpacity: 0.8};
     this.adresseService.getAdresseGeoByAdresse(data.text).subscribe((response:any) => {
@@ -210,14 +222,12 @@ export class MapComponent implements  OnChanges, OnDestroy{
     }
   }
 
-
   /**
    * Function activated whent the mouse passed out the datatable.
    */
   out(){
     this.cleanMap()
   }
-
 
   /**
    * Function used to clean the map from markers.
@@ -227,7 +237,19 @@ export class MapComponent implements  OnChanges, OnDestroy{
       this.map.removeLayer(marker)
     }
   }
+  /**
+   * Function to actualize the datatable.
+   */
+  renderer(){
+    this.display_table_geo = false ; 
+    this.display_table_geo = true ; 
+    
+  }
 
+
+  sleep(ms : number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
 
 
