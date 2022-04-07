@@ -11,7 +11,7 @@ th.mat-header-cell {
 
 #Global #gauche {
   float:left;
-  width:50%;
+  width:50%; 
 }
 #Global #droite {
   margin-left:51%
@@ -24,6 +24,13 @@ th.mat-header-cell {
 }
 
 #map {
+  height: 500px;
+
+  margin:0px;
+  padding:0px;
+}
+
+#DataTables_Table_0{
   height: 400px;
   margin:0px;
   padding:0px;

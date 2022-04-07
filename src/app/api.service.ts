@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
+
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +22,17 @@ export class ApiService {
     queryParams = queryParams.append("time.window.start",startingTime);
     queryParams = queryParams.append("time.window.end",endingTime);
     queryParams = queryParams.append("time.softness",softTime);
+
+//     return this.http.get<any>(url,{params:queryParams}).pipe(
+//       catchError((err) => {
+//         console.log('error caught in service')
+//         console.error(err);
+
+//         //Handle the error here
+
+//         return throwError(err);    //Rethrow it back to component
+//       }) ) 
+// 
     const response =  this.http.get(url,{params:queryParams})
                      .pipe(retry(1),catchError(this.handleError));
 
@@ -28,5 +43,6 @@ export class ApiService {
   
   handleError(error: HttpErrorResponse) {
     return throwError(error.message || 'server Error');
+
   }
 }

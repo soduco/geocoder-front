@@ -20,6 +20,9 @@ export class CsvServiceService {
     return this.data;
   }
 
+  getCsvDataById(id:number ){
+    return this.data[id];
+  }
   setHeader(header: string[]) {
     this.header = header;
   }

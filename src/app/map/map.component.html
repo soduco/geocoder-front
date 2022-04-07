@@ -4,22 +4,26 @@
     <div id="Global">
         <div id="gauche" *ngIf="display_table_geo || display_table_geo_details">
             <div *ngIf="display_table_geo" id="table_results" >
+                <button class="btn btn-primary btn-sm" (click)="renderer()">  ACTUALIZE </button>
                 <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
                     <thead>
                     <tr>
+                        <!-- <th *ngFor="let header of headers" >{{header}}</th> -->
                         <th>Adresse</th>
-                        <th>lat</th>
-                        <th>long</th>
-                        <th>rang</th>
-                        <th>action</th>
+                        <th>Date</th>
+                        <th>Lat</th>
+                        <th>Long</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let data of databaseGeo" (mouseover)="over(data)" (mouseout)="out()" (click)="zoom(data,14)">
+                        <!-- <th *ngFor="let row_data of data.row_data">{{row_data}}</th> -->
                         <td>{{ data.text }}</td>
-                        <td>{{ data.lat }}</td>
-                        <td>{{ data.long }}</td>
-                        <td>{{ data.rang }}</td>
+                        <td>{{ data.startingTime}} - {{ data.endingTime}}</td>
+                        <td>{{ data.lat | number }}</td>
+                        <td>{{ data.long | number }}</td>
+                        
                         <td><button class="btn btn-sm btn-dark" (click)="details(data)">Details</button></td>
                     </tr>
                     </tbody>
