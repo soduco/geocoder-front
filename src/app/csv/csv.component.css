@@ -61,11 +61,26 @@ max-height: 300px;
 }
 
 .date{
-  display:inline-flex;
-  float:right;
+  text-align: center;
 }
 
-::ng-deep .mat-form-field{
-  width: 300px;
-  height: 150px;
+
+mat-button-toggle {
+  border: 0.1px rgba(0,0,0,0) solid !important;
+  margin-top: 5px !important;
+  padding: 0 5px !important;
+  z-index: 3 !important;
+}
+
+mat-button-toggle:hover {
+  border: 0.1px #000 solid !important;
+  background-color: rgba(198, 197, 197, 0.384) !important;
+  border-radius: 5px !important;
+}
+
+.mat-button-toggle-checked {
+  /* box-shadow: 0 0 10px #000 !important; */
+  border: 0.1px #000 solid !important;
+  border-radius: 5px !important;
+  background-color: rgba(101, 101, 166, 0.384) !important;
 }

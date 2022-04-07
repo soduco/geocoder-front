@@ -8,7 +8,9 @@
     </mat-form-field>
 
     <p style="display:inline-block;margin-left:2em" >
+
         <button class="btn btn-primary btn-sm"  (click)=" geocodage()" [disabled]="display_button_geo">geocodage</button>
+
     </p>
     <mat-progress-bar mode="indeterminate" *ngIf="chargement" ></mat-progress-bar>
 

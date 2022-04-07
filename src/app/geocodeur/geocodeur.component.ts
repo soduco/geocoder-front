@@ -132,6 +132,7 @@ export class GeocodeurComponent implements  OnChanges {
       //depreciated 
       //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise();
       
+
       this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
       
         //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
@@ -159,19 +160,17 @@ export class GeocodeurComponent implements  OnChanges {
       
     } 
 
- 
-    
     await this.sleep(1000);
     this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
     while ( this.nb < nb_max){
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
       await this.sleep(500);
+      
     }
 
     this.display_button_exp=true;
     this.geocodage_done=true;
     this.chargement=false;
-    
     
   }
 }

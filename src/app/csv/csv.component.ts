@@ -1,11 +1,11 @@
 // Imports
-import { CurrencyPipe } from '@angular/common';
-import { ParseSpan } from '@angular/compiler';
 import { Component, VERSION ,ViewChild } from '@angular/core';
-import { cpuUsage } from 'process';
 import { AdressesService } from '../adresses.service';
 import { CsvServiceService } from '../csv-service.service';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { FormControl, FormGroup } from '@angular/forms';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import * as moment from 'moment';
 import Swal from 'sweetalert2';
 const Papa = require('papaparse');
 
@@ -29,16 +29,38 @@ export class CsvDataGeo {
   public properties: any;
 }
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'YYYY', 
+  },
+  display: {
+    dateInput: 'YYYY',
+    monthYearLabel: 'YYYY',
+    monthYearA11yLabel: 'YYYY',
+  },
+};
+
 // Composent CsvComponent
 @Component({
   selector: 'csv',
   templateUrl: './csv.component.html',
-  styleUrls: [ './csv.component.css' ]
+  styleUrls: [ './csv.component.css' ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 
 // Class CsvComponent où on définit les méthodes et les attributs de notre composent. Tout le code du component est dans cette classe.
 export class CsvComponent  {
   name = 'Angular ' + VERSION.major; // Nom (inutile)
+
+  public fileName:string= ''; // Nom du fichier importé
 
   public records: any[] = []; // Attribut qui va contenir les données du CSV
 
@@ -70,11 +92,36 @@ export class CsvComponent  {
 
   public CsvDataResult: CsvData[] = []; // Attribut qui va contenir les données du CSV s'il existe
 
-  public previsualisation: string = ''; // Prévisulation de l'adresse construite par l'utilisateur avec les colonnes qu'il sélectionner
-  
+  public previsualisationAdress: string = ''; // Prévisulation de l'adresse construite par l'utilisateur avec les colonnes qu'il sélectionner
+
+  public previsualisationDate: string = ''; // Prévisulation de la date construite par l'utilisateur avec les colonnes qu'il sélectionner
+
   public startDate: Date = new Date(1800,1,1); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
   public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
+
+  public dateSelection : number = 0; // Numéro définissant si on choisit une ou deux dates variant en fonction du click sur le bouton radio 
+
+  public distanceValue : number = 0; // Numéro contenant la variable de distance temporelle réglée par l'utilisateur avec le slider
+
+  public startDistDate:number = 0; // Année de départ de la date avec la distance temporelle
+
+  public endDistDate:number = 0; // Année de fin de la date avec la distance temporelle
+  
+  public UIForm = new FormGroup({
+    yearSelector: new FormControl(moment()),
+  }); 
+
+  public date = new FormControl(moment());
+
+  public chosenYear:any = new Date(0,0); // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
+  public chosenStartYear:any = new Date(0,0); // Date choisie de début par l'utilisateur pour une fenêtre temporelle
+  public chosenEndYear:any = new Date(0,0); // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
+
+  public dateRange = new FormGroup({ // On crée un objet DataRange pour récupérer les dates données par l'utilisateur
+    start: new FormControl(),
+    end: new FormControl()
+  });
 
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){
   }
@@ -83,13 +130,13 @@ export class CsvComponent  {
     
     this.displayLoader(); // On affiche le loader
 
-    this.previsualisation = ''; // On vide la prévisualisation
-
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
 
       // Ici le fichier est valide
+
+      this.fileName = files[0].name; // On récupère le nom du fichier
 
       this.csv_valid=true; // On change l'attribut csv_valid car le fichier est valide 
 
@@ -103,7 +150,11 @@ export class CsvComponent  {
         console.log('error is occured while reading file!');};
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
-        console.log("loading start")
+
+        this.previsualisationDate = ''; // On vide la prévisualisation
+        this.previsualisationAdress = ''; // On vide la prévisualisation
+
+        this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
@@ -171,7 +222,6 @@ export class CsvComponent  {
           const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
           
           if(inputCSV){ // On vérifie que l'objet existe
-
             const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
             const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
             const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
@@ -377,12 +427,11 @@ export class CsvComponent  {
     this.selectedColumnsForDate.push(header); // On ajoute la colonne sélectionnée dans le tableau des colonnes sélectionnées pour la date
   }
 
-  isGeocodageClicked(){ // On regatde si le bouton de géocodage est cliqué
+  isGeocodageClicked(){ // Si le boutton de géocodage est cliqué on ajoute les éléments de la requête dans un objet CsvData  
 
     this.isGeoClicked = !this.isGeoClicked; // On inverse la valeur de la variable isGeoClicked
 
     let csvArr: any[] = []; // On crée un tableau vide qui va contenir les objects CsvData
-
 
     for(let i = 0; i<this.records.length; i++){ // On parcourt les lignes du fichier
 
@@ -404,41 +453,97 @@ export class CsvComponent  {
           csvRecord.text += this.records[i][this.headerRowMapped.get(this.selectedColumnsForAdress[j])] + " "; // On récupère la valeur de la colonne sélectionnée pour les adresses
         }
       }
-      if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-        Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction des dates (années)."); // On affiche un message d'erreur
+      const referenceDate = new Date(0,0); // Date de référence qui est la même que les chosendates si l'utilisateur n'utilise pas le calendrier
 
-      } else if(this.selectedColumnsForDate.length == 1){
+      if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number")){
+        console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
+        if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-        csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
-        csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
+          Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction des dates (années)."); // On affiche un message d'erreur
 
-      } else if(this.selectedColumnsForDate.length == 2){
+        } else if(this.selectedColumnsForDate.length == 1){
 
-        for(let j=0; j<this.selectedColumnsForDate.length; j++){ // On parcourt les colonnes sélectionnées pour les adresses
-          csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date de début
-          csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[1])]; // On récupère la valeur de la colonne sélectionnée pour la date de fin
+          csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
+          csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
+
+        } else if(this.selectedColumnsForDate.length == 2){
+
+          for(let j=0; j<this.selectedColumnsForDate.length; j++){ // On parcourt les colonnes sélectionnées pour les adresses
+            csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date de début
+            csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[1])]; // On récupère la valeur de la colonne sélectionnée pour la date de fin
+          }
         }
+
+      } else if (typeof(this.chosenEndYear) != "number") {
+
+        console.log("Ici on est dans le cas où l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
+        csvRecord.startingTime = (this.chosenYear - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+        csvRecord.endingTime = (this.chosenYear + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+        
+      } else {
+
+        console.log("Ici on est dans le cas où l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
+        csvRecord.startingTime = this.chosenStartYear.toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier
+        csvRecord.endingTime = this.chosenEndYear.toString(); // On donne à la valeur de fin la valeur donnée par l'utilisateur avec le calendrier
+
       }
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
-      this.adresses_service.addAdresse(csvRecord); // On ajoute la première adresse et la date au service qui va faire la requête
+
+      if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
+        this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
+      } else {
+        console.log("-------------------------------------------")
+      }
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau
-    // Il faudra toutes les ajouter cependant
   }  
 
   previz(){ // On donne à l'utilisateur une prévisulisation de l'adresse qu'il construit
 
-    this.previsualisation = ''; // On vide la variable prévisualisation
+    this.previsualisationDate = ''; // On vide la variable prévisualisation
+    this.previsualisationAdress = ''; // On vide la variable prévisualisation
 
     for(let i = 0; i<this.selectedColumnsForAdress.length; i++){ // On parcourt les colonnes sélectionnées pour les adresses
 
       let index = this.headerRowMapped.get(this.selectedColumnsForAdress[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
-      this.previsualisation += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+      this.previsualisationAdress += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
 
     }
+
+    for(let i = 0; i<this.selectedColumnsForDate.length; i++){ // On parcourt les colonnes sélectionnées pour les adresses
+
+      if(i==1){ this.previsualisationDate += " - "; } // On ajoute un tiret pour séparer les dates quand il y en a deux
+      let index = this.headerRowMapped.get(this.selectedColumnsForDate[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
+      this.previsualisationDate += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+
+    }
+  }
+
+  radioSelect(value:number){ // On récupère la valeur de la variable radio
+    if(value == 1){
+      this.dateSelection = 1; // On donne à la variable dateSelection la valeur 1 ie: la fenêtre temporelle
+    } else if(value == 2 ){
+      this.dateSelection = 2; // On donne à la variable dateSelection la valeur 2 ie: la distance temporelle
+    }
+  }
+
+  getDate(event:any){ // On récupère la valeur de la date 
+    this.chosenYear = event.target.value._i.year; // On récupère l'année choisie
+  }
+
+  getStartDate(event:any){ // On récupère la valeur de la date de début
+    this.chosenStartYear = event.target.value._i.year; // On récupère l'année choisie
+  }
+
+  getEndDate(event:any){ // On récupère la valeur de la date de fin
+    this.chosenEndYear = event.target.value._i.year; // On récupère l'année choisie
+  }
+
+  displaySliderValue(){ // Fonction pour suivre la valeur du slider et afficher la valeur dans la console pour les developpeurs (coucou :) )
+    console.log(this.distanceValue);
   }
 }
 
