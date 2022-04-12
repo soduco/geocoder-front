@@ -265,7 +265,7 @@ export class CsvComponent  {
 
           // Ici les données ne son pas des chaînes de caractères
 
-          Swal.fire("Les données dans le fichier ne sont pas valides.", "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."); // On affiche un message d'erreur
+          Swal.fire({icon: 'error', title: "Les données dans le fichier ne sont pas valides.",text: "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."}); // On affiche un message d'erreur
 
           this.hideLoader(); // On cache le loader
 
@@ -282,7 +282,7 @@ export class CsvComponent  {
 
       // Ici le fichier est invalide
 
-      Swal.fire( "Le fichier n'est pas valide.", "Veuillez importer un fichier csv (finissant par .csv).") // On affiche un message d'erreur
+      Swal.fire({icon: 'error', title: "Le fichier n'est pas valide.", text: "Veuillez importer un fichier csv (finissant par .csv)."}) // On affiche un message d'erreur
 
       this.hideLoader(); // On cache le loader
 
@@ -445,7 +445,7 @@ export class CsvComponent  {
 
       if(this.selectedColumnsForAdress.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-        Swal.fire("Il n'y a pas de colonnes sélectionnées.", "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."); // On affiche un message d'erreur
+        Swal.fire({icon:"error", title: "Il n'y a pas de colonnes sélectionnées.", text: "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."}); // On affiche un message d'erreur
 
       } else if(this.selectedColumnsForAdress.length == 1){
 
@@ -474,7 +474,7 @@ export class CsvComponent  {
             csvRecord.startingTime = this.chosenStartYear;
             csvRecord.endingTime = this.chosenEndYear;
           } else {
-          Swal.fire("Il n'y a pas de colonnes sélectionnées.", "Veuillez sélectionner les colonnes nécessaires à la construction des dates (années)."); // On affiche un message d'erreur
+          Swal.fire({icon: "error", title: "Il n'y a pas de colonnes sélectionnées.", text: "Veuillez sélectionner les colonnes nécessaires à la construction des dates (années)."}); // On affiche un message d'erreur
           }
 
         } else if(this.selectedColumnsForDate.length == 1){
@@ -580,6 +580,16 @@ export class CsvComponent  {
 
   displaySliderValue(){ // Fonction pour suivre la valeur du slider et afficher la valeur dans la console pour les developpeurs (coucou :) )
     console.log(this.distanceValue);
+  }
+
+  displayInfoFenetre(){
+    Swal.fire({icon: "info", title: "La fenêtre temporelle.", text: "Ici, vous sélectionnez deux dates pour construire votre requête. Une date de début et une de fin."}); // On affiche l'info
+
+  }
+
+  displayInfoDistance(){
+    Swal.fire({icon: "info", title: "La distance temporelle.", text: "Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée."}); // On affiche l'info
+
   }
 }
 

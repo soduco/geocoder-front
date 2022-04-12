@@ -77,17 +77,21 @@
           <div *ngIf="csv_valid" class="date">
 
             <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
-              <mat-radio-button style="margin: 10px 10px 10px 10px;" (click)="radio(1)">Utiliser les colonnes pour construire la date</mat-radio-button>
+              <mat-radio-button color="primary" style="margin: 10px 10px 10px 10px;" (click)="radio(1)">Utiliser les colonnes pour construire la date</mat-radio-button>
 
-              <mat-radio-button value="0" style="margin: 10px 10px 10px 100px;" (click)="radio(2)">Sélectionner manuellement la date</mat-radio-button>
+              <mat-radio-button color="primary" value="0" style="margin: 10px 10px 10px 100px;" (click)="radio(2)">Sélectionner manuellement la date</mat-radio-button>
 
             </mat-radio-group>
 
             <div *ngIf="selectionManuelle">
               <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
-                <mat-radio-button id="radio1" value="1" style="margin: 10px 10px 10px 10px;" (click)="radioSelect(1)">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
+                <mat-radio-button id="radio1" color="primary" value="1" style="margin: 10px 10px 10px 10px;" (click)="radioSelect(1)">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
+                <mat-icon color="primary" aria-hidden="true" aria-label="Example info icon" id="infoFenetre" (click)="displayInfoFenetre()">info</mat-icon>
+                <!-- <span id="infoF"> Ici, vous sélectionnez deux dates pour construire votre requête. Une date de début et une de fin. </span> -->
 
-                <mat-radio-button id="radio2" value="2"style="margin: 10px 10px 10px 100px;" (click)="radioSelect(2)">Distance temporelle (choisir une date)</mat-radio-button>
+                <mat-radio-button id="radio2" color="primary" value="2"style="margin: 10px 10px 10px 100px;" (click)="radioSelect(2)">Distance temporelle (choisir une date)</mat-radio-button>
+                <mat-icon color="primary" aria-hidden="false" aria-label="Example info icon" id="infoDistance" (click)="displayInfoDistance()">info</mat-icon>
+                <!-- <span id="infoD"> Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée.</span> -->
 
               </mat-radio-group>
             </div>
