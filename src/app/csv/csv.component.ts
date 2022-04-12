@@ -445,7 +445,7 @@ export class CsvComponent  {
 
       if(this.selectedColumnsForAdress.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-        Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction de l'adresse."); // On affiche un message d'erreur
+        Swal.fire("Il n'y a pas de colonnes sélectionnées.", "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."); // On affiche un message d'erreur
 
       } else if(this.selectedColumnsForAdress.length == 1){
 
@@ -463,10 +463,19 @@ export class CsvComponent  {
       const referenceDate = new Date(0,0); // Date de référence qui est la même que les chosendates si l'utilisateur n'utilise pas le calendrier
 
       if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number")){
+   
         console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
         if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-          Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction des dates (années)."); // On affiche un message d'erreur
+          if(typeof(this.chosenYear) == "string"){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
+            csvRecord.startingTime = (Number(this.chosenYear) - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+            csvRecord.endingTime = (Number(this.chosenYear) + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+          } else if (typeof(this.chosenEndYear) == "string"){
+            csvRecord.startingTime = this.chosenStartYear;
+            csvRecord.endingTime = this.chosenEndYear;
+          } else {
+          Swal.fire("Il n'y a pas de colonnes sélectionnées.", "Veuillez sélectionner les colonnes nécessaires à la construction des dates (années)."); // On affiche un message d'erreur
+          }
 
         } else if(this.selectedColumnsForDate.length == 1){
 
@@ -480,6 +489,7 @@ export class CsvComponent  {
             csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[1])]; // On récupère la valeur de la colonne sélectionnée pour la date de fin
           }
         }
+
 
       } else if (typeof(this.chosenEndYear) != "number") {
 
@@ -497,7 +507,6 @@ export class CsvComponent  {
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
-
       if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
         this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
       } else {
@@ -546,15 +555,27 @@ export class CsvComponent  {
   }
 
   getDate(event:any){ // On récupère la valeur de la date 
-    this.chosenYear = event.target.value._i.year; // On récupère l'année choisie
+    if(typeof event.value._i == 'undefined'){
+      this.chosenYear = event.target.value._i.year; // On récupère l'année choisie
+    } else {
+      this.chosenYear = event.value._i; // On récupère l'année choisir avec le clavier 
+    }
   }
 
   getStartDate(event:any){ // On récupère la valeur de la date de début
-    this.chosenStartYear = event.target.value._i.year; // On récupère l'année choisie
+    if(typeof event.value._i == 'undefined'){
+      this.chosenStartYear = event.target.value._i.year; // On récupère l'année choisie
+    } else {
+      this.chosenStartYear = event.value._i; // On récupère l'année choisir avec le clavier 
+    }
   }
 
   getEndDate(event:any){ // On récupère la valeur de la date de fin
-    this.chosenEndYear = event.target.value._i.year; // On récupère l'année choisie
+    if(typeof event.value._i == 'undefined'){
+      this.chosenEndYear = event.target.value._i.year; // On récupère l'année choisie
+    } else {
+      this.chosenEndYear = event.value._i; // On récupère l'année choisir avec le clavier 
+    }
   }
 
   displaySliderValue(){ // Fonction pour suivre la valeur du slider et afficher la valeur dans la console pour les developpeurs (coucou :) )

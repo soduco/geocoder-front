@@ -110,7 +110,7 @@
             <div *ngIf="dateSelection==2"> <!-- Ici c'est une distance temporelle, l'utilisateur choisit une date et une distance -->
               <mat-form-field appearance="legacy">
                 <mat-label style="font-size:20px;">Choisir une année</mat-label>
-                <input matInput [min]="startDate" [max]="endDate" [matDatepicker]="picker" (dateChange)="getDate($event)">
+                <input matInput [min]="startDate" [max]="endDate" [matDatepicker]="picker" (dateInput)="getDate($event)">
                 <mat-datepicker-toggle  matSuffix [for]="picker" ></mat-datepicker-toggle>
                 <mat-datepicker #picker startView="multi-year" [startAt]="startDate" [touchUi]="true" ></mat-datepicker>
               </mat-form-field>
