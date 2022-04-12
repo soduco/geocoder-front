@@ -77,10 +77,21 @@
           <div *ngIf="csv_valid" class="date">
 
             <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
-              <mat-radio-button value="1" style="margin: 10px 100px 10px 10px;" (click)="radioSelect(1)">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
-              <mat-radio-button value="2"(click)="radioSelect(2)">Distance temporelle (choisir une date)</mat-radio-button>
+              <mat-radio-button style="margin: 10px 10px 10px 10px;" (click)="radio(1)">Utiliser les colonnes pour construire la date</mat-radio-button>
+
+              <mat-radio-button value="0" style="margin: 10px 10px 10px 100px;" (click)="radio(2)">Sélectionner manuellement la date</mat-radio-button>
+
             </mat-radio-group>
 
+            <div *ngIf="selectionManuelle">
+              <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
+                <mat-radio-button id="radio1" value="1" style="margin: 10px 10px 10px 10px;" (click)="radioSelect(1)">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
+
+                <mat-radio-button id="radio2" value="2"style="margin: 10px 10px 10px 100px;" (click)="radioSelect(2)">Distance temporelle (choisir une date)</mat-radio-button>
+
+              </mat-radio-group>
+            </div>
+            
             <div *ngIf="dateSelection==1"> <!-- Ici c'est une fenêtre temporelle on l'utilisateur choisit deux dates -->
               <div>
                 <mat-form-field appearance="legacy">

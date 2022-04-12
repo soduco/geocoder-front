@@ -107,6 +107,8 @@ export class CsvComponent  {
   public startDistDate:number = 0; // Année de départ de la date avec la distance temporelle
 
   public endDistDate:number = 0; // Année de fin de la date avec la distance temporelle
+
+  public selectionManuelle:boolean = false; // Booléen représentant si l'utilisateur veut choisir ses colonnes à la main ou non 
   
   public UIForm = new FormGroup({
     yearSelector: new FormControl(moment()),
@@ -522,11 +524,20 @@ export class CsvComponent  {
     }
   }
 
-  radioSelect(value:number){ // On récupère la valeur de la variable radio
+  radioSelect(value:number){ // On récupère la valeur de la variable radio pour savoir si on utilise une fenêtre temporelle ou une distance temporelle
     if(value == 1){
       this.dateSelection = 1; // On donne à la variable dateSelection la valeur 1 ie: la fenêtre temporelle
     } else if(value == 2 ){
       this.dateSelection = 2; // On donne à la variable dateSelection la valeur 2 ie: la distance temporelle
+    }
+  }
+
+  radio(value:number){ // On récupére la valeur de la variable radio pour savoir si on sélectionne la data à la main ou non
+    if(value == 1){
+      this.selectionManuelle = false; // On affiche pas le calendrier pour choisir les dates
+      this.dateSelection = 0; // On donne à la variable dateSelection la valeur 0 ie: on affiche pas les calendriers
+    } else if(value == 2 ){
+      this.selectionManuelle = true; // On affiche le calendrier pour choisir les dates
     }
   }
 
