@@ -158,6 +158,8 @@ export class CsvComponent  {
 
         this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
 
+        this.selectedColumnsForDate = []; // On vide les colonnes séléctionnées pour l'adresse
+
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
         let resultat: any[] = []; // On crée l'objet resultat qui contient les données traitées. Records deviendra resultat à la fin du traitement
@@ -376,6 +378,8 @@ export class CsvComponent  {
     this.records = [];
     this.jsondatadisplay = '';
     this.csvService.cleanCsvData();
+    this.selectedColumnsForAdress = [];
+    this.selectedColumnsForDate = [];
   }
 
   hideLoader(){ // On cache le loader
