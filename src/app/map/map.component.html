@@ -1,10 +1,10 @@
-<button *ngIf="display_button_geo == false " (click)="graphic_display()" >Prévisualitation des resultas</button>
+<button mat-raised-button color="primary"  *ngIf="display_button_geo == false" (click)="graphic_display()" >Prévisualitation des resultas</button>
 
 <div class="container">
     <div id="Global">
         <div id="gauche" *ngIf="display_table_geo || display_table_geo_details">
             <div *ngIf="display_table_geo" id="table_results" >
-                <button class="btn btn-primary btn-sm" (click)="renderer()">  ACTUALIZE </button>
+                
                 <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
                     <thead>
                     <tr>
@@ -23,7 +23,6 @@
                         <td>{{ data.startingTime}} - {{ data.endingTime}}</td>
                         <td>{{ data.lat | number }}</td>
                         <td>{{ data.long | number }}</td>
-                        
                         <td><button class="btn btn-sm btn-dark" (click)="details(data)">Details</button></td>
                     </tr>
                     </tbody>
@@ -32,6 +31,10 @@
             
             <div *ngIf="display_table_geo_details" id="table_results_details" >
                 <button class="btn btn-primary btn-sm" (click)="retour()">  RETOUR </button>
+                <div class="container h-100">
+                    <p class="rounded d-flex justify-content-center bg-info bg-opacity-25 fs-3" >{{databaseGeoDetails[0].text}} {{databaseGeoDetails[0].startingTime}}-{{databaseGeoDetails[0].endingTime}}</p>
+                </div>
+                
                 <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
                     <thead>
                     <tr>
@@ -44,7 +47,7 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let data of databaseGeoDetails" (mouseover)="over_details(data)" (mouseout)="out_details()" (click)="zoom(data,15)">
-                        <td>{{ data.text }}</td>
+                        <td>{{ data.properties.name }}</td>
                         <td>{{ data.lat }}</td>
                         <td>{{ data.long }}</td>
                         <td>{{ data.rang }}</td>

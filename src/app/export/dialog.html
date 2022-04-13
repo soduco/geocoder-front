@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Download specifications</h1>
+
+
+<mat-button-toggle-group name="group" aria-label="Font Style" (change)="choix_format($event.value)">
+  <mat-button-toggle value="csv">CSV</mat-button-toggle>
+  <mat-button-toggle value="json">JSON</mat-button-toggle>
+</mat-button-toggle-group>
+<br><br><br>
+
+<mat-slide-toggle (change)="choix_nombre($event.checked)" >Telecharger seulement 1 resultats par adresse</mat-slide-toggle>
+
+<button style="position: relative;float: right;" class="btn btn-primary btn-sm" (click)="exportCSV()">download</button>
