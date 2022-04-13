@@ -4,19 +4,16 @@ name: Deploy to QA server with SSH and RSYNC
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the dev branch 
+  # Triggers the workflow on push or pull request events but only for the branch `deploy`
   push:
-    branches: [ dev ]
-    tags:
-      - 'deploy'
+    branches: [ deploy ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,3 +33,11 @@ jobs:
       
       - name: Deploy with rsync
         run: rsync -avz . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/frontend/
+
+      - name: Run with PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          script: pm2 start "ng serve --open --port 4200 --configuration production"
+
