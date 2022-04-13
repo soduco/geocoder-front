@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,14 +8,14 @@ import { MapComponent } from './map/map.component';
 import { CsvComponent } from './csv/csv.component';
 import { GeocodeurComponent } from './geocodeur/geocodeur.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ExportComponent } from './export/export.component';
+import { Dialog, ExportComponent } from './export/export.component';
 
 import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {DateAdapter, MatRippleModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { AppMaterialModule } from "./app.material-module";
 import {DataTablesModule} from 'angular-datatables';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -34,7 +34,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatRadioModule} from '@angular/material/radio';
-
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,6 +44,7 @@ import {MatRadioModule} from '@angular/material/radio';
     CsvComponent,
     GeocodeurComponent,
     ExportComponent,
+    Dialog
   ],
   imports: [
     BrowserModule,
@@ -66,7 +69,14 @@ import {MatRadioModule} from '@angular/material/radio';
     MatNativeDateModule,
     MatToolbarModule,
     MatButtonModule,
-    MatRadioModule
+    MatRadioModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRippleModule,
+    MatDialogModule,
+    MatSlideToggleModule
+
+
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorIntercept, multi: true }

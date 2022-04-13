@@ -9,6 +9,7 @@ import { CsvDataGeo } from '../csv/csv.component';
 import {Subject} from 'rxjs';
 import { CsvServiceService } from '../csv-service.service';
 import { DataTableDirective } from 'angular-datatables';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-map',
@@ -47,6 +48,8 @@ export class MapComponent implements  OnChanges, OnDestroy{
   map: any; 
   selected_marker:any;
   markers:any = [];
+ 
+  
 
   //To get services 
   constructor(public apiService: ApiService, private adresseService : AdressesService,public csvService : CsvServiceService) { }
@@ -75,7 +78,9 @@ export class MapComponent implements  OnChanges, OnDestroy{
       accessToken: environment.mapbox.accessToken,
     });
 
+    
     mainLayer.addTo(this.map);
+
   };
 
   
@@ -113,12 +118,22 @@ export class MapComponent implements  OnChanges, OnDestroy{
     this.headers=this.csvService.getHeader()
     this.adresseService.getAdresseGeoByRang(1).subscribe((response:any) => {
       this.databaseGeo = response;
-    
     })
 
     this.display_table_geo = true;
     try {
       this.createMap();
+      let legend = new L.Control({ position: "topright"});
+
+      legend.onAdd = function() {
+      var div = L.DomUtil.create("div", "legend");
+      div.innerHTML += "<h4>Résultats</h4>";
+      div.innerHTML += '<i style="background: #3333FF"></i><span>Principal</span><br>';
+      div.innerHTML += '<i style="background: #ff7800"></i><span>Secondaires</span><br>';
+      return div;
+    };
+
+    legend.addTo(this.map);
     } catch (error) {
       console.log(error)
     }
@@ -147,19 +162,33 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * @param  {any} data : data selected 
    */
   details(data : any){
-    
+   
     this.cleanMap()
-    var MarkerOptions = {radius: 8,fillColor: "#ff7800",color: "#000",weight: 1,opacity: 1,fillOpacity: 0.8};
-    this.adresseService.getAdresseGeoByAdresse(data.text).subscribe((response:any) => {
+    this.adresseService.getAdresseGeoByAdresse(data.text,data.startingTime,data.endingTime).subscribe((response:any) => {
       this.databaseGeoDetails = response 
     })
+    var MarkerOptions = {radius: 8,fillColor: "#ff7800",color: "#000",weight: 1,opacity: 0.8,fillOpacity: 0.8};
+    var MarkerOptions2 = {radius: 8,fillColor: "#3333FF",color: "blue",weight: 1,opacity: 0.8,fillOpacity: 0.8}
 
     for (let data of this.databaseGeoDetails){
-      var circle = L.circleMarker([data.lat,data.long], MarkerOptions);
+
+      var numberIcon = L.divIcon({className: 'test',html : data.rang,iconAnchor:[3.5,8]});
+      if (data.rang == 1 ) {
+        var circle = L.circleMarker([data.lat,data.long], MarkerOptions2);
+      }
+      else{
+        var circle = L.circleMarker([data.lat,data.long], MarkerOptions);
+      }
       this.markers.push(circle)
       circle.addTo(this.map).bindPopup(data.text);
-    }
 
+      var marker_number = L.marker([data.lat, data.long],{icon: numberIcon})
+      marker_number.addTo(this.map)
+      this.markers.push(marker_number)
+     
+    }
+    this.map.fitBounds(L.featureGroup(this.markers).getBounds());
+    
     this.display_table_geo = false;
     this.display_table_geo_details=true;
 
@@ -173,11 +202,14 @@ export class MapComponent implements  OnChanges, OnDestroy{
    */
   rang(data : any ){
     const rang_click = data.rang 
-    this.adresseService.changeAdresseRang(data.text,"1","-1")
-    this.adresseService.changeAdresseRang(data.text,rang_click,"1")
-    this.adresseService.changeAdresseRang(data.text,"-1",rang_click)
+    this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,"1","-1")
+    this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,rang_click,"1")
+    this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,"-1",rang_click)
     this.display_table_geo_details=false;
     this.display_table_geo_details=true;
+    this.cleanMap()
+    this.details(data)
+   
   }
 
 
@@ -186,14 +218,15 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * @param  {any} data : data selected 
    */
   over_details(data : any){
-    var MarkerOptions = {radius: 8,fillColor: "blue",color: "blue",weight: 1,opacity: 1,fillOpacity: 0.8}
+    var MarkerOptions = {radius: 12,fillcolor:"yellow",color: "yellow",weight: 1,opacity: 1,fillOpacity: 1}
+    
     this.selected_marker = L.circleMarker([data.lat,data.long], MarkerOptions);
     this.selected_marker.addTo(this.map).bindPopup(data.text);
   }
 
   /**
    * Function activated whent the mouse passed out the details datatable.
-   */
+   */ 
   out_details(){
     this.map.removeLayer(this.selected_marker)
   }
@@ -203,13 +236,13 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * @param  {any} data : data selected 
    */
   over(data:any){
-    this.zoom(data,12)
     var MarkerOptions = {radius: 8,fillColor: "#ff7800",color: "#000",weight: 1,opacity: 1,fillOpacity: 0.8};
-    var MarkerOptions2 = {radius: 8,fillColor: "blue",color: "blue",weight: 1,opacity: 1,fillOpacity: 0.8}
+    var MarkerOptions2 = {radius: 8,fillColor: "#3333FF",color: "#000",weight: 1,opacity: 1,fillOpacity: 0.8}
 
-    this.adresseService.getAdresseGeoByAdresse(data.text).subscribe((response:any) => {
+    this.adresseService.getAdresseGeoByAdresse(data.text,data.startingTime,data.endingTime).subscribe((response:any) => {
       this.databaseGeoDetails = response 
     })
+
     for (let data of  this.databaseGeoDetails){
       if (data.rang == 1 ) {
         var circle = L.circleMarker([data.lat,data.long], MarkerOptions2);
@@ -218,8 +251,15 @@ export class MapComponent implements  OnChanges, OnDestroy{
         var circle = L.circleMarker([data.lat,data.long], MarkerOptions);
       }
       this.markers.push(circle);
+      
       circle.addTo(this.map);
     }
+
+    let group = L.featureGroup(this.markers)
+    this.map.fitBounds(group.getBounds(),{padding:[100,100]} )
+
+    group.clearLayers()
+    
   }
 
   /**
@@ -236,20 +276,14 @@ export class MapComponent implements  OnChanges, OnDestroy{
     for ( let marker of this.markers){
       this.map.removeLayer(marker)
     }
-  }
-  /**
-   * Function to actualize the datatable.
-   */
-  renderer(){
-    this.display_table_geo = false ; 
-    this.display_table_geo = true ; 
-    
+    this.markers=[]
   }
 
 
   sleep(ms : number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
 }
 
 

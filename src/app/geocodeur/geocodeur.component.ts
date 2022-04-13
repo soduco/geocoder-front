@@ -75,6 +75,8 @@ export class GeocodeurComponent implements  OnChanges {
 
     return new Promise((resolve, reject) => {
       this.AdressesService.cleanAdresseGeo()
+      
+
       this.chargement=true;
       
       this.enfant.emit(this.isClicked);
@@ -131,8 +133,6 @@ export class GeocodeurComponent implements  OnChanges {
       }
       //depreciated 
       //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise();
-      
-
       this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
       
         //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
@@ -145,7 +145,7 @@ export class GeocodeurComponent implements  OnChanges {
             dataGeo.startingTime = adresses[x].startingTime;
             dataGeo.endingTime = adresses[x].endingTime;
             dataGeo.softTime = adresses[x].softTime;
-            console.log(response.features[i].properties)
+            
             dataGeo.properties = response.features[i].properties
             dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
             dataGeo.long = response.features[i].geometry.coordinates[0].toString();
@@ -165,9 +165,7 @@ export class GeocodeurComponent implements  OnChanges {
     while ( this.nb < nb_max){
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
       await this.sleep(500);
-      
     }
-
     this.display_button_exp=true;
     this.geocodage_done=true;
     this.chargement=false;
