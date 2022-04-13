@@ -39,5 +39,6 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: pm2 start "ng serve --open --port 4200 --configuration production"
 
