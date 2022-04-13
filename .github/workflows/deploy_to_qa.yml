@@ -40,6 +40,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: ~/.nvm/versions/node/v16.14.0/bin/pm2 delete geocoder-front 2> /dev/null && ~/.nvm/versions/node/v16.14.0/bin/pm2 start "ng serve --open --port 4200 --disable-host-check" --watch --name 'geocoder-front'
+          script: cd ~/frontend && ~/.nvm/versions/node/v16.14.0/bin/pm2 delete geocoder-front 2> /dev/null && ~/.nvm/versions/node/v16.14.0/bin/pm2 start "ng serve --open --port 4200 --disable-host-check" --watch --name 'geocoder-front'
 
 
