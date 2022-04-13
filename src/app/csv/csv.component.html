@@ -87,11 +87,9 @@
               <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
                 <mat-radio-button id="radio1" color="primary" value="1" style="margin: 10px 10px 10px 10px;" (click)="radioSelect(1)">Fenêtre temporelle (choisir deux dates)</mat-radio-button>
                 <mat-icon color="primary" aria-hidden="true" aria-label="Example info icon" id="infoFenetre" (click)="displayInfoFenetre()">info</mat-icon>
-                <!-- <span id="infoF"> Ici, vous sélectionnez deux dates pour construire votre requête. Une date de début et une de fin. </span> -->
 
                 <mat-radio-button id="radio2" color="primary" value="2"style="margin: 10px 10px 10px 100px;" (click)="radioSelect(2)">Distance temporelle (choisir une date)</mat-radio-button>
                 <mat-icon color="primary" aria-hidden="false" aria-label="Example info icon" id="infoDistance" (click)="displayInfoDistance()">info</mat-icon>
-                <!-- <span id="infoD"> Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée.</span> -->
 
               </mat-radio-group>
             </div>
@@ -146,23 +144,19 @@
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header" id="five">
-        <button mat-button (click)="showAdvanced = !showAdvanced">
-          <mat-icon>settings</mat-icon>
-        </button>
-        <div *ngIf="showAdvanced" style="display:inline-block; margin-left: 25px;">
-          <h1>
-            Softness de la recherche : 
-          </h1>
-          <mat-slider min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
+  <!-- <button mat-button (click)="showAdvanced = !showAdvanced">
+    <mat-icon>settings</mat-icon>
+  </button>
+  <div *ngIf="showAdvanced" style="display:inline-block; margin-left: 25px;">
+    <h1 style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400; margin-bottom: 5px;">
+      Softness de la recherche : 
+    </h1>
+    <mat-slider color="primary" min="0" max="1" step="0.1" thumbLabel tickInterval="0.1" value="0" #slider></mat-slider>
+  </div> -->
 
 </body>
 <app-geocodeur  id="geocodeur" [parent]="csv_valid" (enfant)="this.isGeocodageClicked()" ></app-geocodeur>

@@ -582,12 +582,12 @@ export class CsvComponent  {
     console.log(this.distanceValue);
   }
 
-  displayInfoFenetre(){
+  displayInfoFenetre(){ // Fonction pour donner l'information sur la fenêtre temporelle à l'utilisateur
     Swal.fire({icon: "info", title: "La fenêtre temporelle.", text: "Ici, vous sélectionnez deux dates pour construire votre requête. Une date de début et une de fin."}); // On affiche l'info
 
   }
 
-  displayInfoDistance(){
+  displayInfoDistance(){ // Fonction pour donner l'information sur la distance temporelle à l'utilisateur
     Swal.fire({icon: "info", title: "La distance temporelle.", text: "Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée."}); // On affiche l'info
 
   }
