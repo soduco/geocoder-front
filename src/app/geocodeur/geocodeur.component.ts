@@ -18,7 +18,9 @@ export class GeocodeurComponent implements  OnChanges {
   @Input() public parent: any; 
   
   @Output() public enfant = new EventEmitter<boolean>();
+  @Output() public enfant2 = new EventEmitter<boolean>();
 
+  public isPrevisClicked: boolean = false;
   public isClicked: boolean = false;
   public csv_valid!: boolean;
   display_button_exp:boolean = false;
@@ -170,5 +172,13 @@ export class GeocodeurComponent implements  OnChanges {
     this.geocodage_done=true;
     this.chargement=false;
     
+  }
+
+  /**
+   * Function used when the button "prévisualisation des résultats" is presssed. It will change the value of the boolean. This boolean will be used in CsvComponent. 
+   */
+  isPrevizClicked(){
+    this.isPrevisClicked = true;
+    this.enfant2.emit(this.isPrevisClicked);
   }
 }

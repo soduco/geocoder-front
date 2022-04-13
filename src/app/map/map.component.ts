@@ -1,5 +1,5 @@
 import { ApiService } from './../api.service';
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import * as L from 'leaflet'
 import { environment } from 'src/environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
@@ -28,6 +28,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   posts:any;
   adresses = new Array<any>();
   @Input() public data_available: any; 
+  @Output() public enfant = new EventEmitter<boolean>();
   private http: HttpClient | undefined ;
 
   //boolean for activation of button and displays of the tables 
@@ -107,7 +108,12 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Create the databse for the datatable and create the map.
    */
   graphic_display(){
-
+    
+    const droite = document.getElementById( 'droite' );
+    if(droite){
+      droite.scrollIntoView(); // On scroll vers le bas de la page
+    }
+    this.enfant.emit(this.display_table_geo);
     this.dtOptions={
       pagingType: 'full_numbers',
       pageLength: 5,
