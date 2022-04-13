@@ -107,6 +107,8 @@ export class CsvComponent  {
   public startDistDate:number = 0; // Année de départ de la date avec la distance temporelle
 
   public endDistDate:number = 0; // Année de fin de la date avec la distance temporelle
+
+  public selectionManuelle:boolean = false; // Booléen représentant si l'utilisateur veut choisir ses colonnes à la main ou non 
   
   public UIForm = new FormGroup({
     yearSelector: new FormControl(moment()),
@@ -155,6 +157,8 @@ export class CsvComponent  {
         this.previsualisationAdress = ''; // On vide la prévisualisation
 
         this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
+
+        this.selectedColumnsForDate = []; // On vide les colonnes séléctionnées pour l'adresse
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
@@ -261,7 +265,7 @@ export class CsvComponent  {
 
           // Ici les données ne son pas des chaînes de caractères
 
-          Swal.fire("Les données dans le fichier ne sont pas valides.", "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."); // On affiche un message d'erreur
+          Swal.fire({icon: 'error', title: "Les données dans le fichier ne sont pas valides.",text: "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."}); // On affiche un message d'erreur
 
           this.hideLoader(); // On cache le loader
 
@@ -278,7 +282,7 @@ export class CsvComponent  {
 
       // Ici le fichier est invalide
 
-      Swal.fire( "Le fichier n'est pas valide.", "Veuillez importer un fichier csv (finissant par .csv).") // On affiche un message d'erreur
+      Swal.fire({icon: 'error', title: "Le fichier n'est pas valide.", text: "Veuillez importer un fichier csv (finissant par .csv)."}) // On affiche un message d'erreur
 
       this.hideLoader(); // On cache le loader
 
@@ -374,6 +378,8 @@ export class CsvComponent  {
     this.records = [];
     this.jsondatadisplay = '';
     this.csvService.cleanCsvData();
+    this.selectedColumnsForAdress = [];
+    this.selectedColumnsForDate = [];
   }
 
   hideLoader(){ // On cache le loader
@@ -439,7 +445,7 @@ export class CsvComponent  {
 
       if(this.selectedColumnsForAdress.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-        Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction de l'adresse."); // On affiche un message d'erreur
+        Swal.fire({icon:"error", title: "Il n'y a pas de colonnes sélectionnées.", text: "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."}); // On affiche un message d'erreur
 
       } else if(this.selectedColumnsForAdress.length == 1){
 
@@ -457,10 +463,19 @@ export class CsvComponent  {
       const referenceDate = new Date(0,0); // Date de référence qui est la même que les chosendates si l'utilisateur n'utilise pas le calendrier
 
       if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number")){
+   
         console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
         if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-          Swal.fire("Il n'y a pas de colonnes séléectionnées.", "Veuillez sélectionner les colonnes nécessaire à la construction des dates (années)."); // On affiche un message d'erreur
+          if(typeof(this.chosenYear) == "string"){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
+            csvRecord.startingTime = (Number(this.chosenYear) - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+            csvRecord.endingTime = (Number(this.chosenYear) + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+          } else if (typeof(this.chosenEndYear) == "string"){
+            csvRecord.startingTime = this.chosenStartYear;
+            csvRecord.endingTime = this.chosenEndYear;
+          } else {
+          Swal.fire({icon: "error", title: "Il n'y a pas de colonnes sélectionnées.", text: "Veuillez sélectionner les colonnes nécessaires à la construction des dates (années)."}); // On affiche un message d'erreur
+          }
 
         } else if(this.selectedColumnsForDate.length == 1){
 
@@ -474,6 +489,7 @@ export class CsvComponent  {
             csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[1])]; // On récupère la valeur de la colonne sélectionnée pour la date de fin
           }
         }
+
 
       } else if (typeof(this.chosenEndYear) != "number") {
 
@@ -491,7 +507,6 @@ export class CsvComponent  {
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
-
       if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
         this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
       } else {
@@ -522,7 +537,7 @@ export class CsvComponent  {
     }
   }
 
-  radioSelect(value:number){ // On récupère la valeur de la variable radio
+  radioSelect(value:number){ // On récupère la valeur de la variable radio pour savoir si on utilise une fenêtre temporelle ou une distance temporelle
     if(value == 1){
       this.dateSelection = 1; // On donne à la variable dateSelection la valeur 1 ie: la fenêtre temporelle
     } else if(value == 2 ){
@@ -530,20 +545,51 @@ export class CsvComponent  {
     }
   }
 
+  radio(value:number){ // On récupére la valeur de la variable radio pour savoir si on sélectionne la data à la main ou non
+    if(value == 1){
+      this.selectionManuelle = false; // On affiche pas le calendrier pour choisir les dates
+      this.dateSelection = 0; // On donne à la variable dateSelection la valeur 0 ie: on affiche pas les calendriers
+    } else if(value == 2 ){
+      this.selectionManuelle = true; // On affiche le calendrier pour choisir les dates
+    }
+  }
+
   getDate(event:any){ // On récupère la valeur de la date 
-    this.chosenYear = event.target.value._i.year; // On récupère l'année choisie
+    if(typeof event.value._i == 'undefined'){
+      this.chosenYear = event.target.value._i.year; // On récupère l'année choisie
+    } else {
+      this.chosenYear = event.value._i; // On récupère l'année choisir avec le clavier 
+    }
   }
 
   getStartDate(event:any){ // On récupère la valeur de la date de début
-    this.chosenStartYear = event.target.value._i.year; // On récupère l'année choisie
+    if(typeof event.value._i == 'undefined'){
+      this.chosenStartYear = event.target.value._i.year; // On récupère l'année choisie
+    } else {
+      this.chosenStartYear = event.value._i; // On récupère l'année choisir avec le clavier 
+    }
   }
 
   getEndDate(event:any){ // On récupère la valeur de la date de fin
-    this.chosenEndYear = event.target.value._i.year; // On récupère l'année choisie
+    if(typeof event.value._i == 'undefined'){
+      this.chosenEndYear = event.target.value._i.year; // On récupère l'année choisie
+    } else {
+      this.chosenEndYear = event.value._i; // On récupère l'année choisir avec le clavier 
+    }
   }
 
   displaySliderValue(){ // Fonction pour suivre la valeur du slider et afficher la valeur dans la console pour les developpeurs (coucou :) )
     console.log(this.distanceValue);
+  }
+
+  displayInfoFenetre(){ // Fonction pour donner l'information sur la fenêtre temporelle à l'utilisateur
+    Swal.fire({icon: "info", title: "La fenêtre temporelle.", text: "Ici, vous sélectionnez deux dates pour construire votre requête. Une date de début et une de fin."}); // On affiche l'info
+
+  }
+
+  displayInfoDistance(){ // Fonction pour donner l'information sur la distance temporelle à l'utilisateur
+    Swal.fire({icon: "info", title: "La distance temporelle.", text: "Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée."}); // On affiche l'info
+
   }
 }
 
