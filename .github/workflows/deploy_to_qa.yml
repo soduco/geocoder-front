@@ -34,6 +34,9 @@ jobs:
       - name: Deploy with rsync
         run: rsync -avz . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/frontend/
 
+      - name: Install PM2
+        run: npm i pm2
+        
       - name: Run with PM2
         uses: appleboy/ssh-action@master
         with:
