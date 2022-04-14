@@ -17,6 +17,11 @@ max-height: 300px;
 }
 
 /* text for importing a file */
+.card{
+  /* margin-top: 30px; */
+  background-color: white !important;
+}
+
 .card-header{
   font-family: Helvetica, sans-serif	;
   font-weight: bold;
@@ -67,21 +72,21 @@ max-height: 300px;
 
 mat-button-toggle {
   border: 0.1px rgba(0,0,0,0) solid !important;
-  margin-top: 5px !important;
-  padding: 0 5px !important;
+  margin-top: 0px !important;
+  padding: 0 0px !important;
   z-index: 3 !important;
 }
 
 mat-button-toggle:hover {
   border: 0.1px #000 solid !important;
   background-color: rgba(198, 197, 197, 0.384) !important;
-  border-radius: 5px !important;
+  border-radius: 2px !important;
 }
 
 .mat-button-toggle-checked {
   /* box-shadow: 0 0 10px #000 !important; */
   border: 0.1px #000 solid !important;
-  border-radius: 5px !important;
+  border-radius: 2px !important;
   background-color: rgba(101, 101, 166, 0.384) !important;
 }
 
