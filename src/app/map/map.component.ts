@@ -66,16 +66,24 @@ export class MapComponent implements  OnChanges, OnDestroy{
     const zoomLevel = 12;
     this.map = L.map('map').setView([paris_centre.lat, paris_centre.lon], zoomLevel);
 
-    const mainLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox/streets-v11',
-      tileSize: 512,
-      zoomOffset: -1,
-      accessToken: environment.mapbox.accessToken,
-    });
+    if(true){
 
-    mainLayer.addTo(this.map);
+      const mainLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: environment.mapbox.accessToken,
+      });
+
+      mainLayer.addTo(this.map);
+    } else{
+      var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+      layers: 'SRTM30-Colored-Hillshade'
+      });
+      wmsLayer.addTo(this.map);
+    }
   };
 
   
