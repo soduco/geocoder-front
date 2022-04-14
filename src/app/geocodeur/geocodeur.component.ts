@@ -104,7 +104,6 @@ export class GeocodeurComponent implements  OnChanges {
               dataGeo.softTime = adresses[x].softTime;
               dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
               dataGeo.long = response.features[i].geometry.coordinates[0].toString();
-              console.log(response[i])
               dataGeo.rang = (i + 1).toString();
               full_database.push(dataGeo)
               nb_max += 1;
