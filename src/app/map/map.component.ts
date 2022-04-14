@@ -1,5 +1,5 @@
 import { ApiService } from './../api.service';
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import * as L from 'leaflet'
 import { environment } from 'src/environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
@@ -28,6 +28,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   posts:any;
   adresses = new Array<any>();
   @Input() public data_available: any; 
+  @Output() public enfant = new EventEmitter<boolean>();
   private http: HttpClient | undefined ;
 
   //boolean for activation of button and displays of the tables 
@@ -48,14 +49,10 @@ export class MapComponent implements  OnChanges, OnDestroy{
   map: any; 
   selected_marker:any;
   markers:any = [];
- 
-  
 
   //To get services 
   constructor(public apiService: ApiService, private adresseService : AdressesService,public csvService : CsvServiceService) { }
 
-
- 
   /** 
    * Function to create and display a map in the web interface 
    */
@@ -78,9 +75,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       accessToken: environment.mapbox.accessToken,
     });
 
-    
     mainLayer.addTo(this.map);
-
   };
 
   
@@ -93,7 +88,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       this.display_button_geo=false
     }
   }
-  
+
   
   /**
    * Function to unsubscribe the datatable
@@ -107,7 +102,12 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Create the databse for the datatable and create the map.
    */
   graphic_display(){
-
+    
+    const droite = document.getElementById( 'droite' );
+    if(droite){
+      droite.scrollIntoView(); // On scroll vers le bas de la page
+    }
+    this.enfant.emit(this.display_table_geo);
     this.dtOptions={
       pagingType: 'full_numbers',
       pageLength: 5,
@@ -187,7 +187,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       this.markers.push(marker_number)
      
     }
-    this.map.fitBounds(L.featureGroup(this.markers).getBounds());
+    this.map.fitBounds(L.featureGroup(this.markers).getBounds(),{ padding: [20, 20] });
     
     this.display_table_geo = false;
     this.display_table_geo_details=true;

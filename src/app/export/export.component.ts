@@ -93,9 +93,12 @@ export class Dialog{
    * @return {CsvDataGeo[]} : list of the data to export 
    */
   getAdressesJSON(number:number) {
+    let data: CsvDataGeo[]=[]
     this.AdressesService.getAdresseGeoByRang(number).subscribe(response => {
-      return response;
+      
+      data = response;
     })
+    return data
   } 
 
   /**
@@ -127,6 +130,7 @@ export class Dialog{
   choix_nombre(event : any){
     this.nombre_export = +event
   }
+  
   /**
    * Function used when the user click on Download. Depending on the format and the nombre_export,
    * differents functions are called. 
@@ -146,7 +150,8 @@ export class Dialog{
     }
     if (this.format == "json"){
       let theJSON = JSON.stringify(this.getAdressesJSON(this.nombre_export))
-      let blob = new Blob([theJSON], { type: 'json' });
+     
+      let blob = new Blob([theJSON], { type: 'text/json' });
       FileSaver.saveAs(blob, "resultats_geolocalisés.json");
       return
     }

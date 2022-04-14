@@ -125,12 +125,20 @@ export class CsvComponent  {
     end: new FormControl()
   });
 
+  public expand2:boolean = true; // Booléen qui gère l'affichage ou non des détails de la partie 2
+  public expand4:boolean = true; // Booléen qui gère l'affichage ou non des détails de la partie 4
+
+  public isPrevisClicked: boolean = false; // Booléen qui dit si le bouton prévisualisation est cliqué ou non
+
+  public resGeocodage:number = 0; // Résultat du géocodage
+
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){
   }
 
-  uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait
-    
+  uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
     this.displayLoader(); // On affiche le loader
+
+    this.expand2 = true; this.expand4 = true; // On affiche les détails de la partie 2 et 4
 
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
@@ -380,6 +388,8 @@ export class CsvComponent  {
     this.csvService.cleanCsvData();
     this.selectedColumnsForAdress = [];
     this.selectedColumnsForDate = [];
+    this.adresses_service.cleanAdresse();
+    this.adresses_service.cleanAdresseGeo();
   }
 
   hideLoader(){ // On cache le loader
@@ -445,7 +455,10 @@ export class CsvComponent  {
 
       if(this.selectedColumnsForAdress.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-        Swal.fire({icon:"error", title: "Il n'y a pas de colonnes sélectionnées.", text: "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."}); // On affiche un message d'erreur
+        Swal.fire({icon:"error", title: "Il n'y a pas de colonnes sélectionnées pour l'adresse.", text: "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."}); // On affiche un message d'erreur
+        this.resGeocodage = -1; // On quitte la fonction avec une erreur
+        return this.resGeocodage;
+        console.log(this.resGeocodage)
 
       } else if(this.selectedColumnsForAdress.length == 1){
 
@@ -464,7 +477,7 @@ export class CsvComponent  {
 
       if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number")){
    
-        console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
+        // console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
         if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
           if(typeof(this.chosenYear) == "string"){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
@@ -474,7 +487,9 @@ export class CsvComponent  {
             csvRecord.startingTime = this.chosenStartYear;
             csvRecord.endingTime = this.chosenEndYear;
           } else {
-          Swal.fire({icon: "error", title: "Il n'y a pas de colonnes sélectionnées.", text: "Veuillez sélectionner les colonnes nécessaires à la construction des dates (années)."}); // On affiche un message d'erreur
+          Swal.fire({icon: "error", title: "Il n'y a pas de colonnes sélectionnées pour la date.", text: "Veuillez sélectionner les colonnes nécessaires à la construction des dates (années)."}); // On affiche un message d'erreur
+          this.resGeocodage = -1; // On quitte la fonction avec une erreur
+          return this.resGeocodage;
           }
 
         } else if(this.selectedColumnsForDate.length == 1){
@@ -493,13 +508,13 @@ export class CsvComponent  {
 
       } else if (typeof(this.chosenEndYear) != "number") {
 
-        console.log("Ici on est dans le cas où l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
+        // console.log("Ici on est dans le cas où l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
         csvRecord.startingTime = (this.chosenYear - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
         csvRecord.endingTime = (this.chosenYear + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
         
       } else {
 
-        console.log("Ici on est dans le cas où l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
+        // console.log("Ici on est dans le cas où l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
         csvRecord.startingTime = this.chosenStartYear.toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier
         csvRecord.endingTime = this.chosenEndYear.toString(); // On donne à la valeur de fin la valeur donnée par l'utilisateur avec le calendrier
 
@@ -510,10 +525,12 @@ export class CsvComponent  {
       if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
         this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
       } else {
-        console.log("-------------------------------------------")
+        // console.log("-------------------------------------------")
       }
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau
+    this.resGeocodage = 1; // On quitte la fonction avec succès
+    return this.resGeocodage;
   }  
 
   previz(){ // On donne à l'utilisateur une prévisulisation de l'adresse qu'il construit
@@ -579,7 +596,7 @@ export class CsvComponent  {
   }
 
   displaySliderValue(){ // Fonction pour suivre la valeur du slider et afficher la valeur dans la console pour les developpeurs (coucou :) )
-    console.log(this.distanceValue);
+    // console.log(this.distanceValue);
   }
 
   displayInfoFenetre(){ // Fonction pour donner l'information sur la fenêtre temporelle à l'utilisateur
@@ -590,6 +607,22 @@ export class CsvComponent  {
   displayInfoDistance(){ // Fonction pour donner l'information sur la distance temporelle à l'utilisateur
     Swal.fire({icon: "info", title: "La distance temporelle.", text: "Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée."}); // On affiche l'info
 
+  }
+
+  expand(value:number){ // Fonction permettant d'étendre ou non les différentes parties de la page
+    if(value == 2){
+      this.expand2 = !this.expand2; // On change la valeur de l'expand2 
+      console.log(this.expand2);
+    }  else if(value == 4){
+      this.expand4 = !this.expand4; // On change la valeur de l'expand4
+      this.selectionManuelle = false; // On affiche pas le choix du type de calendrier : fenêtre ou distance
+      this.dateSelection  = 0; // On donne à la variable dateSelection la valeur 0 ie: on affiche pas les calendriers
+    }
+  }
+
+  isPrevizClicked(){ // Fonction qui replie les différentes parties de la page quand on clique sur le bouton prévisualisation
+    this.isPrevisClicked = !this.isPrevisClicked; // On change la valeur de isPrevisClicked
+    this.expand2 = false; this.expand4 = false; // On repli toutes les parties de la page
   }
 }
 
