@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { CsvData, CsvDataGeo } from './csv/csv.component';
 
 @Injectable({
   providedIn: 'root'

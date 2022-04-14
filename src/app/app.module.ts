@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,8 +14,7 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MatRippleModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatRippleModule} from '@angular/material/core';
 import { AppMaterialModule } from "./app.material-module";
 import {DataTablesModule} from 'angular-datatables';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -28,7 +27,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule} from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 import { ErrorIntercept } from './error.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -39,6 +37,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { KoiExpandButtonComponent } from './koi-expand-button/koi-expand-button.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { ParametreAvanceComponent } from './parametre-avance/parametre-avance.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +47,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     GeocodeurComponent,
     ExportComponent,
     Dialog,
-    KoiExpandButtonComponent
+    KoiExpandButtonComponent,
+    ParametreAvanceComponent
   ],
   imports: [
     BrowserModule,
