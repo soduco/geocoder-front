@@ -64,26 +64,57 @@ export class MapComponent implements  OnChanges, OnDestroy{
     };
 
     const zoomLevel = 12;
-    this.map = L.map('map').setView([paris_centre.lat, paris_centre.lon], zoomLevel);
 
-    if(true){
+    // La carte est censée être comme ci-dessous avec crs : ESPG:4326 pour WMS84 mais cela crée des problèmes de projection avec MAPBOX
+    // this.map = L.map('map', {crs: L.CRS.EPSG4326})
+    // .setView([paris_centre.lat, paris_centre.lon], zoomLevel);
 
-      const mainLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: environment.mapbox.accessToken,
-      });
+    const modernLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: environment.mapbox.accessToken
+    });
 
-      mainLayer.addTo(this.map);
-    } else{
-      var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
-      layers: 'SRTM30-Colored-Hillshade'
-      });
-      wmsLayer.addTo(this.map);
-    }
+    const poubelle_1888 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+    layers: "paris-rasters:poubelle_1888"
+    });
+
+    const verniquet_1789 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+    layers: "paris-rasters:verniquet_1789_demo_11_avril"
+    });
+
+    const jacoubet_1836 =L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+    layers: "paris-rasters:jacoubet_1836"
+    });
+
+    const andriveau_1849 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+    layers: "paris-rasters:andriveau_1849"
+    });
+
+    const picquet_1809 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+    layers: "paris-rasters:picquet_1809"
+    });
+
+    const BHDV_1888 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', { // Meilleure qualité que poubelle_1888
+    layers: "paris-rasters:BHdV_PL_ATL20Ardt_1888"
+    });
+
+    this.map = L.map('map',{layers: [modernLayer, BHDV_1888, andriveau_1849, jacoubet_1836, picquet_1809,  verniquet_1789]}).setView([paris_centre.lat, paris_centre.lon], zoomLevel);
+
+    var baseMaps = {
+      "Moderne": modernLayer,
+      "1888": BHDV_1888,
+      "1849": andriveau_1849,
+      "1836": jacoubet_1836,
+      "1809": picquet_1809,
+      "1789": verniquet_1789
+    };
+
+    var layerControl = L.control.layers(baseMaps);
+    layerControl.addTo(this.map);
   };
 
   
