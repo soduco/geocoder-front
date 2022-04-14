@@ -49,6 +49,35 @@ export class MapComponent implements  OnChanges, OnDestroy{
   map: any; 
   selected_marker:any;
   markers:any = [];
+  modernLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: environment.mapbox.accessToken
+  });
+
+  // Différents fonds de carte disponibles
+  poubelle_1888 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+  layers: "paris-rasters:poubelle_1888"
+  });
+  verniquet_1789 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+  layers: "paris-rasters:verniquet_1789_demo_11_avril"
+  });
+  jacoubet_1836 =L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+  layers: "paris-rasters:jacoubet_1836"
+  });
+  andriveau_1849 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+  layers: "paris-rasters:andriveau_1849"
+  });
+  picquet_1809 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
+  layers: "paris-rasters:picquet_1809"
+  });
+  BHDV_1888 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', { // Meilleure qualité que poubelle_1888
+  layers: "paris-rasters:BHdV_PL_ATL20Ardt_1888"
+  });
+
 
   //To get services 
   constructor(public apiService: ApiService, private adresseService : AdressesService,public csvService : CsvServiceService) { }
@@ -69,51 +98,19 @@ export class MapComponent implements  OnChanges, OnDestroy{
     // this.map = L.map('map', {crs: L.CRS.EPSG4326})
     // .setView([paris_centre.lat, paris_centre.lon], zoomLevel);
 
-    const modernLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox/streets-v11',
-      tileSize: 512,
-      zoomOffset: -1,
-      accessToken: environment.mapbox.accessToken
-    });
-
-    const poubelle_1888 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
-    layers: "paris-rasters:poubelle_1888"
-    });
-
-    const verniquet_1789 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
-    layers: "paris-rasters:verniquet_1789_demo_11_avril"
-    });
-
-    const jacoubet_1836 =L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
-    layers: "paris-rasters:jacoubet_1836"
-    });
-
-    const andriveau_1849 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
-    layers: "paris-rasters:andriveau_1849"
-    });
-
-    const picquet_1809 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', {
-    layers: "paris-rasters:picquet_1809"
-    });
-
-    const BHDV_1888 = L.tileLayer.wms('http://geohistoricaldata.org/geoserver/wms', { // Meilleure qualité que poubelle_1888
-    layers: "paris-rasters:BHdV_PL_ATL20Ardt_1888"
-    });
-
-    this.map = L.map('map',{layers: [modernLayer, BHDV_1888, andriveau_1849, jacoubet_1836, picquet_1809,  verniquet_1789]}).setView([paris_centre.lat, paris_centre.lon], zoomLevel);
+    this.map = L.map('map',{layers: [this.modernLayer, this.BHDV_1888, this.andriveau_1849, this.jacoubet_1836, this.picquet_1809,  this.verniquet_1789]}).setView([paris_centre.lat, paris_centre.lon], zoomLevel);
 
     var baseMaps = {
-      "Moderne": modernLayer,
-      "1888": BHDV_1888,
-      "1849": andriveau_1849,
-      "1836": jacoubet_1836,
-      "1809": picquet_1809,
-      "1789": verniquet_1789
+      "Moderne": this.modernLayer,
+      "1888": this.BHDV_1888,
+      "1849": this.andriveau_1849,
+      "1836": this.jacoubet_1836,
+      "1809": this.picquet_1809,
+      "1789": this.verniquet_1789
     };
 
     var layerControl = L.control.layers(baseMaps);
+    // layerControl
     layerControl.addTo(this.map);
   };
 
@@ -257,8 +254,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * @param  {any} data : data selected 
    */
   over_details(data : any){
-    var MarkerOptions = {radius: 12,fillcolor:"yellow",color: "yellow",weight: 1,opacity: 1,fillOpacity: 1}
-    
+    var MarkerOptions = {radius: 12,fillcolor:"yellow",color: "yellow",weight: 1,opacity: 1,fillOpacity: 1};
     this.selected_marker = L.circleMarker([data.lat,data.long], MarkerOptions);
     this.selected_marker.addTo(this.map).bindPopup(data.text);
   }
@@ -274,7 +270,16 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Function activated when the mouse passed over the datatable.
    * @param  {any} data : data selected 
    */
-  over(data:any){
+  over(data:any){    
+    var meanDate = Math.round((Number(data.startingTime) + Number(data.endingTime))/2); // Moyenne de la date pour la requête. Cette date permet de choisir le fond de carte le plus adapté 
+
+    if(meanDate<1800){this.resetZindex();this.verniquet_1789.setZIndex(7);
+    } else if(meanDate<1822){this.resetZindex();this.picquet_1809.setZIndex(7);
+    } else if(meanDate<1844){this.resetZindex();this.jacoubet_1836.setZIndex(7);
+    } else if(meanDate<1869){this.resetZindex();this.andriveau_1849.setZIndex(7);
+    } else {this.resetZindex();this.BHDV_1888.setZIndex(7);
+    }
+
     var MarkerOptions = {radius: 8,fillColor: "#ff7800",color: "#000",weight: 1,opacity: 1,fillOpacity: 0.8};
     var MarkerOptions2 = {radius: 8,fillColor: "#3333FF",color: "#000",weight: 1,opacity: 1,fillOpacity: 0.8}
 
@@ -321,6 +326,14 @@ export class MapComponent implements  OnChanges, OnDestroy{
 
   sleep(ms : number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  resetZindex(){
+    this.verniquet_1789.setZIndex(5);
+    this.picquet_1809.setZIndex(5);
+    this.jacoubet_1836.setZIndex(5);
+    this.andriveau_1849.setZIndex(5);
+    this.BHDV_1888.setZIndex(5);
   }
 
 }
