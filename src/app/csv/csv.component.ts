@@ -125,8 +125,8 @@ export class CsvComponent  {
     end: new FormControl()
   });
 
-  public expanded2:boolean = true; // Booléen qui gère l'affichage ou non des détails de la partie 2
-  public expanded4:boolean = true; // Booléen qui gère l'affichage ou non des détails de la partie 4
+  public expand2:boolean = true; // Booléen qui gère l'affichage ou non des détails de la partie 2
+  public expand4:boolean = true; // Booléen qui gère l'affichage ou non des détails de la partie 4
 
   public isPrevisClicked: boolean = false; // Booléen qui dit si le bouton prévisualisation est cliqué ou non
 
@@ -599,15 +599,17 @@ export class CsvComponent  {
 
   expand(value:number){ // Fonction permettant d'étendre ou non les différentes parties de la page
     if(value == 2){
-      this.expanded2 = !this.expanded2; // On change la valeur de l'expand2 
+      this.expand2 = !this.expand2; // On change la valeur de l'expand2 
+      console.log(this.expand2);
     }  else if(value == 4){
-      this.expanded4 = !this.expanded4; // On change la valeur de l'expand4
+      this.expand4 = !this.expand4; // On change la valeur de l'expand4
     }
   }
 
   isPrevizClicked(){ // Fonction qui replie les différentes parties de la page quand on clique sur le bouton prévisualisation
     console.log("On a cliqué sur Previz")
-    this.expanded2 = false; this.expanded4 = false; // On repli toutes les parties de la page
+    this.isPrevisClicked = !this.isPrevisClicked; // On change la valeur de isPrevisClicked
+    this.expand2 = false; this.expand4 = false; // On repli toutes les parties de la page
   }
 }
 

@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './koi-expand-button.component.html',
   styleUrls: ['./koi-expand-button.component.css']
 })
-export class KoiExpandIconComponent {
+export class KoiExpandButtonComponent {
   @Input()
   public expanded: boolean = true;
 
