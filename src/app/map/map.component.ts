@@ -48,14 +48,10 @@ export class MapComponent implements  OnChanges, OnDestroy{
   map: any; 
   selected_marker:any;
   markers:any = [];
- 
-  
 
   //To get services 
   constructor(public apiService: ApiService, private adresseService : AdressesService,public csvService : CsvServiceService) { }
 
-
- 
   /** 
    * Function to create and display a map in the web interface 
    */
@@ -78,9 +74,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       accessToken: environment.mapbox.accessToken,
     });
 
-    
     mainLayer.addTo(this.map);
-
   };
 
   
@@ -93,7 +87,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       this.display_button_geo=false
     }
   }
-  
+
   
   /**
    * Function to unsubscribe the datatable
@@ -187,7 +181,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       this.markers.push(marker_number)
      
     }
-    this.map.fitBounds(L.featureGroup(this.markers).getBounds());
+    this.map.fitBounds(L.featureGroup(this.markers).getBounds(),{ padding: [20, 20] });
     
     this.display_table_geo = false;
     this.display_table_geo_details=true;
