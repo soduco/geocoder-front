@@ -80,13 +80,13 @@ mat-button-toggle {
 mat-button-toggle:hover {
   border: 0.1px #000 solid !important;
   background-color: rgba(198, 197, 197, 0.384) !important;
-  border-radius: 5px !important;
+  border-radius: 2px !important;
 }
 
 .mat-button-toggle-checked {
   /* box-shadow: 0 0 10px #000 !important; */
   border: 0.1px #000 solid !important;
-  border-radius: 5px !important;
+  border-radius: 2px !important;
   background-color: rgba(101, 101, 166, 0.384) !important;
 }
 
