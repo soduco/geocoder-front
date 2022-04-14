@@ -17,6 +17,11 @@ max-height: 300px;
 }
 
 /* text for importing a file */
+.card{
+  /* margin-top: 30px; */
+  background-color: white !important;
+}
+
 .card-header{
   font-family: Helvetica, sans-serif	;
   font-weight: bold;
@@ -67,8 +72,8 @@ max-height: 300px;
 
 mat-button-toggle {
   border: 0.1px rgba(0,0,0,0) solid !important;
-  margin-top: 5px !important;
-  padding: 0 5px !important;
+  margin-top: 0px !important;
+  padding: 0 0px !important;
   z-index: 3 !important;
 }
 

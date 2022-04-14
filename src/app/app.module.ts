@@ -37,7 +37,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { KoiExpandIconComponent } from './koi-expand-button/koi-expand-button.component';
+import { KoiExpandButtonComponent } from './koi-expand-button/koi-expand-button.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +46,7 @@ import { KoiExpandIconComponent } from './koi-expand-button/koi-expand-button.co
     GeocodeurComponent,
     ExportComponent,
     Dialog,
-    KoiExpandIconComponent
+    KoiExpandButtonComponent
   ],
   imports: [
     BrowserModule,

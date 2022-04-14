@@ -33,9 +33,9 @@
     <div class="card"> <!-- Aperçu du fichier -->
       <div class="card-header" id="two">
         2. Aperçu du fichier et vérification de l’encodage
-        <koi-expand-button *ngIf="csv_valid" id="expand2" (click)="expand(2)" [(expanded)]="expanded2"></koi-expand-button>
+        <koi-expand-button *ngIf="csv_valid" (click)="expand(2)"></koi-expand-button>
       </div>
-      <div *ngIf="expanded2">
+      <div *ngIf="expand2">
         {{jsondatadisplay}}
         <div class="table-responsive">
           <table class="table table-bordered"  *ngIf="records.length > 0">
@@ -79,8 +79,8 @@
     <div class="card"> <!-- Choix des colonnes du fichier ou calendrier pour la date -->
       <div class="card-header" id="four">
         4. Choisir la ou les colonnes à utiliser pour la date ou les dates
-        <koi-expand-button *ngIf="csv_valid" id="expand4" (click)="expand(4)" [(expanded)]="expanded4"></koi-expand-button>
-        <div *ngIf="csv_valid && expanded4" class="date">
+        <koi-expand-button *ngIf="csv_valid" id="expand4" (click)="expand(4)"></koi-expand-button>
+        <div *ngIf="csv_valid && expand4" class="date">
           <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
             <mat-radio-button color="primary" style="margin: 10px 10px 10px 10px;" (click)="radio(1)">Utiliser les colonnes pour construire la date</mat-radio-button>
 
