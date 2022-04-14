@@ -613,6 +613,8 @@ export class CsvComponent  {
       console.log(this.expand2);
     }  else if(value == 4){
       this.expand4 = !this.expand4; // On change la valeur de l'expand4
+      this.selectionManuelle = false; // On affiche pas le choix du type de calendrier : fenêtre ou distance
+      this.dateSelection  = 0; // On donne à la variable dateSelection la valeur 0 ie: on affiche pas les calendriers
     }
   }
 
