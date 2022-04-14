@@ -310,7 +310,8 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Function activated whent the mouse passed out the datatable.
    */
   out(){
-    this.cleanMap()
+    this.cleanMap();
+    this.resetZindex(); // On remet le fond moderne en premier plan. A voir si c'est pertinent ou pas
   }
 
   /**
