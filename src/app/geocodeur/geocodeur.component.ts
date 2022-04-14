@@ -5,6 +5,7 @@ import { Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ApiService } from '../api.service';
 import { CsvDataGeo } from '../csv/csv.component';
 import { CsvServiceService } from '../csv-service.service';
+import { cpuUsage } from 'process';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { CsvServiceService } from '../csv-service.service';
 
 export class GeocodeurComponent implements  OnChanges {
   @Input() public parent: any; 
+  @Input() public resGeocodageG:number =0;
   
   @Output() public enfant = new EventEmitter<boolean>();
   @Output() public enfant2 = new EventEmitter<boolean>();
@@ -124,6 +126,10 @@ export class GeocodeurComponent implements  OnChanges {
   async geocodage() {
     this.AdressesService.cleanAdresseGeo()
     this.chargement=true;
+    console.log("je passe dans geocodage")
+    this.chargement=false;
+
+    // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
     this.enfant.emit(this.isClicked);
     const adresses = this.AdressesService.getAdresse();
@@ -156,21 +162,21 @@ export class GeocodeurComponent implements  OnChanges {
           } catch (error) {
             continue;
           }
-        }
-    })
+        }  
       
-    } 
 
-    await this.sleep(1000);
-    this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
-    while ( this.nb < nb_max){
+      }) 
+      await this.sleep(1000);
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
-      await this.sleep(500);
+      while ( this.nb < nb_max){
+        console.log(nb_max, "    ",this.nb);
+        this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
+        await this.sleep(500);
+      }
+      this.display_button_exp=true;
+      this.geocodage_done=true;
+      this.chargement=false;
     }
-    this.display_button_exp=true;
-    this.geocodage_done=true;
-    this.chargement=false;
-    
   }
 
   /**

@@ -17,7 +17,7 @@
         1. Choisir un fichier
       </div>
 
-        <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+        <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (click)="fileReset()" (change)="uploadListener($event)" accept=".csv" />
 
       <mat-card id="loading">
         <mat-card-content >      
@@ -159,5 +159,5 @@
   </div> -->
 
 </body>
-<app-geocodeur  id="geocodeur" [parent]="csv_valid" (enfant)="this.isGeocodageClicked()" (enfant2)="this.isPrevizClicked()" ></app-geocodeur>
+<app-geocodeur  id="geocodeur" [parent]="csv_valid" [resGeocodageG]="resGeocodage" (enfant)="this.isGeocodageClicked()" (enfant2)="this.isPrevizClicked()" ></app-geocodeur>
 
