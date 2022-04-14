@@ -138,6 +138,8 @@ export class CsvComponent  {
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
     this.displayLoader(); // On affiche le loader
 
+    this.expand2 = true; this.expand4 = true; // On affiche les détails de la partie 2 et 4
+
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
