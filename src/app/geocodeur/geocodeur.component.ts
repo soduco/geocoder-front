@@ -125,9 +125,7 @@ export class GeocodeurComponent implements  OnChanges {
    */
   async geocodage() {
     this.AdressesService.cleanAdresseGeo()
-    this.chargement=true;
-    console.log("je passe dans geocodage")
-    this.chargement=false;
+    // this.chargement=true;
 
     // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
