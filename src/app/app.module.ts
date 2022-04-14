@@ -38,6 +38,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { KoiExpandButtonComponent } from './koi-expand-button/koi-expand-button.component';
+import {MatGridListModule} from '@angular/material/grid-list';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,9 +78,8 @@ import { KoiExpandButtonComponent } from './koi-expand-button/koi-expand-button.
     MatInputModule,
     MatRippleModule,
     MatDialogModule,
-    MatSlideToggleModule
-
-
+    MatSlideToggleModule,
+    MatGridListModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorIntercept, multi: true }
