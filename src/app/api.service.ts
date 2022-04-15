@@ -1,3 +1,4 @@
+import { CsvData } from './csv/csv.component';
 import { Injectable } from '@angular/core';
 
 
@@ -11,6 +12,7 @@ import { retry, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ApiService {
+  public errorMessage: any;
 
   constructor(private http: HttpClient) { }
 
@@ -37,6 +39,28 @@ export class ApiService {
                      .pipe(retry(1),catchError(this.handleError));
 
     return response;
+  }
+
+  public getAdressMass(softTime:number, size:number, body:CsvData): Observable<any>{
+    const url = "http://dev-geocode.geohistoricaldata.org/api/v1/msearch?";
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("size",size);
+    queryParams = queryParams.append("time.softness",softTime);
+
+    let response!:Observable<any>;
+
+    this.http.post<any>(url,body,{params:queryParams}).subscribe({
+      next: data => {
+        response = data;
+      },
+      error: error => {
+          this.errorMessage = error.message;
+          console.error('There was an error!', error);
+      }
+    })
+
+    return response;
+
   }
 
   // HTTP Interceptor 
