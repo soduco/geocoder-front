@@ -146,7 +146,9 @@ export class GeocodeurComponent implements  OnChanges {
             dataGeo.startingTime = adresses[x].startingTime;
             dataGeo.endingTime = adresses[x].endingTime;
             dataGeo.softTime = adresses[x].softTime;
-            
+            dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
+          
+            dataGeo.precision = response.features[i].properties.layer
             dataGeo.properties = response.features[i].properties
             dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
             dataGeo.long = response.features[i].geometry.coordinates[0].toString();

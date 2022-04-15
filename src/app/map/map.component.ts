@@ -89,7 +89,9 @@ export class MapComponent implements  OnChanges, OnDestroy{
     }
   }
 
-  
+  rounded(nombre:number){
+    return Math.round(nombre)
+  }
   /**
    * Function to unsubscribe the datatable
    */
@@ -113,6 +115,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
       pageLength: 5,
       processing: true,
       order:[],
+   
     };
 
     this.headers=this.csvService.getHeader()
