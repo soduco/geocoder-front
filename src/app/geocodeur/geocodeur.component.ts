@@ -5,7 +5,7 @@ import { Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ApiService } from '../api.service';
 import { CsvDataGeo } from '../csv/csv.component';
 import { CsvServiceService } from '../csv-service.service';
-import { cpuUsage } from 'process';
+import { ParametreAvanceService } from '../parametre-avance.service';
 
 
 @Component({
@@ -30,15 +30,9 @@ export class GeocodeurComponent implements  OnChanges {
   public geocodage_done:boolean = false;
   selected_nb= 5;
   public chargement:boolean=false;
-  public numbers = [1,2,3,4,5,6,7,8,9,10];
   public nb! : number;
 
-  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService) { }
-  
-  selectChangeHandler (number: number) {
-    this.selected_nb = number;
-    console.log(this.selected_nb);
-  }
+  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.csv_valid = changes['parent'].currentValue;
@@ -55,7 +49,6 @@ export class GeocodeurComponent implements  OnChanges {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
-
   
   /**
    * Function to use when the api.service will be in charge of multiple requests.
@@ -91,7 +84,7 @@ export class GeocodeurComponent implements  OnChanges {
         if (adresses[x].text.trim().length == 0){
           continue 
         }
-
+        this.selected_nb = this.parameterService.getNumber();
         this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
         
           //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
@@ -150,7 +143,9 @@ export class GeocodeurComponent implements  OnChanges {
             dataGeo.startingTime = adresses[x].startingTime;
             dataGeo.endingTime = adresses[x].endingTime;
             dataGeo.softTime = adresses[x].softTime;
-            
+            dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
+          
+            dataGeo.precision = response.features[i].properties.layer
             dataGeo.properties = response.features[i].properties
             dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
             dataGeo.long = response.features[i].geometry.coordinates[0].toString();

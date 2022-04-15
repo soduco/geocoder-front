@@ -25,6 +25,8 @@ export class CsvDataGeo {
   public lat:any;
   public long:any;
   public rang:any;
+  public source:any;
+  public precision:any;
   public row_data:any;
   public properties: any;
 }
@@ -132,8 +134,7 @@ export class CsvComponent  {
 
   public resGeocodage:number = 0; // Résultat du géocodage
 
-  constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){
-  }
+  constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){  }
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
     this.displayLoader(); // On affiche le loader
@@ -601,12 +602,10 @@ export class CsvComponent  {
 
   displayInfoFenetre(){ // Fonction pour donner l'information sur la fenêtre temporelle à l'utilisateur
     Swal.fire({icon: "info", title: "La fenêtre temporelle.", text: "Ici, vous sélectionnez deux dates pour construire votre requête. Une date de début et une de fin."}); // On affiche l'info
-
   }
 
   displayInfoDistance(){ // Fonction pour donner l'information sur la distance temporelle à l'utilisateur
     Swal.fire({icon: "info", title: "La distance temporelle.", text: "Ici, vous sélectionner une date et une période pour construire votre requête. La période est le laps de temps autour de la date sélectionnée."}); // On affiche l'info
-
   }
 
   expand(value:number){ // Fonction permettant d'étendre ou non les différentes parties de la page

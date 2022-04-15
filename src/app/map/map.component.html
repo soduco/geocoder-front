@@ -1,5 +1,7 @@
+
 <button  style="height: 80px;width: 300px;position: relative;float:right;margin-right: 12.5%;" class="bouton-ligne" mat-raised-button color="primary"  *ngIf="display_button_geo == false" (click)="graphic_display()" >
     <!-- style="height: 80px;width: 300px;position: relative;float:right;margin-right: 5%;" -->
+
 <h1><img style='width: 50px; 'src="../../assets/logo_map.png">Carte</h1>
 </button>
 
@@ -26,24 +28,29 @@
                         <td>{{ data.startingTime}} - {{ data.endingTime}}</td>
                         <td>{{ data.lat | number }}</td>
                         <td>{{ data.long | number }}</td>
-                        <td><button class="btn btn-sm btn-dark" (click)="details(data)">Details</button></td>
+                        <td><button class="btn btn-sm btn-dark" (click)="details(data)">Détails</button></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             
             <div *ngIf="display_table_geo_details" id="table_results_details" >
-                <button class="btn btn-primary btn-sm" (click)="retour()">  RETOUR </button>
-                <div class="container h-100">
-                    <p class="rounded d-flex justify-content-center bg-info bg-opacity-25 fs-3" >{{databaseGeoDetails[0].text}} {{databaseGeoDetails[0].startingTime}}-{{databaseGeoDetails[0].endingTime}}</p>
+                
+                <div class="container h-25">
+                    
+                    <div class="rounded bg-info bg-opacity-25 fs-3 d-flex justify-content-between" >
+                        <button class="btn btn-primary btn-sm  " (click)="retour()"> RETOUR </button>
+                        <p class="">{{databaseGeoDetails[0].text}} {{rounded(databaseGeoDetails[0].startingTime) }}-{{rounded(databaseGeoDetails[0].endingTime) }}</p>
+                        <p>|</p>
+                    </div>
                 </div>
                 
                 <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
                     <thead>
                     <tr>
                         <th>Adresse</th>
-                        <th>lat</th>
-                        <th>long</th>
+                        <th>source</th>
+                        <th>précision</th>
                         <th>rang</th>
                         <th>action</th>
                     </tr>
@@ -51,10 +58,11 @@
                     <tbody>
                     <tr *ngFor="let data of databaseGeoDetails" (mouseover)="over_details(data)" (mouseout)="out_details()" (click)="zoom(data,15)">
                         <td>{{ data.properties.name }}</td>
-                        <td>{{ data.lat }}</td>
-                        <td>{{ data.long }}</td>
+                        <td>{{ data.source }}</td>
+                        <td>{{data.precision}}</td>
                         <td>{{ data.rang }}</td>
-                        <td><button class="btn btn-sm btn-dark" (click)="rang(data)">Choisir comme résultat principal</button></td>
+
+                        <td><button class="btn btn-sm btn-dark" (click)="rang(data)"><img src="../../assets/logo_up.png" style="width: 10px;"> 1er Rang  </button></td>
                         
                     </tr>
                     </tbody>

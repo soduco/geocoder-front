@@ -36,7 +36,7 @@ export class Dialog{
   constructor(private AdressesService:AdressesService, public apiService: ApiService,public CsvService : CsvServiceService) { }
 
   data : any =[];
-  headers = ['text','startingTime','endingTime','softTime','lat','long','rang','properties']
+  headers = ['text','startingTime','endingTime','softTime','lat','long','rang','source','precision','properties']
   final_headers: string[] = [];
   format:any = null;
   nombre_export: number = 0;
@@ -144,14 +144,14 @@ export class Dialog{
     if (this.format == "csv"){
       let data = this.getAdressesCSV(this.nombre_export)
       let data2 = (this.convertToCSV(data) )
-      var blob = new Blob([data2], {type: "csv"});
+      var blob = new Blob([data2], {type: "csv;charset=UTF-8"});
       FileSaver.saveAs(blob, "resultats_geolocalisés.csv");
       return 
     }
     if (this.format == "json"){
       let theJSON = JSON.stringify(this.getAdressesJSON(this.nombre_export))
      
-      let blob = new Blob([theJSON], { type: 'text/json' });
+      let blob = new Blob([theJSON], { type: 'text/json;charset=UTF-8' });
       FileSaver.saveAs(blob, "resultats_geolocalisés.json");
       return
     }
