@@ -130,7 +130,7 @@
         </div>
 
 <!-- Paramètre avancé -->
-<button mat-button (click)="showAdvanced =!showAdvanced">
+<button mat-button *ngIf="csv_valid && expand4" (click)="showAdvanced =!showAdvanced">
   <mat-icon>settings</mat-icon>
 </button>
 <app-parametre-avance *ngIf="showAdvanced"></app-parametre-avance>
