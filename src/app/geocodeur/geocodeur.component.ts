@@ -5,6 +5,7 @@ import { Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ApiService } from '../api.service';
 import { CsvDataGeo } from '../csv/csv.component';
 import { CsvServiceService } from '../csv-service.service';
+import { ParametreAvanceService } from '../parametre-avance.service';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { CsvServiceService } from '../csv-service.service';
 
 export class GeocodeurComponent implements  OnChanges {
   @Input() public parent: any; 
+  @Input() public resGeocodageG:number =0;
   
   @Output() public enfant = new EventEmitter<boolean>();
   @Output() public enfant2 = new EventEmitter<boolean>();
@@ -28,15 +30,9 @@ export class GeocodeurComponent implements  OnChanges {
   public geocodage_done:boolean = false;
   selected_nb= 5;
   public chargement:boolean=false;
-  public numbers = [1,2,3,4,5,6,7,8,9,10];
   public nb! : number;
 
-  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService) { }
-  
-  selectChangeHandler (number: number) {
-    this.selected_nb = number;
-    console.log(this.selected_nb);
-  }
+  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.csv_valid = changes['parent'].currentValue;
@@ -53,7 +49,6 @@ export class GeocodeurComponent implements  OnChanges {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
-
   
   /**
    * Function to use when the api.service will be in charge of multiple requests.
@@ -89,7 +84,7 @@ export class GeocodeurComponent implements  OnChanges {
         if (adresses[x].text.trim().length == 0){
           continue 
         }
-
+        this.selected_nb = this.parameterService.getNumber();
         this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
         
           //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
@@ -123,7 +118,9 @@ export class GeocodeurComponent implements  OnChanges {
    */
   async geocodage() {
     this.AdressesService.cleanAdresseGeo()
-    this.chargement=true;
+    // this.chargement=true;
+
+    // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
     this.enfant.emit(this.isClicked);
     const adresses = this.AdressesService.getAdresse();
@@ -158,21 +155,21 @@ export class GeocodeurComponent implements  OnChanges {
           } catch (error) {
             continue;
           }
-        }
-    })
+        }  
       
-    } 
 
-    await this.sleep(1000);
-    this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
-    while ( this.nb < nb_max){
+      }) 
+      await this.sleep(1000);
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
-      await this.sleep(500);
+      while ( this.nb < nb_max){
+        console.log(nb_max, "    ",this.nb);
+        this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
+        await this.sleep(500);
+      }
+      this.display_button_exp=true;
+      this.geocodage_done=true;
+      this.chargement=false;
     }
-    this.display_button_exp=true;
-    this.geocodage_done=true;
-    this.chargement=false;
-    
   }
 
   /**
