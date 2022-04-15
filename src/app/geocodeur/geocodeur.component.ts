@@ -162,7 +162,6 @@ export class GeocodeurComponent implements  OnChanges {
       await this.sleep(1000);
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
       while ( this.nb < nb_max){
-        console.log(nb_max, "    ",this.nb);
         this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
         await this.sleep(500);
       }
