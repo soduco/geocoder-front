@@ -459,7 +459,6 @@ export class CsvComponent  {
         Swal.fire({icon:"error", title: "Il n'y a pas de colonnes sélectionnées pour l'adresse.", text: "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."}); // On affiche un message d'erreur
         this.resGeocodage = -1; // On quitte la fonction avec une erreur
         return this.resGeocodage;
-        console.log(this.resGeocodage)
 
       } else if(this.selectedColumnsForAdress.length == 1){
 
