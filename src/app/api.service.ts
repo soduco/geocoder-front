@@ -41,7 +41,7 @@ export class ApiService {
     return response;
   }
 
-  public getAdressMass(softTime:number, size:number, body:CsvData): Observable<any>{
+  public getAdressMass(softTime:number, size:number, body:CsvData): Observable<any>{ // il faut formatter le csv avant de le mettre en argument de cette fonction
     const url = "http://dev-geocode.geohistoricaldata.org/api/v1/msearch?";
     let queryParams = new HttpParams();
     queryParams = queryParams.append("size",size);
