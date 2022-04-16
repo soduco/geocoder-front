@@ -35,9 +35,12 @@ export class GeocodeurComponent implements  OnChanges {
   constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.csv_valid = changes['parent'].currentValue;
-    if (this.csv_valid == true){
-      this.display_button_geo=false;
+    // console.log(typeof(changes['parent']));
+    if(changes && typeof(changes['parent']) != "undefined"){
+      this.csv_valid = changes['parent'].currentValue;
+      if (this.csv_valid == true){
+        this.display_button_geo=false;
+      }
     }
   }
 
