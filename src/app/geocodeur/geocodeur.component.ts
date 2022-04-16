@@ -145,24 +145,37 @@ export class GeocodeurComponent implements  OnChanges {
             dataGeo.startingTime = adresses[x].startingTime;
             dataGeo.endingTime = adresses[x].endingTime;
             dataGeo.softTime = adresses[x].softTime;
-            dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
-          
-            dataGeo.precision = response.features[i].properties.layer
-            dataGeo.properties = response.features[i].properties
-            dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
-            dataGeo.long = response.features[i].geometry.coordinates[0].toString();
+            if(typeof(response) == "object"){
+              if(typeof(response.features[i]) != "undefined"){
+                dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
+                dataGeo.precision = response.features[i].properties.layer
+                dataGeo.properties = response.features[i].properties
+                dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
+                dataGeo.long = response.features[i].geometry.coordinates[0].toString();
+              } else {
+                continue;
+              }
+            } else {
+              continue;
+            }
             dataGeo.rang = (i + 1).toString();
             this.AdressesService.addAdresseGeo(dataGeo);
             nb_max += 1;
           } catch (error) {
+            console.error("Il y a eu une erreur : ", error);
+            if (error instanceof Error) {
+              let errorMessage = error.message;
+              console.log(errorMessage);
+            }
+            
             continue;
+
           }
         }  
       }) 
       await this.sleep(1000);
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
       while ( this.nb < nb_max){
-        console.log(nb_max, "    ",this.nb);
         this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
         await this.sleep(500);
       }
