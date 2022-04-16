@@ -1,0 +1,43 @@
+
+th.mat-header-cell {
+  text-align: left;
+  max-width: 300px;
+}
+
+
+#Global { 
+  padding: 10px;
+}
+
+#Global #gauche {
+  float:left;
+  width:50%; 
+}
+#Global #droite {
+  margin-left:51%
+}
+
+.container{
+  margin-right:0px;
+  margin-left:0px;
+  max-width: 100%;
+}
+
+#map {
+  height: 500px;
+
+  margin:0px;
+  padding:0px;
+}
+
+#DataTables_Table_0{
+  height: 400px;
+  margin:0px;
+  padding:0px;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,1), 
+              0 1px 1px 0 rgba(0,0,0,1), 
+              0 1px 3px 0 rgba(0,0,0,1);
+}

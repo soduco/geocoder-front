@@ -1,0 +1,92 @@
+p {
+  font-family: Lato;
+}
+.table,.container{
+  margin-top:px;
+}
+.btn{
+  margin-right:20px;
+  margin-top: 20px;
+}
+.table-responsive{
+max-height: 300px;
+}
+
+.geocodeur{
+  padding: 100px;
+}
+
+/* text for importing a file */
+.card{
+  /* margin-top: 30px; */
+  background-color: white !important;
+}
+
+.card-header{
+  font-family: Helvetica, sans-serif	;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+#two{
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+#three{
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+#four{
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 30px;
+  color: rgba(174, 191, 206, 0.76);
+}
+
+
+.colonnes{
+  display: none;
+  font-family: Helvetica, sans-serif	;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+#five{
+  display : none;
+}
+
+#loading{
+  display: none;
+}
+
+.date{
+  text-align: center;
+}
+
+
+mat-button-toggle {
+  border: 0.1px rgba(0,0,0,0) solid !important;
+  margin-top: 0px !important;
+  padding: 0 0px !important;
+  z-index: 3 !important;
+}
+
+mat-button-toggle:hover {
+  border: 0.1px #000 solid !important;
+  background-color: rgba(198, 197, 197, 0.384) !important;
+  border-radius: 2px !important;
+}
+
+.mat-button-toggle-checked {
+  /* box-shadow: 0 0 10px #000 !important; */
+  border: 0.1px #000 solid !important;
+  border-radius: 2px !important;
+  background-color: rgba(101, 101, 166, 0.384) !important;
+}
+

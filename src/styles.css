@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/leaflet/dist/leaflet.css";
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+
+html, body { height: 100%; margin:0;padding: 0px;}
+body {  margin-right: 0px;margin-left:0px; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/*Legend specific*/
+.legend.leaflet-control {
+    padding: 6px 8px;
+    font: 14px Arial, Helvetica, sans-serif;
+    background: rgb(143, 72, 72);
+    background: rgba(243, 237, 233, 0.959);
+    /*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+    /*border-radius: 5px;*/
+    line-height: 24px;
+    color: #555;
+  }
+  .legend h4 {
+    text-align: center;
+    font-size: 16px;
+    margin: 2px 12px 8px;
+    color: #777;
+  }
+  
+  .legend span {
+    position: relative;
+    bottom: 3px;
+  }
+  
+  .legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin: 0 8px 0 0;
+    opacity: 0.7;
+  }
+  
+  .legend i.icon {
+    background-size: 18px;
+    background-color: rgba(255, 255, 255, 1);
+  }
+  

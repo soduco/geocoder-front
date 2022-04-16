@@ -1,0 +1,78 @@
+
+<button  style="height: 80px;width: 300px;position: relative;float:right;margin-right: 12.5%;" class="bouton-ligne" mat-raised-button color="primary"  *ngIf="display_button_geo == false" (click)="graphic_display()" >
+    <!-- style="height: 80px;width: 300px;position: relative;float:right;margin-right: 5%;" -->
+
+<h1><img style='width: 50px; 'src="../../assets/logo_map.png">Carte</h1>
+</button>
+
+<div class="container">
+    <div id="Global">
+        <div id="gauche" *ngIf="display_table_geo || display_table_geo_details">
+            <div *ngIf="display_table_geo" id="table_results" >
+                
+                <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
+                    <thead>
+                    <tr>
+                        <!-- <th *ngFor="let header of headers" >{{header}}</th> -->
+                        <th>Adresse</th>
+                        <th>Date</th>
+                        <th>Lat</th>
+                        <th>Long</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of databaseGeo" (mouseover)="over(data)" (mouseout)="out()" (click)="zoom(data,14)">
+                        <!-- <th *ngFor="let row_data of data.row_data">{{row_data}}</th> -->
+                        <td>{{ data.text }}</td>
+                        <td>{{ data.startingTime}} - {{ data.endingTime}}</td>
+                        <td>{{ data.lat | number }}</td>
+                        <td>{{ data.long | number }}</td>
+                        <td><button class="btn btn-sm btn-dark" (click)="details(data)">Détails</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div *ngIf="display_table_geo_details" id="table_results_details" >
+                
+                <div class="container h-25">
+                    
+                    <div class="rounded bg-info bg-opacity-25 fs-3 d-flex justify-content-between" >
+                        <button class="btn btn-primary btn-sm  " (click)="retour()"> RETOUR </button>
+                        <p class="">{{databaseGeoDetails[0].text}} {{rounded(databaseGeoDetails[0].startingTime) }}-{{rounded(databaseGeoDetails[0].endingTime) }}</p>
+                        <p>|</p>
+                    </div>
+                </div>
+                
+                <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
+                    <thead>
+                    <tr>
+                        <th>Adresse</th>
+                        <th>source</th>
+                        <th>précision</th>
+                        <th>rang</th>
+                        <th>action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of databaseGeoDetails" (mouseover)="over_details(data)" (mouseout)="out_details()" (click)="zoom(data,15)">
+                        <td>{{ data.properties.name }}</td>
+                        <td>{{ data.source }}</td>
+                        <td>{{data.precision}}</td>
+                        <td>{{ data.rang }}</td>
+
+                        <td><button class="btn btn-sm btn-dark" (click)="rang(data)"><img src="../../assets/logo_up.png" style="width: 10px;"> 1er Rang  </button></td>
+                        
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="droite">
+            <div class="map-wrapper">
+                    <div class="map" id="map" ></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+button {
+    background: white;
+    width: 50px;
+    height: 50px;
+    border: 0;
+    border-radius: 50%;
+    font-size: 1.5em;
+    position: relative;
+    outline: none;
+    float: right;
+  }
+  
+  button span {
+    position: absolute;
+    transition: 0.3s;
+    background: rgba(101, 101, 166, 0.384);
+    border-radius: 10px;
+  }
+  
+  button span:first-of-type {
+    top: 25%;
+    bottom: 25%;
+    width: 10%;
+    left: 45%;
+  }
+  
+  button span:last-of-type {
+    left: 25%;
+    right: 25%;
+    height: 10%;
+    top: 45%;
+  }
+  
+  button.expanded span:first-of-type,
+  button.expanded span:last-of-type {
+    transform: rotate(90deg);
+  }
+  
+  button.expanded span:last-of-type {
+    left: 50%;
+    right: 50%;
+  }
