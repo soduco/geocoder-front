@@ -64,7 +64,6 @@ export class GeocodeurComponent implements  OnChanges {
     this.display_button_exp=true;
     this.geocodage_done=true;
     this.chargement=false;
-    
   }
   
   /**
@@ -129,7 +128,7 @@ export class GeocodeurComponent implements  OnChanges {
     const adresses = this.AdressesService.getAdresse();
     let nb_max = 0
     for (let x = 0 ; x<adresses.length ; x++){
-      if (adresses[x].text.trim().length == 0){
+      if (adresses[x].text.trim().length == 0){ // On passe si aucune adresse est donnée
         continue 
       }
       //depreciated 
@@ -159,8 +158,6 @@ export class GeocodeurComponent implements  OnChanges {
             continue;
           }
         }  
-      
-
       }) 
       await this.sleep(1000);
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
@@ -182,4 +179,21 @@ export class GeocodeurComponent implements  OnChanges {
     this.isPrevisClicked = true;
     this.enfant2.emit(this.isPrevisClicked);
   }
+
+
+  /**
+   *  Fonction test pour récupérer mieux les erreurs mais marche pas
+   */
+  // async geocodageBIS(){
+  //   this.AdressesService.cleanAdresseGeo()
+  //   this.enfant.emit(this.isClicked);
+  //   const csvPrepared = this.csvService.getPreparedCSV();
+  //   for(let i=0; i<csvPrepared.length; i++){
+  //     if (csvPrepared[i].text.trim().length == 0){ // On passe si aucune adresse est donnée
+  //       continue 
+  //     } 
+  //     let result = await this.apiService.getAdressBIS(csvPrepared[i].text, csvPrepared[i].startingTime, csvPrepared[i].endingTime, csvPrepared[i].softTime, this.selected_nb);
+  //     console.log(result);
+  //   } 
+  // }
 }

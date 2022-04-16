@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CsvData } from './csv/csv.component';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ export class CsvServiceService {
 
   data: Array<string>[] = [];
   header: string[] = [];
+  preparedDate: Array<CsvData> = [];
 
   constructor() { }
 
@@ -33,4 +35,13 @@ export class CsvServiceService {
     this.data = [];
     this.header = [];
   }
+
+  setPreparedCSV(data: Array<CsvData>) {
+    this.preparedDate = data;
+  }
+
+  getPreparedCSV() {
+    return this.preparedDate;
+  }
+
 }

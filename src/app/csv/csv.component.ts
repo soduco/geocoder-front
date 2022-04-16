@@ -522,6 +522,15 @@ export class CsvComponent  {
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
+      
+      if(typeof(csvRecord.startingTime) == "undefined"){ // On vérifie que la date de début est bien définie. Il se peut que l'information soit absente du CSV
+        csvRecord.startingTime = '1700'; // On lui donne une valeur par défaut
+      } 
+
+      if(typeof(csvRecord.endingTime) == "undefined"){ // On vérifie que la date de fin est bien définie. Il se peut que l'information soit absente du CSV
+        csvRecord.endingTime = '1950'; // On lui donne une valeur par défaut
+      }
+
       if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
         this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
       } else {
@@ -529,6 +538,8 @@ export class CsvComponent  {
       }
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau
+    this.csvService.setPreparedCSV(this.CsvDataResult); // On envoie le tableau contenant les CsvData au service
+
     this.resGeocodage = 1; // On quitte la fonction avec succès
     return this.resGeocodage;
   }  
