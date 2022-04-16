@@ -610,7 +610,6 @@ export class CsvComponent  {
   expand(value:number){ // Fonction permettant d'étendre ou non les différentes parties de la page
     if(value == 2){
       this.expand2 = !this.expand2; // On change la valeur de l'expand2 
-      console.log(this.expand2);
     }  else if(value == 4){
       this.expand4 = !this.expand4; // On change la valeur de l'expand4
       this.selectionManuelle = false; // On affiche pas le choix du type de calendrier : fenêtre ou distance
