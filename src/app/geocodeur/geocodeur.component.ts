@@ -24,7 +24,7 @@ export class GeocodeurComponent implements  OnChanges {
 
   public isPrevisClicked: boolean = false;
   public isClicked: boolean = false;
-  public csv_valid!: boolean;
+  public csv_valid!: number;
   display_button_exp:boolean = false;
   display_button_geo : boolean = true;
   public geocodage_done:boolean = false;
@@ -35,11 +35,15 @@ export class GeocodeurComponent implements  OnChanges {
   constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log("changement")
     // console.log(typeof(changes['parent']));
     if(changes && typeof(changes['parent']) != "undefined"){
       this.csv_valid = changes['parent'].currentValue;
-      if (this.csv_valid == true){
+      if (this.csv_valid >= 0 ){
         this.display_button_geo=false;
+        this.display_button_exp=false;
+        this.geocodage_done=false;
+        
       }
     }
   }
@@ -120,7 +124,7 @@ export class GeocodeurComponent implements  OnChanges {
    */
   async geocodage() {
     this.AdressesService.cleanAdresseGeo()
-    // this.chargement=true;
+    this.chargement=true;
 
     // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
@@ -139,6 +143,7 @@ export class GeocodeurComponent implements  OnChanges {
 
         for (let i = 0; i < this.selected_nb; i++) {
           try {
+            
             const dataGeo: CsvDataGeo = new CsvDataGeo();
             dataGeo.row_data = this.csvService.getCsvDataById(x);
             dataGeo.text = adresses[x].text;

@@ -25,9 +25,9 @@ th.mat-header-cell {
 
 #map {
   height: 500px;
-
   margin:0px;
   padding:0px;
+  background-color: white;
 }
 
 #DataTables_Table_0{
