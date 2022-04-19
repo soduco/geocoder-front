@@ -47,8 +47,12 @@ export class GeocodeurComponent implements  OnChanges {
         
       }
     }
-    if (changes['resGeocodageG'].currentValue == -1){
-      this.chargement=false;
+    if (changes && typeof(changes['resGeocodageG']) != "undefined"){
+
+      this.resGeocodageG = changes['resGeocodageG'].currentValue;
+      if (this.resGeocodageG == -1){
+        this.chargement=false;
+      }
     }
   }
 
