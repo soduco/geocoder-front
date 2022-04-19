@@ -1,7 +1,5 @@
 
-<button  style="height: 80px;width: 300px;position: relative;float:right;margin-right: 12.5%;" class="bouton-ligne" mat-raised-button color="primary"  *ngIf="display_button_geo == false" (click)="graphic_display()" >
-    <!-- style="height: 80px;width: 300px;position: relative;float:right;margin-right: 5%;" -->
-
+<button  style="height: 80px;width: 300px;position: relative;float:right;margin-right: 12.5%;" class="bouton-ligne" mat-raised-button color="primary"  *ngIf="display_map" (click)="graphic_display()" >
 <h1><img style='width: 50px; 'src="../../assets/logo_map.png">Carte</h1>
 </button>
 
@@ -41,7 +39,7 @@
                     <div class="rounded bg-info bg-opacity-25 fs-3 d-flex justify-content-between" >
                         <button class="btn btn-primary btn-sm  " (click)="retour()"> RETOUR </button>
                         <p class="">{{databaseGeoDetails[0].text}} {{rounded(databaseGeoDetails[0].startingTime) }}-{{rounded(databaseGeoDetails[0].endingTime) }}</p>
-                        <p>|</p>
+                        <p></p>
                     </div>
                 </div>
                 

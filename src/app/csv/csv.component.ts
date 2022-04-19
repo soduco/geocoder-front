@@ -74,7 +74,7 @@ export class CsvComponent  {
 
   public display_button_geo:boolean = false; // Attribut qui gère l'affichage ou non du boutton géocodage
 
-  public csv_valid:boolean = false; // Attribut qui représente la validité ou non du fichier uploadé par l'utilisateur
+  public csv_valid:number = -1; // Attribut qui représente la validité ou non du fichier uploadé par l'utilisateur (-1 = non valide)
 
   public showSpinner:boolean = false; // Attribut qui gère l'affichage ou non du cercle de chargement du fichier
 
@@ -138,18 +138,18 @@ export class CsvComponent  {
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
     this.displayLoader(); // On affiche le loader
-
+    
     this.expand2 = true; this.expand4 = true; // On affiche les détails de la partie 2 et 4
 
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
-
+    
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
 
       // Ici le fichier est valide
 
       this.fileName = files[0].name; // On récupère le nom du fichier
 
-      this.csv_valid=true; // On change l'attribut csv_valid car le fichier est valide 
+      this.csv_valid+=1; // On change l'attribut csv_valid car le fichier est valide 
 
       this.display_button_geo=true; // On affiche le boutton géocodage
 
@@ -290,6 +290,7 @@ export class CsvComponent  {
     } else {
 
       // Ici le fichier est invalide
+      this.csv_valid=-1
 
       Swal.fire({icon: 'error', title: "Le fichier n'est pas valide.", text: "Veuillez importer un fichier csv (finissant par .csv)."}) // On affiche un message d'erreur
 
@@ -325,6 +326,7 @@ export class CsvComponent  {
       };
 
     }
+    console.log(this.csv_valid)
   }
 
   isValidCSVFile(file: any) { // On vérifie que le fichier importé est bien un fichier csv
