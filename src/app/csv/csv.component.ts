@@ -134,6 +134,9 @@ export class CsvComponent  {
 
   public resGeocodage:number = 0; // Résultat du géocodage
 
+  public matGroupButtons = document.getElementsByTagName("mat-button-toggle-group");
+  public matButtons = document.getElementsByTagName("mat-button-toggle");
+
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){  }
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
@@ -229,6 +232,8 @@ export class CsvComponent  {
           this.displayRecords = display; // L'objet displayRecords prend les données à afficher dans l'aperçu du fichier
 
           this.hideLoader(); // On cache le loader
+
+          setTimeout(()=>this.isOverflown(this.matGroupButtons, this.matButtons),50);
 
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
@@ -636,6 +641,21 @@ export class CsvComponent  {
   isPrevizClicked(){ // Fonction qui replie les différentes parties de la page quand on clique sur le bouton prévisualisation
     this.isPrevisClicked = !this.isPrevisClicked; // On change la valeur de isPrevisClicked
     this.expand2 = false; this.expand4 = false; // On repli toutes les parties de la page
+  }
+
+  isOverflown(elementG: any, elements : any) { // Fonction qui vérifie si un élément dépasse de la div ou non
+    // console.log("j'entre dans la fonction")
+    // console.log(element[0].scrollWidth);console.log(element[0].clientWidth);
+    // console.log(elements.length);
+    let width = 0;
+    for(let i=0; i<(elements.length/2); i++){
+      width += elements[i].scrollWidth;
+    }
+    if(width > elementG[0].clientWidth){
+      console.log("overflow");
+      elementG[0].style.overflowX = 'scroll';
+      elementG[1].style.overflowX = 'scroll';
+    }
   }
 }
 
