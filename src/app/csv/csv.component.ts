@@ -644,9 +644,6 @@ export class CsvComponent  {
   }
 
   isOverflown(elementG: any, elements : any) { // Fonction qui vérifie si un élément dépasse de la div ou non
-    // console.log("j'entre dans la fonction")
-    // console.log(element[0].scrollWidth);console.log(element[0].clientWidth);
-    // console.log(elements.length);
     let width = 0;
     for(let i=0; i<(elements.length/2); i++){
       width += elements[i].scrollWidth;

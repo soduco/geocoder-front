@@ -69,10 +69,6 @@ max-height: 300px;
   text-align: center;
 }
 
-mat-button-toggle-group{
-  /* overflow-x: scroll !important; */
-}
-
 mat-button-toggle {
   display: inline-flex !important;
   border: 0.1px rgba(0,0,0,0) solid !important;
