@@ -35,7 +35,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   display_button_geo: boolean = true;
   display_table_geo : boolean = false;
   display_table_geo_details : boolean = false;
-
+  display_map : boolean = false;
   //databases for the 2 possible table 
   public databaseGeo : CsvDataGeo[] = [];
   public databaseGeoDetails : CsvDataGeo[] = [];
@@ -120,8 +120,18 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * @param  {SimpleChanges} changes 
    */
   ngOnChanges(changes: SimpleChanges) {
+   
     if (changes['data_available'].currentValue == true){
       this.display_button_geo=false
+      this.display_map=true;
+    }
+    else{
+     
+      this.display_table_geo = false;
+      this.display_table_geo_details=false;
+      this.display_map=false;
+      this.map.off()
+      this.map.remove()
     }
   }
 
@@ -202,7 +212,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
    */
   details(data : any){
    
-    this.cleanMap()
+    this.cleanMap() // clean the map of all markers 
     this.adresseService.getAdresseGeoByAdresse(data.text,data.startingTime,data.endingTime).subscribe((response:any) => {
       this.databaseGeoDetails = response 
     })
@@ -218,12 +228,11 @@ export class MapComponent implements  OnChanges, OnDestroy{
       else{
         var circle = L.circleMarker([data.lat,data.long], MarkerOptions);
       }
-      this.markers.push(circle)
-      circle.addTo(this.map).bindPopup(data.text);
-
+      circle.addTo(this.map).bindPopup(data.properties.name);
       var marker_number = L.marker([data.lat, data.long],{icon: numberIcon})
-      marker_number.addTo(this.map)
-      this.markers.push(marker_number)
+      marker_number.addTo(this.map).bindPopup(data.properties.name)
+
+      this.markers.push(circle,marker_number)
      
     }
     this.map.fitBounds(L.featureGroup(this.markers).getBounds(),{ padding: [20, 20] });
@@ -232,14 +241,14 @@ export class MapComponent implements  OnChanges, OnDestroy{
     this.display_table_geo_details=true;
 
   }
-
-  
+ 
   /**
    * Function activated when the button "mettre au rang 1" is pressed. 
    * Put the current data in rank 1 and the old data rank 1 to the currant data rank. 
    * @param  {any} data : data selected 
    */
   rang(data : any ){
+    console.log(data)
     const rang_click = data.rang 
     this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,"1","-1")
     this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,rang_click,"1")
@@ -341,5 +350,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   }
 
 }
+
+
 
 
