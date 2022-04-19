@@ -195,9 +195,11 @@ export class GeocodeurComponent implements  OnChanges {
         this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
         await this.sleep(500);
       }
-      this.display_button_exp=true;
-      this.geocodage_done=true;
-      this.chargement=false;
+      if(this.resGeocodageG == 1){
+        this.display_button_exp=true;
+        this.geocodage_done=true;
+        this.chargement=false;
+      }
     }
   }
 
@@ -282,10 +284,11 @@ export class GeocodeurComponent implements  OnChanges {
           }
         }  
       }
-      
-      this.display_button_exp=true;
-      this.geocodage_done=true;
-      this.chargement=false;
+      if(this.resGeocodageG == 1){
+        this.display_button_exp=true;
+        this.geocodage_done=true;
+        this.chargement=false;
+      }
     }
   
 }
