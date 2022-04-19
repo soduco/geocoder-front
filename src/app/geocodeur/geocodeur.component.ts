@@ -36,8 +36,8 @@ export class GeocodeurComponent implements  OnChanges {
   constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService, public transformCSV : TransformCsvService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("changement")
-    // console.log(typeof(changes['parent']));
+    
+    
     if(changes && typeof(changes['parent']) != "undefined"){
       this.csv_valid = changes['parent'].currentValue;
       if (this.csv_valid >= 0 ){
@@ -46,6 +46,9 @@ export class GeocodeurComponent implements  OnChanges {
         this.geocodage_done=false;
         
       }
+    }
+    if (changes['resGeocodageG'].currentValue == -1){
+      this.chargement=false;
     }
   }
 
@@ -125,7 +128,8 @@ export class GeocodeurComponent implements  OnChanges {
    */
   async geocodage() {
     this.AdressesService.cleanAdresseGeo()
-    this.chargement=true;
+    if (this.resGeocodageG != -1)
+      this.chargement=true;
 
     // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
@@ -221,4 +225,67 @@ export class GeocodeurComponent implements  OnChanges {
   //     console.log(result);
   //   } 
   // }
+
+  /**
+   * Function used when the button "geocodage" is presssed. It will fill the apiService by all the results. 
+   */
+   async geocodage_one_by_one() {
+    this.AdressesService.cleanAdresseGeo()
+    if (this.resGeocodageG != -1)
+      this.chargement=true;
+
+    // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
+
+    this.enfant.emit(this.isClicked);
+    const adresses = this.AdressesService.getAdresse();
+    let nb_max = 0
+    for (let x = 0 ; x<adresses.length ; x++){
+      if (adresses[x].text.trim().length == 0){ // On passe si aucune adresse est donnée
+        continue 
+      }
+      const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
+
+        for (let i = 0; i < this.selected_nb; i++) {
+          try {
+            
+            const dataGeo: CsvDataGeo = new CsvDataGeo();
+            dataGeo.row_data = this.csvService.getCsvDataById(x);
+            dataGeo.text = adresses[x].text;
+            dataGeo.startingTime = adresses[x].startingTime;
+            dataGeo.endingTime = adresses[x].endingTime;
+            dataGeo.softTime = adresses[x].softTime;
+            if(typeof(response) == "object"){
+              if(typeof(response.features[i]) != "undefined"){
+                dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
+                dataGeo.precision = response.features[i].properties.layer
+                dataGeo.properties = response.features[i].properties
+                dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
+                dataGeo.long = response.features[i].geometry.coordinates[0].toString();
+              } else {
+                continue;
+              }
+            } else {
+              continue;
+            }
+            dataGeo.rang = (i + 1).toString();
+            this.AdressesService.addAdresseGeo(dataGeo);
+            nb_max += 1;
+          } catch (error) {
+            console.error("Il y a eu une erreur : ", error);
+            if (error instanceof Error) {
+              let errorMessage = error.message;
+              console.log(errorMessage);
+            }
+            
+            continue;
+
+          }
+        }  
+      }
+      
+      this.display_button_exp=true;
+      this.geocodage_done=true;
+      this.chargement=false;
+    }
+  
 }

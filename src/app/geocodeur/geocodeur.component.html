@@ -1,11 +1,12 @@
 <div *ngIf="csv_valid >=0">
     
 
-    <button class="bouton-ligne" style="height: 80px;width: 300px;margin-left: 12.5%;" mat-raised-button color="primary" (click)=" geocodage()" [disabled]="display_button_geo">
+    <button class="bouton-ligne" style="height: 80px;width: 300px;margin-left: 12.5%;" mat-raised-button color="primary" (click)=" geocodage_one_by_one()" [disabled]="display_button_geo">
     <h1><img src="../../assets/logo_geocode.png" style=" width: 40px;" class="bouton-ligne">Géocodage</h1></button>
-
-
-    <mat-progress-bar mode="indeterminate" *ngIf="chargement" ></mat-progress-bar>        
+   
+    
+    <mat-progress-spinner style="position: relative;float: right;margin-right: 30%;" mode="indeterminate" *ngIf="chargement" ></mat-progress-spinner> 
+       
     <app-export *ngIf="display_button_exp"  ></app-export>
 
     <app-map [data_available]="geocodage_done" (enfant)="this.isPrevizClicked()"></app-map>
