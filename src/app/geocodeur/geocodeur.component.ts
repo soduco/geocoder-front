@@ -135,9 +135,10 @@ export class GeocodeurComponent implements  OnChanges {
       //depreciated 
       //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise();
 
-      this.apiService.getAdressMass(adresses[x].softTime, this.selected_nb * adresses.length).subscribe(async (response) => {
-        console.log(response);
-      });
+      // Ne marche pas 
+      // this.apiService.getAdressMass(adresses[x].softTime, this.selected_nb * adresses.length).subscribe(async (response) => {
+      //   console.log(response);
+      // });
 
       this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
       
