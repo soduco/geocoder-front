@@ -76,6 +76,8 @@ export class CsvComponent  {
 
   public csv_valid:number = -1; // Attribut qui représente la validité ou non du fichier uploadé par l'utilisateur (-1 = non valide)
 
+  public geocodage_valid:boolean=false;
+
   public showSpinner:boolean = false; // Attribut qui gère l'affichage ou non du cercle de chargement du fichier
 
   public displayLimit:number = 10; // Nombre de lignes qu'on affiche dans l'aperçu du fichier
@@ -542,6 +544,7 @@ export class CsvComponent  {
     this.CsvDataResult = csvArr; // On renvoie le tableau
     this.csvService.setPreparedCSV(this.CsvDataResult); // On envoie le tableau contenant les CsvData au service
 
+    this.geocodage_valid=true;
     this.resGeocodage = 1; // On quitte la fonction avec succès
     return this.resGeocodage;
   }  
