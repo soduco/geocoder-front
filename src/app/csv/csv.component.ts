@@ -553,6 +553,11 @@ export class CsvComponent  {
 
       let index = this.headerRowMapped.get(this.selectedColumnsForAdress[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
       this.previsualisationAdress += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+      let cpt = 0; // On initialise le compteur
+      while(this.records[cpt][index].toString().trim()==''){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses est bien remplie
+        cpt ++;
+        this.previsualisationAdress += this.records[cpt][index].toString() + ' '; // On lui donne une valeur par défaut
+      }
 
     }
 
