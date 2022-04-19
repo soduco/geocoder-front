@@ -7,6 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { retry, catchError } from 'rxjs/operators';
 import { CsvServiceService } from './csv-service.service';
+import { TransformCsvService } from './transform-csv.service';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ import { CsvServiceService } from './csv-service.service';
 export class ApiService {
   public errorMessage: any;
 
-  constructor(private http: HttpClient, private csvService: CsvServiceService) { }
+  constructor(private http: HttpClient, private csvService: CsvServiceService, private transformCSV : TransformCsvService ) { }
 
   public getAdress(adress: string, startingTime: number, endingTime: number, softTime: number,size :number ): Observable<any> {
     const url = "http://dev-geocode.geohistoricaldata.org/api/v1/search?";
@@ -32,13 +33,16 @@ export class ApiService {
     return response;
   }
 
-  public getAdressMass(softTime:number, size:number, body:CsvData): Observable<any>{ // il faut formatter le csv avant de le mettre en argument de cette fonction !
+  public getAdressMass(softTime:number, size:number): Observable<any>{ // il faut formatter le csv avant de le mettre en argument de cette fonction !
     const url = "http://dev-geocode.geohistoricaldata.org/api/v1/msearch?";
     let queryParams = new HttpParams();
     queryParams = queryParams.append("size",size);
     queryParams = queryParams.append("time.softness",softTime);
 
-    const response = this.http.post(url,{params:queryParams,body:body})
+    let preparedCSV = this.csvService.getPreparedCSV();
+    let csv = this.transformCSV.convertToCSV(preparedCSV);
+
+    const response = this.http.post(url,{params:queryParams,body:csv})
                       .pipe(retry(1),catchError(this.handleError));
 
     return response;

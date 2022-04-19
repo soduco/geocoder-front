@@ -6,6 +6,7 @@ import { ApiService } from '../api.service';
 import { CsvDataGeo } from '../csv/csv.component';
 import { CsvServiceService } from '../csv-service.service';
 import { ParametreAvanceService } from '../parametre-avance.service';
+import { TransformCsvService } from '../transform-csv.service';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class GeocodeurComponent implements  OnChanges {
   public chargement:boolean=false;
   public nb! : number;
 
-  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService) { }
+  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService, public transformCSV : TransformCsvService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(typeof(changes['parent']));
@@ -133,6 +134,11 @@ export class GeocodeurComponent implements  OnChanges {
       }
       //depreciated 
       //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise();
+
+      this.apiService.getAdressMass(adresses[x].softTime, this.selected_nb * adresses.length).subscribe(async (response) => {
+        console.log(response);
+      });
+
       this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
       
         //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
