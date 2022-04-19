@@ -333,7 +333,6 @@ export class CsvComponent  {
       };
 
     }
-    console.log(this.csv_valid)
   }
 
   isValidCSVFile(file: any) { // On vérifie que le fichier importé est bien un fichier csv
