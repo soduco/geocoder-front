@@ -134,8 +134,9 @@ export class CsvComponent  {
 
   public resGeocodage:number = 0; // Résultat du géocodage
 
-  public matGroupButtons = document.getElementsByTagName("mat-button-toggle-group");
-  public matButtons = document.getElementsByTagName("mat-button-toggle");
+  public matGroupButtons = document.getElementsByTagName("mat-button-toggle-group") as HTMLCollectionOf<HTMLElement>;
+  public matButtons = document.getElementsByTagName("mat-button-toggle") as HTMLCollectionOf<HTMLElement>;
+  public colonnes = document.getElementsByClassName("colonnes") as HTMLCollectionOf<HTMLElement>;
 
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){  }
 
@@ -149,6 +150,10 @@ export class CsvComponent  {
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
 
       // Ici le fichier est valide
+      this.matGroupButtons[0].style.display = "block"; // On cache les boutons
+      this.matGroupButtons[1].style.display = "block"; // On cache les boutons
+      this.colonnes[0].style.display = "block"; // On affiche les colonnes
+      this.colonnes[1].style.display = "block"; // On affiche les colonnes
 
       this.fileName = files[0].name; // On récupère le nom du fichier
 
@@ -164,13 +169,6 @@ export class CsvComponent  {
         console.log('error is occured while reading file!');};
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
-
-        this.previsualisationDate = ''; // On vide la prévisualisation
-        this.previsualisationAdress = ''; // On vide la prévisualisation
-
-        this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
-
-        this.selectedColumnsForDate = []; // On vide les colonnes séléctionnées pour l'adresse
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
@@ -277,7 +275,7 @@ export class CsvComponent  {
 
         } else {
 
-          // Ici les données ne son pas des chaînes de caractères
+          // Ici les données ne sont pas des chaînes de caractères
 
           Swal.fire({icon: 'error', title: "Les données dans le fichier ne sont pas valides.",text: "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."}); // On affiche un message d'erreur
 
@@ -301,33 +299,6 @@ export class CsvComponent  {
       this.hideLoader(); // On cache le loader
 
       this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
-
-      // On change alors les couleurs des textes pour montrer que le fichier n'est pas valide
-
-      const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
-          
-      if(inputCSV){ // On vérifie que l'objet existe
-
-        const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
-        const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
-        const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
-
-        if(text2){ // On vérifie que l'objet existe
-
-          text2.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
-          text2.style.fontWeight = "300";
-        }
-        if(text3){ // On vérifie que l'objet existe
-
-          text3.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte
-          text3.style.fontWeight = "300";
-        }
-        if(text4){ // On vérifie que l'objet existe
-
-          text4.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
-          text4.style.fontWeight = "300";
-        }
-      };
 
     }
   }
@@ -388,14 +359,54 @@ export class CsvComponent  {
   }
 
   fileReset() { // On réinitialise l'import du fichier
+    this.csv_valid = false; // On indique que le fichier n'est pas valide
     this.csvReader.nativeElement.value = "";
     this.records = [];
     this.jsondatadisplay = '';
     this.csvService.cleanCsvData();
-    this.selectedColumnsForAdress = [];
-    this.selectedColumnsForDate = [];
+    
+    this.previsualisationDate = ''; // On vide la prévisualisation
+    this.previsualisationAdress = ''; // On vide la prévisualisation
+    this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
+    this.selectedColumnsForDate = []; // On vide les colonnes séléctionnées pour l'adresse
+    this.matGroupButtons[0].style.display = "none"; // On cache les boutons
+    this.matGroupButtons[1].style.display = "none"; // On cache les boutons
+    this.colonnes[0].style.display = "none"; // On cache les colonnes
+    this.colonnes[1].style.display = "none"; // On cache les colonnes
+
     this.adresses_service.cleanAdresse();
     this.adresses_service.cleanAdresseGeo();
+
+    // On change alors les couleurs des textes pour montrer que le fichier n'est pas valide
+
+    const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
+          
+    if(inputCSV){ // On vérifie que l'objet existe
+
+      const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
+      const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
+      const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
+
+      if(text2){ // On vérifie que l'objet existe
+
+        text2.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
+        text2.style.fontWeight = "300";
+      }
+      if(text3){ // On vérifie que l'objet existe
+
+        text3.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte
+        text3.style.fontWeight = "300";
+      }
+      if(text4){ // On vérifie que l'objet existe
+
+        text4.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
+        text4.style.fontWeight = "300";
+      }
+    };
+    
+    // for (let i = 0; i < this.matButtons.length; i++) { // On affiche les boutons
+    //   this.matButtons[i]. = true;
+    // }
   }
 
   hideLoader(){ // On cache le loader
@@ -432,7 +443,7 @@ export class CsvComponent  {
   }
 
   getColumnSelectedForDate(header: any){ // On récupère les colonnes sélectionnées par l'utilisateur pour la date
-
+    console.log(this.matButtons);
     for(let i=0; i<this.selectedColumnsForDate.length+1; i++){ // On parcourt les éléments du tableau contenant les colonnes sélectionnées par l'utilisateur pour la date 
 
       if(this.selectedColumnsForDate[i] == header){ // On vérifie que la colonne n'est pas déjà dans le tableau
@@ -649,7 +660,6 @@ export class CsvComponent  {
       width += elements[i].scrollWidth;
     }
     if(width > elementG[0].clientWidth){
-      console.log("overflow");
       elementG[0].style.overflowX = 'scroll';
       elementG[1].style.overflowX = 'scroll';
     }
