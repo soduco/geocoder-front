@@ -9,13 +9,14 @@ th.mat-header-cell {
   padding: 10px;
 }
 
-#Global #gauche {
+#Global .gauche {
   float:left;
   width:50%; 
 }
-#Global #droite {
+#Global .droite {
   margin-left:51%
 }
+
 
 .container{
   margin-right:0px;
@@ -23,12 +24,14 @@ th.mat-header-cell {
   max-width: 100%;
 }
 
+
 #map {
-  height: 500px;
+  height: 450px;
   margin:0px;
   padding:0px;
   background-color: white;
 }
+
 
 #DataTables_Table_0{
   height: 400px;
