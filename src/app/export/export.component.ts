@@ -5,7 +5,7 @@ import { CsvServiceService } from '../csv-service.service';
 
 import { CsvDataGeo } from '../csv/csv.component';
 import {MatDialog} from '@angular/material/dialog';
-
+const Papa = require('papaparse');
 /*
 * Component of the button Download. 
 */
@@ -108,19 +108,8 @@ export class Dialog{
   convertToCSV(objArray : any) {
     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
     var str = '';
-    for (let head of this.final_headers){
-      str+=head +';'
-    }
-    str += '\r\n';
-    for (let i = 0; i < array.length; i++) {
-        let line = '';
-        for (let head of this.final_headers) {
-            if (line != '') line += ';'
-            line += array[i][head];
-        }
-        str += line + '\r\n';
-    }
-    return str;
+    const data = Papa.unparse(array);
+    return data
   }
   
   /**

@@ -4,17 +4,38 @@ th.mat-header-cell {
   max-width: 300px;
 }
 
+.background_container{
+  background-color: rgb(255, 255, 255);
+  box-shadow: -4px -4px 2px rgb(91, 91, 91);;
+}
+
+
+.invisible_container{
+  background-color: rgb(255, 255, 255);
+  box-shadow:none;
+}
+
 
 #Global { 
   padding: 10px;
+  
 }
 
 #Global .gauche {
   float:left;
   width:50%; 
+  border: 2px solid gray;
 }
+
+#Global .haut {
+
+  border: 2px solid gray;
+}
+
+
 #Global .droite {
-  margin-left:51%
+  margin-left:51%;
+
 }
 
 
@@ -30,6 +51,7 @@ th.mat-header-cell {
   margin:0px;
   padding:0px;
   background-color: white;
+  
 }
 
 

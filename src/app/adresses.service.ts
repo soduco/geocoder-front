@@ -46,29 +46,28 @@ export class AdressesService {
 
   getAdresseGeoByAdresse(adresse : string,startingTime : string,endingTime : string): Observable<CsvDataGeo[]> {
     let adresses_selected: CsvDataGeo[] = [];
-    
+    let adresses_selected_final: CsvDataGeo[] = [];
     for (let ad of this.adresses_geo){
       if (ad.text == adresse && ad.startingTime == startingTime && ad.endingTime == endingTime){
         adresses_selected.push(ad)
       }
     }
+    adresses_selected_final.push(adresses_selected[0]) // on ajoute le premier element 
 
-    for (let i=0;i<adresses_selected.length;i++){
-      for (let y=0;y<adresses_selected.length;y++){
-        if (i == y ){
-          continue
+    for (let i=1;i<adresses_selected.length;i++){
+      for (let y=0;y<adresses_selected_final.length;y++){
+        if (adresses_selected[i].rang == adresses_selected_final[y].rang){
+          break
         }
-        if (i !=y && adresses_selected[i].rang == adresses_selected[y].rang ){
-          const index = adresses_selected.indexOf(adresses_selected[i]);
-          if (index > -1) {
-            adresses_selected.splice(index, 1); // 2nd parameter means remove one item only
-          }
+        if (adresses_selected[i].rang != adresses_selected_final[y].rang && y==adresses_selected_final.length-1){
+          adresses_selected_final.push(adresses_selected[i])
         }
       }
+
     }
    
 
-  return of(adresses_selected)
+  return of(adresses_selected_final)
   }
 
   changeAdresseRang(adresse : string,startingTime:string,endingTime:string, old_rank : string, new_rank : string){
