@@ -26,7 +26,8 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
   public map_class='droite'
   public tab_class = 'gauche'
   public innerWidth!:number
-  public map_class_border='big'
+ 
+  public container = 'invisible_container'
 
   readonly ROOT_URL = "http://dev-geocode.geohistoricaldata.org/v1/search?";
   posts:any;
@@ -95,12 +96,10 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
     if( this.innerWidth <1300){
       this.map_class='bas'
       this.tab_class='haut'
-      this.map_class_border = 'small'
     }
     else{
       this.map_class='droite'
       this.tab_class='gauche'
-      this.map_class_border = 'big'
     }
   }
   
@@ -158,12 +157,13 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
   ngOnChanges(changes: SimpleChanges) {
    
     if (changes['data_available'].currentValue == true){
+      
       this.display_button_geo=false
       this.display_map=true;
       this.graphic_display() 
     }
     else{
-     
+      
       this.display_table_geo = false;
       this.display_table_geo_details=false;
       this.display_map=false;
@@ -189,8 +189,9 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
    * Create the databse for the datatable and create the map.
    */
   graphic_display(){
-   
     
+
+    this.container='background_container'
     const droite = document.getElementById( 'droite' );
     if(droite){
       droite.scrollIntoView(); // On scroll vers le bas de la page
@@ -232,6 +233,7 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
    * Function when the button "retour" is pressed -> display normal datable / remove datable details  
    */
   retour(){
+    window.scrollTo(0,document.body.scrollHeight);
     this.display_table_geo = true;
     this.display_table_geo_details=false;
     this.cleanMap()
@@ -251,6 +253,7 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
    * @param  {any} data : data selected 
    */
   details(data : any){
+    window.scrollTo(0,document.body.scrollHeight);
    
     this.cleanMap() // clean the map of all markers 
     this.adresseService.getAdresseGeoByAdresse(data.text,data.startingTime,data.endingTime).subscribe((response:any) => {

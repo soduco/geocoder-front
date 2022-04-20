@@ -47,12 +47,15 @@ export class GeocodeurComponent implements  OnChanges {
         
       }
     }
+
     if (changes && typeof(changes['resGeocodageG']) != "undefined"){
 
       this.resGeocodageG = changes['resGeocodageG'].currentValue;
       if (this.resGeocodageG == -1){
         this.chargement=false;
+        this.geocodage_done=false;
       }
+
     }
   }
 
@@ -131,9 +134,14 @@ export class GeocodeurComponent implements  OnChanges {
    * Function used when the button "geocodage" is presssed. It will fill the apiService by all the results. 
    */
   async geocodage() {
+    console.log("pas probleme")
     this.AdressesService.cleanAdresseGeo()
     if (this.resGeocodageG != -1)
       this.chargement=true;
+    else{
+      console.log("porbleme")
+      return
+    }
 
     // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
@@ -237,16 +245,22 @@ export class GeocodeurComponent implements  OnChanges {
    */
    async geocodage_one_by_one() {
     this.AdressesService.cleanAdresseGeo()
-    if (this.resGeocodageG != -1)
-      this.chargement=true;
-
-    // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
-
     this.enfant.emit(this.isClicked);
+    
+    this.chargement=true;
+    
+    
+    // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.  
     const adresses = this.AdressesService.getAdresse();
-    let nb_max = 0
+    
+    if (adresses.length == 0){
+      this.chargement=false
+      this.display_button_exp=false
+      return 
+    }
     for (let x = 0 ; x<adresses.length ; x++){
-      if (adresses[x].text.trim().length == 0){ // On passe si aucune adresse est donnée
+      if (adresses[x].text.trim().length == 0){
+         // On passe si aucune adresse est donnée
         continue 
       }
       const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
@@ -275,7 +289,7 @@ export class GeocodeurComponent implements  OnChanges {
             }
             dataGeo.rang = (i + 1).toString();
             this.AdressesService.addAdresseGeo(dataGeo);
-            nb_max += 1;
+           
           } catch (error) {
             console.error("Il y a eu une erreur : ", error);
             if (error instanceof Error) {

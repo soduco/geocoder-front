@@ -143,6 +143,7 @@ export class CsvComponent  {
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){  }
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
+  
     this.displayLoader(); // On affiche le loader
     
     this.expand2 = true; this.expand4 = true; // On affiche les détails de la partie 2 et 4
@@ -305,6 +306,7 @@ export class CsvComponent  {
       this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
 
     }
+
   }
 
   isValidCSVFile(file: any) { // On vérifie que le fichier importé est bien un fichier csv

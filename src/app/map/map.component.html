@@ -3,7 +3,7 @@
 <h1><img style='width: 50px; 'src="../../assets/logo_map.png">Carte</h1>
 </button> -->
 <br><br><br>
-<div class="container" >
+<div [ngClass]="container" >
     <div id="Global">
         <div [ngClass]="tab_class" *ngIf="display_table_geo || display_table_geo_details">
             <div *ngIf="display_table_geo" id="table_results" >
@@ -20,7 +20,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let data of databaseGeo" (mouseover)="over(data)" (mouseout)="out()" (click)="zoom(data,14)">
+                    <tr *ngFor="let data of databaseGeo" (mouseover)="over(data)" (mouseout)="out()" >
                         <!-- <th *ngFor="let row_data of data.row_data">{{row_data}}</th> -->
                         <td>{{ data.text }}</td>
                         <td>{{ data.startingTime}} - {{ data.endingTime}}</td>
@@ -54,7 +54,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let data of databaseGeoDetails" (mouseover)="over_details(data)" (mouseout)="out_details()" (click)="zoom(data,15)">
+                    <tr *ngFor="let data of databaseGeoDetails" (mouseover)="over_details(data)" (mouseout)="out_details()" (dbclick)="zoom(data,14)" >
                         <td>{{ data.properties.name }}</td>
                         <td>{{ data.source }}</td>
                         <td>{{data.precision}}</td>
@@ -69,8 +69,9 @@
         </div>
         <div [ngClass]="map_class">
             <div class="map-wrapper">
-                    <div [ngClass]="map_class_border" id="map" ></div>
+                    <div [ngClass]="'map_class_border'" id="map" ></div>
             </div>
         </div>
     </div>
 </div>
+<br><br>
