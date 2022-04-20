@@ -280,7 +280,7 @@ export class CsvComponent  {
 
         } else {
 
-          // Ici les données ne son pas des chaînes de caractères
+          // Ici les données ne sont pas des chaînes de caractères
 
           Swal.fire({icon: 'error', title: "Les données dans le fichier ne sont pas valides.",text: "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."}); // On affiche un message d'erreur
 
@@ -334,7 +334,7 @@ export class CsvComponent  {
       };
 
     }
-    console.log(this.csv_valid)
+   
   }
 
   isValidCSVFile(file: any) { // On vérifie que le fichier importé est bien un fichier csv
