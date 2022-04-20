@@ -167,8 +167,10 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
       this.display_table_geo = false;
       this.display_table_geo_details=false;
       this.display_map=false;
-      this.map.off()
-      this.map.remove()
+      if(typeof(this.map) != 'undefined'){
+        this.map.off()
+        this.map.remove()
+      }
     }
   }
 

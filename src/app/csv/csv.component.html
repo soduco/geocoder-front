@@ -68,7 +68,7 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
 
-        <div class="colonnes" id="colonnesAdresse">
+        <div class="colonnes" id="colonnesAdresse ">
           Pour l'adresse : {{group.value}}
           <div *ngIf="selectedColumnsForAdress.length>0" style="display:inline-flex; float:right;" >
             Aperçu : {{ previsualisationAdress }}
@@ -130,13 +130,13 @@
         </div>
 
 <!-- Paramètre avancé -->
-<button mat-button (click)="showAdvanced =!showAdvanced">
+<button mat-button *ngIf="csv_valid && expand4" (click)="showAdvanced =!showAdvanced">
   <mat-icon>settings</mat-icon>
 </button>
 <app-parametre-avance *ngIf="showAdvanced"></app-parametre-avance>
 
       </div>
-      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
+      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup" >
         <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header); previz()">
           {{header}}
         </mat-button-toggle>
