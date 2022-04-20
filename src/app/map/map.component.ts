@@ -157,12 +157,13 @@ export class MapComponent implements  OnChanges, OnDestroy,OnInit{
   ngOnChanges(changes: SimpleChanges) {
    
     if (changes['data_available'].currentValue == true){
+      
       this.display_button_geo=false
       this.display_map=true;
       this.graphic_display() 
     }
     else{
-     
+      
       this.display_table_geo = false;
       this.display_table_geo_details=false;
       this.display_map=false;
