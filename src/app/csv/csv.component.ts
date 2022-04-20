@@ -145,6 +145,8 @@ export class CsvComponent  {
 
     this.expand2 = true; this.expand4 = true; // On affiche les détails de la partie 2 et 4
 
+    this.headersRow = []; // On vide les entêtes du CSV
+
     let files = $event.srcElement.files; // Fichier importé par l'utilisateur
 
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
@@ -265,7 +267,6 @@ export class CsvComponent  {
 
               colonnes[0].style.display = "block"; // On affiche les colonnes sélectionnées
               colonnes[1].style.display = "block"; // On affiche les colonnes sélectionnées
-              // console.log(colonnes);
             }
             if(button1){ // On vérifie que l'objet existe
 
@@ -443,7 +444,6 @@ export class CsvComponent  {
   }
 
   getColumnSelectedForDate(header: any){ // On récupère les colonnes sélectionnées par l'utilisateur pour la date
-    console.log(this.matButtons);
     for(let i=0; i<this.selectedColumnsForDate.length+1; i++){ // On parcourt les éléments du tableau contenant les colonnes sélectionnées par l'utilisateur pour la date 
 
       if(this.selectedColumnsForDate[i] == header){ // On vérifie que la colonne n'est pas déjà dans le tableau

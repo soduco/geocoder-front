@@ -136,7 +136,7 @@
 <app-parametre-avance *ngIf="showAdvanced"></app-parametre-avance>
 
       </div>
-      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
+      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup" >
         <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header); previz()">
           {{header}}
         </mat-button-toggle>
