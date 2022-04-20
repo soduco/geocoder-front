@@ -1,10 +1,9 @@
 import { CsvData } from './csv/csv.component';
 import { Injectable } from '@angular/core';
 
-
 import { Observable, throwError } from 'rxjs';
 
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { retry, catchError } from 'rxjs/operators';
 import { CsvServiceService } from './csv-service.service';
 import { TransformCsvService } from './transform-csv.service';
@@ -38,11 +37,25 @@ export class ApiService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("size",size);
     queryParams = queryParams.append("time.softness",softTime);
+    queryParams = queryParams.append("text",1);
 
-    let preparedCSV = this.csvService.getPreparedCSV();
-    let csv = this.transformCSV.convertToCSV(preparedCSV);
+    // let preparedCSV = this.csvService.getPreparedCSV();
+    // let csv = this.transformCSV.convertToCSV(preparedCSV);
+    console.log(queryParams);
 
-    const response = this.http.post(url,{params:queryParams,body:csv})
+    let headers = this.csvService.getHeader();
+    let csv = this.csvService.getCsvData();
+    let goodCSV = [];
+    goodCSV[0] = headers;
+    for(let i=1; i<csv.length+1; i++){
+      goodCSV[i] = csv[i-1];
+    }
+    // console.log(goodCSV);
+    let httpheader = new HttpHeaders();
+    // httpheader = httpheader.append('Content-Type', 'text/csv');
+
+
+    const response = this.http.post(url,goodCSV,{params:queryParams})
                       .pipe(retry(1),catchError(this.handleError));
 
     return response;

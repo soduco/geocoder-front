@@ -115,6 +115,12 @@ export class GeocodeurComponent implements  OnChanges {
     })
   }
 
+  async geocodageMass(){
+    const adresses = this.AdressesService.getAdresse(); // Vide jsp pq
+    this.apiService.getAdressMass(1, 60).subscribe(async (response) => {
+      console.log(response);
+    });
+  }
 
   /**
    * Function used when the button "geocodage" is presssed. It will fill the apiService by all the results. 
