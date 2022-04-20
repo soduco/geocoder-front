@@ -100,7 +100,7 @@ export class CsvComponent  {
 
   public previsualisationDate: string = ''; // Prévisulation de la date construite par l'utilisateur avec les colonnes qu'il sélectionner
 
-  public startDate: Date = new Date(1700,1,1); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
+  public startDate: Date = new Date(1699,12,31); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
   public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
