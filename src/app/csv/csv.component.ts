@@ -365,7 +365,7 @@ export class CsvComponent  {
   }
 
   fileReset() { // On réinitialise l'import du fichier
-    this.csv_valid = false; // On indique que le fichier n'est pas valide
+    this.csv_valid = -1; // On indique que le fichier n'est pas valide
     this.csvReader.nativeElement.value = "";
     this.records = [];
     this.jsondatadisplay = '';
