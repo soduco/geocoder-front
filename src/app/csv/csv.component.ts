@@ -504,7 +504,7 @@ export class CsvComponent  {
         // console.log("ici c'est un string");
         if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-          if(typeof(this.chosenYear) == "string"){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
+          if((typeof(this.chosenYear) == "string") && (this.chosenEndYear == "")){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
             // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa distance temporelle");
 
             csvRecord.startingTime = (Number(this.chosenYear) - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
@@ -512,7 +512,6 @@ export class CsvComponent  {
           
           } else if (typeof(this.chosenEndYear) == "string"){
             // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa fenêtre temporelle");
-
             csvRecord.startingTime = this.chosenStartYear;
             csvRecord.endingTime = this.chosenEndYear;
           } else {
