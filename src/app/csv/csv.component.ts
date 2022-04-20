@@ -100,7 +100,7 @@ export class CsvComponent  {
 
   public previsualisationDate: string = ''; // Prévisulation de la date construite par l'utilisateur avec les colonnes qu'il sélectionner
 
-  public startDate: Date = new Date(1789,7,14); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
+  public startDate: Date = new Date(1789,6,14); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
   public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
@@ -120,9 +120,13 @@ export class CsvComponent  {
 
   public date = new FormControl(moment());
 
-  public chosenYear:any = new Date(0,0); // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
-  public chosenStartYear:any = new Date(0,0); // Date choisie de début par l'utilisateur pour une fenêtre temporelle
-  public chosenEndYear:any = new Date(0,0); // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
+  // public chosenYear:any = new Date(0,0); // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
+  // public chosenStartYear:any = new Date(0,0); // Date choisie de début par l'utilisateur pour une fenêtre temporelle
+  // public chosenEndYear:any = new Date(0,0); // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
+
+  public chosenYear:any = ""; // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
+  public chosenStartYear:any = ""; // Date choisie de début par l'utilisateur pour une fenêtre temporelle
+  public chosenEndYear:any = ""; // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
 
   public dateRange = new FormGroup({ // On crée un objet DataRange pour récupérer les dates données par l'utilisateur
     start: new FormControl(),
@@ -495,16 +499,20 @@ export class CsvComponent  {
       }
 
       const referenceDate = new Date(0,0); // Date de référence qui est la même que les chosendates si l'utilisateur n'utilise pas le calendrier
-
-      if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number")){
-   
-        // console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
+      // console.log((typeof(this.chosenYear) != "number"));console.log((typeof(this.chosenEndYear) != "number"));console.log((typeof(this.chosenYear) != "object"));console.log((typeof(this.chosenEndYear) != "object"));
+      if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number") && (typeof(this.chosenYear) != "object") && (typeof(this.chosenEndYear) != "object")){ // On vérifie que les dates sont bien remplies
+        // console.log("ici c'est un string");
         if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
           if(typeof(this.chosenYear) == "string"){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
+            // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa distance temporelle");
+
             csvRecord.startingTime = (Number(this.chosenYear) - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
             csvRecord.endingTime = (Number(this.chosenYear) + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+          
           } else if (typeof(this.chosenEndYear) == "string"){
+            // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa fenêtre temporelle");
+
             csvRecord.startingTime = this.chosenStartYear;
             csvRecord.endingTime = this.chosenEndYear;
           } else {
@@ -514,11 +522,13 @@ export class CsvComponent  {
           }
 
         } else if(this.selectedColumnsForDate.length == 1){
+          // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa date");
 
           csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
           csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
 
         } else if(this.selectedColumnsForDate.length == 2){
+          // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa date");
 
           for(let j=0; j<this.selectedColumnsForDate.length; j++){ // On parcourt les colonnes sélectionnées pour les adresses
             csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date de début
@@ -526,19 +536,27 @@ export class CsvComponent  {
           }
         }
 
-
-      } else if (typeof(this.chosenEndYear) != "number") {
+      } else if (typeof(this.chosenYear) == "number") {
 
         // console.log("Ici on est dans le cas où l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
         csvRecord.startingTime = (this.chosenYear - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
         csvRecord.endingTime = (this.chosenYear + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
         
-      } else {
+      } else if (typeof(this.chosenEndYear) == "number") {
 
         // console.log("Ici on est dans le cas où l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
         csvRecord.startingTime = this.chosenStartYear.toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier
         csvRecord.endingTime = this.chosenEndYear.toString(); // On donne à la valeur de fin la valeur donnée par l'utilisateur avec le calendrier
 
+      } else if (typeof(this.chosenYear) == "object") {
+        // console.log("Ici l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
+        csvRecord.startingTime = (this.chosenYear.year - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+        csvRecord.endingTime = (this.chosenYear.year + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+        
+      } else {
+        // console.log("Ici l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
+        csvRecord.startingTime = this.chosenStartYear.year.toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier
+        csvRecord.endingTime = this.chosenEndYear.year.toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier
       }
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
