@@ -1,11 +1,11 @@
-
+<!-- 
 <button  style="height: 80px;width: 300px;position: relative;float:right;margin-right: 12.5%;" class="bouton-ligne" mat-raised-button color="primary"  *ngIf="display_map" (click)="graphic_display()" >
 <h1><img style='width: 50px; 'src="../../assets/logo_map.png">Carte</h1>
-</button>
-
-<div class="container">
+</button> -->
+<br><br><br>
+<div class="container" >
     <div id="Global">
-        <div id="gauche" *ngIf="display_table_geo || display_table_geo_details">
+        <div [ngClass]="tab_class" *ngIf="display_table_geo || display_table_geo_details">
             <div *ngIf="display_table_geo" id="table_results" >
                 
                 <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions" >
@@ -67,9 +67,9 @@
                 </table>
             </div>
         </div>
-        <div id="droite">
+        <div [ngClass]="map_class">
             <div class="map-wrapper">
-                    <div class="map" id="map" ></div>
+                    <div [ngClass]="map_class_border" id="map" ></div>
             </div>
         </div>
     </div>

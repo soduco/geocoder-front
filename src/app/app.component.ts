@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -8,9 +8,17 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class AppComponent {
   title = 'Géocodeur historique';
+  public innerWidth:any = window.innerWidth;
+
+  @HostListener('window:resize', ['$event']) onResize() { 
+    this.innerWidth = window.innerWidth; 
+    
+  }
 
   reload(){
     window.location.reload();
   }
+ 
+  
 }
 
