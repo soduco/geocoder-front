@@ -24,8 +24,8 @@
   <a href="#dart-description">Description</a> &#xa0; | &#xa0; 
   <a href="#sparkles-fonctionnalités">Fonctionnalités</a> &#xa0; | &#xa0;
   <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-conditions requises pour lancer le projet en local">Conditions requises pour lancer le projet en local</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-lancement du projet en local">Lancement du projet en local</a> &#xa0; | &#xa0;
+  <a href="#white_check_mark-conditions-requises-pour-lancer-le-projet-en-local">Conditions requises pour lancer le projet en local</a> &#xa0; | &#xa0;
+  <a href="#checkered_flag-lancement-du-projet-en-local">Lancement du projet en local</a> &#xa0; | &#xa0;
   <a href="#memo-license">License</a> &#xa0; | &#xa0;
   <a href="https://github.com/Antoine-overflow" target="_blank">Author</a>
 </p>
