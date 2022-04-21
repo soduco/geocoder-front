@@ -42,14 +42,14 @@ Notre application est déployée à l'adresse suivante : http://dev-geocode.geoh
 S
 ## :sparkles: Fonctionnalités ##
 
-:heavy_check_mark: Fonctionnalité 1;\ Importer un fichier CSV en parcourant les dossiers de son ordinateur ou bien en glissant-déposant le fichier.
-:heavy_check_mark: Fonctionnalité 2;\ Visualiser les premières lignes du fichier importé pour vérifier l'encodage et les informations contenues dans le fichier.
-:heavy_check_mark: Fonctionnalité 3;\ Sélectionner les colonnes de son fichier pour construire les adresses qui seront géocodées.
-:heavy_check_mark: Fonctionnalité 4;\ Sélectionner les colonnes de son fichier ou choisir avec un calendrier la ou les date à laquelle on appliquera le géocodage.
-:heavy_check_mark: Fonctionnalité 5;\ Géocodage des adresses données aux dates données.
-:heavy_check_mark: Fonctionnalité 6;\ Télécharger un fichier CSV ou JSON contenant les résultats du géocodage.
-:heavy_check_mark: Fonctionnalité 7;\ Visualiser dans un tableau intéractif et sur une carte intéractive les résultats du géocodage.
-:heavy_check_mark: Fonctionnalité 8;\ Pouvoir changer les fonds de cartes en fonction de la date et pouvoir changer l'ordre des résultats du géocodage en fonction de l'analyse de l'utilisateur.
+:heavy_check_mark: Fonctionnalité 1 Importer un fichier CSV en parcourant les dossiers de son ordinateur ou bien en glissant-déposant le fichier. ;\
+:heavy_check_mark: Fonctionnalité 2 Visualiser les premières lignes du fichier importé pour vérifier l'encodage et les informations contenues dans le fichier. ;\
+:heavy_check_mark: Fonctionnalité 3 Sélectionner les colonnes de son fichier pour construire les adresses qui seront géocodées. ;\
+:heavy_check_mark: Fonctionnalité 4 Sélectionner les colonnes de son fichier ou choisir avec un calendrier la ou les date à laquelle on appliquera le géocodage.;\
+:heavy_check_mark: Fonctionnalité 5 Géocodage des adresses données aux dates données. ;\
+:heavy_check_mark: Fonctionnalité 6 Télécharger un fichier CSV ou JSON contenant les résultats du géocodage. ;\
+:heavy_check_mark: Fonctionnalité 7 Visualiser dans un tableau intéractif et sur une carte intéractive les résultats du géocodage. ;\
+:heavy_check_mark: Fonctionnalité 8 Pouvoir changer les fonds de cartes en fonction de la date et pouvoir changer l'ordre des résultats du géocodage en fonction de l'analyse de l'utilisateur. ;\
 
 ## :rocket: Technologies ##
 
@@ -87,10 +87,10 @@ $ ng serve
 
 ## :memo: License ##
 
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
+This project is under license for SODUCO, the team whom we worked with during the project.
 
 
-Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank"> Antoine Rainaud </a>
+Made with :heart: by <a href="https://github.com/Antoine-overflow" target="_blank"> Antoine Rainaud </a>
 
 &#xa0;
 
