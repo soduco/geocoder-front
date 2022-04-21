@@ -21,11 +21,11 @@
 <hr> -->
 
 <p align="center">
-  <a href="#dart-about">Description</a> &#xa0; | &#xa0; 
-  <a href="#sparkles-features">Fonctionnalités</a> &#xa0; | &#xa0;
+  <a href="#dart-description">Description</a> &#xa0; | &#xa0; 
+  <a href="#sparkles-fonctionnalites">Fonctionnalités</a> &#xa0; | &#xa0;
   <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-requirements">Conditions requises pour lancer le projet en local</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-starting">Lancement du projet en local</a> &#xa0; | &#xa0;
+  <a href="#white_check_mark-conditions">Conditions requises pour lancer le projet en local</a> &#xa0; | &#xa0;
+  <a href="#checkered_flag-lancement">Lancement du projet en local</a> &#xa0; | &#xa0;
   <a href="#memo-license">License</a> &#xa0; | &#xa0;
   <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">Author</a>
 </p>
@@ -49,7 +49,7 @@ S
 :heavy_check_mark: Fonctionnalité 5 : Géocodage des adresses données aux dates données. \
 :heavy_check_mark: Fonctionnalité 6 : Télécharger un fichier CSV ou JSON contenant les résultats du géocodage. \
 :heavy_check_mark: Fonctionnalité 7 : Visualiser dans un tableau intéractif et sur une carte intéractive les résultats du géocodage.\
-:heavy_check_mark: Fonctionnalité 8 : Pouvoir changer les fonds de cartes en fonction de la date et pouvoir changer l'ordre des résultats du géocodage en fonction de l'analyse de l'utilisateur. \
+:heavy_check_mark: Fonctionnalité 8 : Pouvoir changer les fonds de cartes en fonction de la date et pouvoir changer l'ordre des résultats du géocodage en fonction de l'analyse de l'utilisateur. 
 
 ## :rocket: Technologies ##
 
