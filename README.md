@@ -22,12 +22,12 @@
 
 <p align="center">
   <a href="#dart-description">Description</a> &#xa0; | &#xa0; 
-  <a href="#sparkles-fonctionnalites">Fonctionnalités</a> &#xa0; | &#xa0;
+  <a href="#sparkles-fonctionnalités">Fonctionnalités</a> &#xa0; | &#xa0;
   <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-conditions">Conditions requises pour lancer le projet en local</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-lancement">Lancement du projet en local</a> &#xa0; | &#xa0;
+  <a href="#white_check_mark-conditions_requises_pour_lancer_le_projet_en_local">Conditions requises pour lancer le projet en local</a> &#xa0; | &#xa0;
+  <a href="#checkered_flag-lancement_du_projet_en_local">Lancement du projet en local</a> &#xa0; | &#xa0;
   <a href="#memo-license">License</a> &#xa0; | &#xa0;
-  <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">Author</a>
+  <a href="https://github.com/Antoine-overflow" target="_blank">Author</a>
 </p>
 
 <br>
