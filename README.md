@@ -3,7 +3,7 @@
 
   &#xa0;
 
-  <!-- <a href="https://myapp.netlify.app">Demo</a> -->
+  <a href="https://github.com/soduco/geocoder-front/blob/Antoine/Style/Demo/Animation_short_boucle.gif">Demo</a>
 </div>
 
 <h1 align="center"> HistoGéo, le front-end du géocodeur historique </h1>
