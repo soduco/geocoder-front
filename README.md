@@ -39,7 +39,7 @@ Ce projet est le front-end du géocodeur historique développé par 5 étudiants
 Le géocodeur historique permet l'action de géocodage : transformer une adresse indirecte (adresse postale par exemple) en une adresse directe (latitude et longitude) sur une échelle de temps longue en prenant en compte les évolutions des adresses au fil du temps.
 
 Notre application est déployée à l'adresse suivante : http://dev-geocode.geohistoricaldata.org/ et a pour but d'être accessible et utilisable par toute personne souhaitant faire du géocodage. 
-S
+
 ## :sparkles: Fonctionnalités ##
 
 :heavy_check_mark: Fonctionnalité 1 : Importer un fichier CSV en parcourant les dossiers de son ordinateur ou bien en glissant-déposant le fichier. \
