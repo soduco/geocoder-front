@@ -1,9 +1,10 @@
 <div align="center" id="top"> 
-  <img src="https://github.com/soduco/geocoder-front/blob/Antoine/Style/src/assets/logo_HistoGeo.png" alt="My App" />
+  <img src="https://github.com/soduco/geocoder-front/blob/Antoine/Style/src/assets/logo_HistoGeo.png" alt="HistoGéo" />
 
   &#xa0;
 
-  <!-- <a href="https://myapp.netlify.app">Demo</a> -->
+  <a href="https://github.com/soduco/geocoder-front/blob/Antoine/Style/Demo/Animation_short_boucle_reduced2.gif">Demo</a>
+  
 </div>
 
 <h1 align="center"> HistoGéo, le front-end du géocodeur historique </h1>
@@ -39,6 +40,9 @@ Ce projet est le front-end du géocodeur historique développé par 5 étudiants
 Le géocodeur historique permet l'action de géocodage : transformer une adresse indirecte (adresse postale par exemple) en une adresse directe (latitude et longitude) sur une échelle de temps longue en prenant en compte les évolutions des adresses au fil du temps.
 
 Notre application est déployée à l'adresse suivante : http://dev-geocode.geohistoricaldata.org/ et a pour but d'être accessible et utilisable par toute personne souhaitant faire du géocodage. 
+
+
+<img src="https://github.com/soduco/geocoder-front/blob/Antoine/Style/Demo/Animation_short_boucle_reduced2.gif">
 
 ## :sparkles: Fonctionnalités ##
 
