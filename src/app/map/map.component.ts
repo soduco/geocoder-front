@@ -1,5 +1,5 @@
 import { ApiService } from './../api.service';
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, NgModule, OnDestroy, Inject, OnInit, ViewChild, EventEmitter, Output, HostListener } from '@angular/core';
 import * as L from 'leaflet'
 import { environment } from 'src/environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
@@ -19,11 +19,16 @@ import { data } from 'jquery';
 
 // https://blog.logrocket.com/angular-datatables-feature-rich-tables/
 
-export class MapComponent implements  OnChanges, OnDestroy{
+export class MapComponent implements  OnChanges, OnDestroy,OnInit{
   @ViewChild(DataTableDirective, {static: false})
   dtElement!: DataTableDirective;
 
-  
+  public map_class='droite'
+  public tab_class = 'gauche'
+  public innerWidth!:number
+ 
+  public container = 'invisible_container'
+
   readonly ROOT_URL = "http://dev-geocode.geohistoricaldata.org/v1/search?";
   posts:any;
   adresses = new Array<any>();
@@ -35,7 +40,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   display_button_geo: boolean = true;
   display_table_geo : boolean = false;
   display_table_geo_details : boolean = false;
-
+  display_map : boolean = false;
   //databases for the 2 possible table 
   public databaseGeo : CsvDataGeo[] = [];
   public databaseGeoDetails : CsvDataGeo[] = [];
@@ -78,9 +83,39 @@ export class MapComponent implements  OnChanges, OnDestroy{
   layers: "paris-rasters:BHdV_PL_ATL20Ardt_1888"
   });
 
-
+  
   //To get services 
   constructor(public apiService: ApiService, private adresseService : AdressesService,public csvService : CsvServiceService) { }
+
+
+  /**
+   * Function to update the css of map and table. In order to display the 2 entities next to each other or one after the other 
+   * depending on the size of the window. 
+   */
+  maj_css_map(){
+    if( this.innerWidth <1300){
+      this.map_class='bas'
+      this.tab_class='haut'
+    }
+    else{
+      this.map_class='droite'
+      this.tab_class='gauche'
+    }
+  }
+  
+  @HostListener('window:resize', ['$event']) onResize() { 
+    this.innerWidth = window.innerWidth
+    this.maj_css_map()
+  }
+  
+  /**
+   * Bring in the component the value of the size of the window. 
+   * @returns void
+   */
+  ngOnInit(): void {
+    this.innerWidth = window.innerWidth
+    this.maj_css_map()
+  }
 
   /** 
    * Function to create and display a map in the web interface 
@@ -114,14 +149,28 @@ export class MapComponent implements  OnChanges, OnDestroy{
     layerControl.addTo(this.map);
   };
 
-  
+ 
   /**
    * Fonction activated whenever a change is registred in geocodeur component -> display the button "Previsualisation des resultats"
    * @param  {SimpleChanges} changes 
    */
   ngOnChanges(changes: SimpleChanges) {
+   
     if (changes['data_available'].currentValue == true){
+      
       this.display_button_geo=false
+      this.display_map=true;
+      this.graphic_display() 
+    }
+    else{
+      
+      this.display_table_geo = false;
+      this.display_table_geo_details=false;
+      this.display_map=false;
+      if(typeof(this.map) != 'undefined'){
+        this.map.off()
+        this.map.remove()
+      }
     }
   }
 
@@ -141,6 +190,8 @@ export class MapComponent implements  OnChanges, OnDestroy{
    */
   graphic_display(){
     
+
+    this.container='background_container'
     const droite = document.getElementById( 'droite' );
     if(droite){
       droite.scrollIntoView(); // On scroll vers le bas de la page
@@ -182,6 +233,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * Function when the button "retour" is pressed -> display normal datable / remove datable details  
    */
   retour(){
+    window.scrollTo(0,document.body.scrollHeight);
     this.display_table_geo = true;
     this.display_table_geo_details=false;
     this.cleanMap()
@@ -201,8 +253,9 @@ export class MapComponent implements  OnChanges, OnDestroy{
    * @param  {any} data : data selected 
    */
   details(data : any){
+    window.scrollTo(0,document.body.scrollHeight);
    
-    this.cleanMap()
+    this.cleanMap() // clean the map of all markers 
     this.adresseService.getAdresseGeoByAdresse(data.text,data.startingTime,data.endingTime).subscribe((response:any) => {
       this.databaseGeoDetails = response 
     })
@@ -218,12 +271,11 @@ export class MapComponent implements  OnChanges, OnDestroy{
       else{
         var circle = L.circleMarker([data.lat,data.long], MarkerOptions);
       }
-      this.markers.push(circle)
-      circle.addTo(this.map).bindPopup(data.text);
-
+      circle.addTo(this.map).bindPopup(data.properties.name);
       var marker_number = L.marker([data.lat, data.long],{icon: numberIcon})
-      marker_number.addTo(this.map)
-      this.markers.push(marker_number)
+      marker_number.addTo(this.map).bindPopup(data.properties.name)
+
+      this.markers.push(circle,marker_number)
      
     }
     this.map.fitBounds(L.featureGroup(this.markers).getBounds(),{ padding: [20, 20] });
@@ -232,14 +284,14 @@ export class MapComponent implements  OnChanges, OnDestroy{
     this.display_table_geo_details=true;
 
   }
-
-  
+ 
   /**
    * Function activated when the button "mettre au rang 1" is pressed. 
    * Put the current data in rank 1 and the old data rank 1 to the currant data rank. 
    * @param  {any} data : data selected 
    */
   rang(data : any ){
+    console.log(data)
     const rang_click = data.rang 
     this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,"1","-1")
     this.adresseService.changeAdresseRang(data.text,data.startingTime,data.endingTime,rang_click,"1")
@@ -341,5 +393,7 @@ export class MapComponent implements  OnChanges, OnDestroy{
   }
 
 }
+
+
 
 

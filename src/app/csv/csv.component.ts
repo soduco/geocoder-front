@@ -74,7 +74,9 @@ export class CsvComponent  {
 
   public display_button_geo:boolean = false; // Attribut qui gère l'affichage ou non du boutton géocodage
 
-  public csv_valid:boolean = false; // Attribut qui représente la validité ou non du fichier uploadé par l'utilisateur
+  public csv_valid:number = -1; // Attribut qui représente la validité ou non du fichier uploadé par l'utilisateur (-1 = non valide)
+
+  public geocodage_valid:boolean=false;
 
   public showSpinner:boolean = false; // Attribut qui gère l'affichage ou non du cercle de chargement du fichier
 
@@ -98,7 +100,7 @@ export class CsvComponent  {
 
   public previsualisationDate: string = ''; // Prévisulation de la date construite par l'utilisateur avec les colonnes qu'il sélectionner
 
-  public startDate: Date = new Date(1700,1,1); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
+  public startDate: Date = new Date(1789,6,14); // Date de début du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
   public endDate : Date = new Date (2000,1,1); // Date de fin du calendrier servant à l'utilisateur pour choisir la date de la reqûete
 
@@ -118,9 +120,13 @@ export class CsvComponent  {
 
   public date = new FormControl(moment());
 
-  public chosenYear:any = new Date(0,0); // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
-  public chosenStartYear:any = new Date(0,0); // Date choisie de début par l'utilisateur pour une fenêtre temporelle
-  public chosenEndYear:any = new Date(0,0); // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
+  // public chosenYear:any = new Date(0,0); // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
+  // public chosenStartYear:any = new Date(0,0); // Date choisie de début par l'utilisateur pour une fenêtre temporelle
+  // public chosenEndYear:any = new Date(0,0); // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
+
+  public chosenYear:any = ""; // Date choisie par l'utilisateur dans le calendrier pour une distance temporelle
+  public chosenStartYear:any = ""; // Date choisie de début par l'utilisateur pour une fenêtre temporelle
+  public chosenEndYear:any = ""; // Date choisie de fin par l'utilisateur pour une fenêtre temporelle
 
   public dateRange = new FormGroup({ // On crée un objet DataRange pour récupérer les dates données par l'utilisateur
     start: new FormControl(),
@@ -134,22 +140,33 @@ export class CsvComponent  {
 
   public resGeocodage:number = 0; // Résultat du géocodage
 
+  public matGroupButtons = document.getElementsByTagName("mat-button-toggle-group") as HTMLCollectionOf<HTMLElement>;
+  public matButtons = document.getElementsByTagName("mat-button-toggle") as HTMLCollectionOf<HTMLElement>;
+  public colonnes = document.getElementsByClassName("colonnes") as HTMLCollectionOf<HTMLElement>;
+
   constructor(private adresses_service : AdressesService, private csvService : CsvServiceService){  }
 
   uploadListener($event: any): void { // Méthode principale de la classe où quasiment tout est fait    
-    this.displayLoader(); // On affiche le loader
 
+    this.displayLoader(); // On affiche le loader
+    
     this.expand2 = true; this.expand4 = true; // On affiche les détails de la partie 2 et 4
 
-    let files = $event.srcElement.files; // Fichier importé par l'utilisateur
+    this.headersRow = []; // On vide les entêtes du CSV
 
+    let files = $event.srcElement.files; // Fichier importé par l'utilisateur
+    
     if (this.isValidCSVFile(files[0])) { // On vérifie que le fichier est valide en utilisant la méthode isValidCSVFile
 
       // Ici le fichier est valide
+      this.matGroupButtons[0].style.display = "block"; // On cache les boutons
+      this.matGroupButtons[1].style.display = "block"; // On cache les boutons
+      this.colonnes[0].style.display = "block"; // On affiche les colonnes
+      this.colonnes[1].style.display = "block"; // On affiche les colonnes
 
       this.fileName = files[0].name; // On récupère le nom du fichier
 
-      this.csv_valid=true; // On change l'attribut csv_valid car le fichier est valide 
+      this.csv_valid+=1; // On change l'attribut csv_valid car le fichier est valide 
 
       this.display_button_geo=true; // On affiche le boutton géocodage
 
@@ -161,13 +178,6 @@ export class CsvComponent  {
         console.log('error is occured while reading file!');};
 
       reader.onload = () => { // Une fois le fichier chargé on peut le manipuler
-
-        this.previsualisationDate = ''; // On vide la prévisualisation
-        this.previsualisationAdress = ''; // On vide la prévisualisation
-
-        this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
-
-        this.selectedColumnsForDate = []; // On vide les colonnes séléctionnées pour l'adresse
 
         let csvData = reader.result; // CsvData contient les données "brutes" du fichier 
 
@@ -230,6 +240,8 @@ export class CsvComponent  {
 
           this.hideLoader(); // On cache le loader
 
+          setTimeout(()=>this.isOverflown(this.matGroupButtons, this.matButtons),50);
+
           // On est toujours dans l'évenement onload, on change alors la couleur des textes pour montrer que le fichier est chargé
 
           const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
@@ -262,7 +274,6 @@ export class CsvComponent  {
 
               colonnes[0].style.display = "block"; // On affiche les colonnes sélectionnées
               colonnes[1].style.display = "block"; // On affiche les colonnes sélectionnées
-              // console.log(colonnes);
             }
             if(button1){ // On vérifie que l'objet existe
 
@@ -272,7 +283,7 @@ export class CsvComponent  {
 
         } else {
 
-          // Ici les données ne son pas des chaînes de caractères
+          // Ici les données ne sont pas des chaînes de caractères
 
           Swal.fire({icon: 'error', title: "Les données dans le fichier ne sont pas valides.",text: "Veuillez importer un fichier contenant uniquement des chiffres et des lettres."}); // On affiche un message d'erreur
 
@@ -290,6 +301,7 @@ export class CsvComponent  {
     } else {
 
       // Ici le fichier est invalide
+      this.csv_valid=-1
 
       Swal.fire({icon: 'error', title: "Le fichier n'est pas valide.", text: "Veuillez importer un fichier csv (finissant par .csv)."}) // On affiche un message d'erreur
 
@@ -297,34 +309,8 @@ export class CsvComponent  {
 
       this.fileReset(); // On ré-initialise le lecteur du fichier avec la méthode fileReset
 
-      // On change alors les couleurs des textes pour montrer que le fichier n'est pas valide
-
-      const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
-          
-      if(inputCSV){ // On vérifie que l'objet existe
-
-        const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
-        const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
-        const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
-
-        if(text2){ // On vérifie que l'objet existe
-
-          text2.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
-          text2.style.fontWeight = "300";
-        }
-        if(text3){ // On vérifie que l'objet existe
-
-          text3.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte
-          text3.style.fontWeight = "300";
-        }
-        if(text4){ // On vérifie que l'objet existe
-
-          text4.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
-          text4.style.fontWeight = "300";
-        }
-      };
-
     }
+
   }
 
   isValidCSVFile(file: any) { // On vérifie que le fichier importé est bien un fichier csv
@@ -383,14 +369,54 @@ export class CsvComponent  {
   }
 
   fileReset() { // On réinitialise l'import du fichier
+    this.csv_valid = -1; // On indique que le fichier n'est pas valide
     this.csvReader.nativeElement.value = "";
     this.records = [];
     this.jsondatadisplay = '';
     this.csvService.cleanCsvData();
-    this.selectedColumnsForAdress = [];
-    this.selectedColumnsForDate = [];
+    
+    this.previsualisationDate = ''; // On vide la prévisualisation
+    this.previsualisationAdress = ''; // On vide la prévisualisation
+    this.selectedColumnsForAdress = []; // On vide les colonnes séléctionnées pour l'adresse
+    this.selectedColumnsForDate = []; // On vide les colonnes séléctionnées pour l'adresse
+    this.matGroupButtons[0].style.display = "none"; // On cache les boutons
+    this.matGroupButtons[1].style.display = "none"; // On cache les boutons
+    this.colonnes[0].style.display = "none"; // On cache les colonnes
+    this.colonnes[1].style.display = "none"; // On cache les colonnes
+
     this.adresses_service.cleanAdresse();
     this.adresses_service.cleanAdresseGeo();
+
+    // On change alors les couleurs des textes pour montrer que le fichier n'est pas valide
+
+    const inputCSV = document.getElementById("txtFileUpload"); // On récupère l'objet HTML permettant de charger le fichier
+          
+    if(inputCSV){ // On vérifie que l'objet existe
+
+      const text2 = document.querySelector<HTMLElement>("#two"); // On récupère l'objet HTML correspondant au 2.
+      const text3 = document.querySelector<HTMLElement>("#three"); // On récupère l'objet HTML correspondant au 3.
+      const text4 = document.querySelector<HTMLElement>("#four"); // On récupère l'objet HTML correspondant au 3.
+
+      if(text2){ // On vérifie que l'objet existe
+
+        text2.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
+        text2.style.fontWeight = "300";
+      }
+      if(text3){ // On vérifie que l'objet existe
+
+        text3.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte
+        text3.style.fontWeight = "300";
+      }
+      if(text4){ // On vérifie que l'objet existe
+
+        text4.style.color = "rgba(174, 191, 206, 0.76)"; // On change la couleur et l'épaisseur du texte 
+        text4.style.fontWeight = "300";
+      }
+    };
+    
+    // for (let i = 0; i < this.matButtons.length; i++) { // On affiche les boutons
+    //   this.matButtons[i]. = true;
+    // }
   }
 
   hideLoader(){ // On cache le loader
@@ -427,7 +453,6 @@ export class CsvComponent  {
   }
 
   getColumnSelectedForDate(header: any){ // On récupère les colonnes sélectionnées par l'utilisateur pour la date
-
     for(let i=0; i<this.selectedColumnsForDate.length+1; i++){ // On parcourt les éléments du tableau contenant les colonnes sélectionnées par l'utilisateur pour la date 
 
       if(this.selectedColumnsForDate[i] == header){ // On vérifie que la colonne n'est pas déjà dans le tableau
@@ -459,7 +484,6 @@ export class CsvComponent  {
         Swal.fire({icon:"error", title: "Il n'y a pas de colonnes sélectionnées pour l'adresse.", text: "Veuillez sélectionner les colonnes nécessaires à la construction de l'adresse."}); // On affiche un message d'erreur
         this.resGeocodage = -1; // On quitte la fonction avec une erreur
         return this.resGeocodage;
-        console.log(this.resGeocodage)
 
       } else if(this.selectedColumnsForAdress.length == 1){
 
@@ -475,16 +499,19 @@ export class CsvComponent  {
       }
 
       const referenceDate = new Date(0,0); // Date de référence qui est la même que les chosendates si l'utilisateur n'utilise pas le calendrier
-
-      if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number")){
-   
-        // console.log("Ici on est dans le cas où l'utilisateur n'a pas sélectionné de date avec le calendrier");
+      // console.log((typeof(this.chosenYear) != "number"));console.log((typeof(this.chosenEndYear) != "number"));console.log((typeof(this.chosenYear) != "object"));console.log((typeof(this.chosenEndYear) != "object"));
+      if((typeof(this.chosenYear) != "number") && (typeof(this.chosenEndYear) != "number") && (typeof(this.chosenYear) != "object") && (typeof(this.chosenEndYear) != "object")){ // On vérifie que les dates sont bien remplies
+        // console.log("ici c'est un string");
         if(this.selectedColumnsForDate.length == 0){ // Ici on vérifie que les colonnes sélectionnées pour les adresses sont bien remplies
 
-          if(typeof(this.chosenYear) == "string"){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
+          if((typeof(this.chosenYear) == "string") && (this.chosenEndYear == "")){ // Ici on regarde si l'utilisateur a sélectionné une date avec le clavier
+            // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa distance temporelle");
+
             csvRecord.startingTime = (Number(this.chosenYear) - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
             csvRecord.endingTime = (Number(this.chosenYear) + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+          
           } else if (typeof(this.chosenEndYear) == "string"){
+            // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa fenêtre temporelle");
             csvRecord.startingTime = this.chosenStartYear;
             csvRecord.endingTime = this.chosenEndYear;
           } else {
@@ -494,11 +521,13 @@ export class CsvComponent  {
           }
 
         } else if(this.selectedColumnsForDate.length == 1){
+          // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa date");
 
           csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
           csvRecord.endingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date
 
         } else if(this.selectedColumnsForDate.length == 2){
+          // console.log("Ici on est dans le cas où l'utilisateur a écrit avec le clavier sa date");
 
           for(let j=0; j<this.selectedColumnsForDate.length; j++){ // On parcourt les colonnes sélectionnées pour les adresses
             csvRecord.startingTime = this.records[i][this.headerRowMapped.get(this.selectedColumnsForDate[0])]; // On récupère la valeur de la colonne sélectionnée pour la date de début
@@ -506,23 +535,40 @@ export class CsvComponent  {
           }
         }
 
-
-      } else if (typeof(this.chosenEndYear) != "number") {
+      } else if (typeof(this.chosenYear) == "number") {
 
         // console.log("Ici on est dans le cas où l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
         csvRecord.startingTime = (this.chosenYear - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
         csvRecord.endingTime = (this.chosenYear + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
         
-      } else {
+      } else if (typeof(this.chosenEndYear) == "number") {
 
         // console.log("Ici on est dans le cas où l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
         csvRecord.startingTime = this.chosenStartYear.toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier
         csvRecord.endingTime = this.chosenEndYear.toString(); // On donne à la valeur de fin la valeur donnée par l'utilisateur avec le calendrier
 
+      } else if (typeof(this.chosenYear) == "object") {
+        // console.log("Ici l'utilisateur a sélectionné une date avec le calendrier pour une distance temporelle");
+        csvRecord.startingTime = (this.chosenYear.year - (this.distanceValue / 2)).toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier moins la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+        csvRecord.endingTime = (this.chosenYear.year + (this.distanceValue / 2)).toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier plus la distance temporelle divisé par 2 pour respecter la fenêtre donnée par l'utilisateur
+        
+      } else {
+        // console.log("Ici l'utilisateur a sélectionné deux dates avec le calendrier pour une fenêtre temporelle");
+        csvRecord.startingTime = this.chosenStartYear.year.toString(); // On donne à la valeur de début la valeur donnée par l'utilsateur avec le calendrier
+        csvRecord.endingTime = this.chosenEndYear.year.toString(); // On donne à la valeur de fin la valeur donnée par l'utilsateur avec le calendrier
       }
 
       csvRecord.softTime = 1; // On ajoute la valeur de la variable softTime
       csvArr.push(csvRecord);
+      
+      if(typeof(csvRecord.startingTime) == "undefined"){ // On vérifie que la date de début est bien définie. Il se peut que l'information soit absente du CSV
+        csvRecord.startingTime = '1700'; // On lui donne une valeur par défaut
+      } 
+
+      if(typeof(csvRecord.endingTime) == "undefined"){ // On vérifie que la date de fin est bien définie. Il se peut que l'information soit absente du CSV
+        csvRecord.endingTime = '1950'; // On lui donne une valeur par défaut
+      }
+
       if(csvRecord.text.trim() != '' && ((csvRecord.startingTime.trim() != '' ) || (csvRecord.endingTime.trim() != '') )){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses et l'adresse est bien remplie
         this.adresses_service.addAdresse(csvRecord); // On ajoute l'adresse et la date au service qui va faire la requête
       } else {
@@ -530,6 +576,9 @@ export class CsvComponent  {
       }
     }
     this.CsvDataResult = csvArr; // On renvoie le tableau
+    this.csvService.setPreparedCSV(this.CsvDataResult); // On envoie le tableau contenant les CsvData au service
+
+    this.geocodage_valid=true;
     this.resGeocodage = 1; // On quitte la fonction avec succès
     return this.resGeocodage;
   }  
@@ -543,6 +592,11 @@ export class CsvComponent  {
 
       let index = this.headerRowMapped.get(this.selectedColumnsForAdress[i]); // On récupère l'index de la colonne sélectionnée pour les adresses
       this.previsualisationAdress += this.records[0][index].toString() + ' '; // On récupère la valeur de la colonne sélectionnée pour les adresses
+      let cpt = 0; // On initialise le compteur
+      while(this.records[cpt][index].toString().trim()==''){ // On vérifie que la valeur de la colonne sélectionnée pour les adresses est bien remplie
+        cpt ++;
+        this.previsualisationAdress += this.records[cpt][index].toString() + ' '; // On lui donne une valeur par défaut
+      }
 
     }
 
@@ -611,7 +665,6 @@ export class CsvComponent  {
   expand(value:number){ // Fonction permettant d'étendre ou non les différentes parties de la page
     if(value == 2){
       this.expand2 = !this.expand2; // On change la valeur de l'expand2 
-      console.log(this.expand2);
     }  else if(value == 4){
       this.expand4 = !this.expand4; // On change la valeur de l'expand4
       this.selectionManuelle = false; // On affiche pas le choix du type de calendrier : fenêtre ou distance
@@ -622,6 +675,17 @@ export class CsvComponent  {
   isPrevizClicked(){ // Fonction qui replie les différentes parties de la page quand on clique sur le bouton prévisualisation
     this.isPrevisClicked = !this.isPrevisClicked; // On change la valeur de isPrevisClicked
     this.expand2 = false; this.expand4 = false; // On repli toutes les parties de la page
+  }
+
+  isOverflown(elementG: any, elements : any) { // Fonction qui vérifie si un élément dépasse de la div ou non
+    let width = 0;
+    for(let i=0; i<(elements.length/2); i++){
+      width += elements[i].scrollWidth;
+    }
+    if(width > elementG[0].clientWidth){
+      elementG[0].style.overflowX = 'scroll';
+      elementG[1].style.overflowX = 'scroll';
+    }
   }
 }
 

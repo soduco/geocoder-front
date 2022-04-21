@@ -14,7 +14,7 @@
   <div class="card-body" >
     <div class="card"> <!-- Choix du fichier -->
       <div class="card-header" id="1">
-        1. Choisir un fichier
+        1. Choisir ou glisser un fichier
       </div>
 
         <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (click)="fileReset()" (change)="uploadListener($event)" accept=".csv" />
@@ -33,7 +33,7 @@
     <div class="card"> <!-- Aperçu du fichier -->
       <div class="card-header" id="two">
         2. Aperçu du fichier et vérification de l’encodage
-        <koi-expand-button *ngIf="csv_valid" (click)="expand(2)"></koi-expand-button>
+        <koi-expand-button *ngIf="csv_valid >=0" (click)="expand(2)"></koi-expand-button>
       </div>
       <div *ngIf="expand2">
         {{jsondatadisplay}}
@@ -68,7 +68,7 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
 
-        <div class="colonnes" id="colonnesAdresse">
+        <div class="colonnes" id="colonnesAdresse ">
           Pour l'adresse : {{group.value}}
           <div *ngIf="selectedColumnsForAdress.length>0" style="display:inline-flex; float:right;" >
             Aperçu : {{ previsualisationAdress }}
@@ -79,8 +79,8 @@
     <div class="card"> <!-- Choix des colonnes du fichier ou calendrier pour la date -->
       <div class="card-header" id="four">
         4. Choisir la ou les colonnes à utiliser pour la date ou les dates
-        <koi-expand-button *ngIf="csv_valid" id="expand4" (click)="expand(4)"></koi-expand-button>
-        <div *ngIf="csv_valid && expand4" class="date">
+        <koi-expand-button *ngIf="csv_valid >=0" id="expand4" (click)="expand(4)"></koi-expand-button>
+        <div *ngIf="(csv_valid>=0) && expand4" class="date">
           <mat-radio-group aria-label="Select an option" style="font-size:15px;font-family: Helvetica, sans-serif; font-weight: 400;" id="radio">
             <mat-radio-button color="primary" style="margin: 10px 10px 10px 10px;" (click)="radio(1)">Utiliser les colonnes pour construire la date</mat-radio-button>
 
@@ -136,7 +136,7 @@
 <app-parametre-avance *ngIf="showAdvanced"></app-parametre-avance>
 
       </div>
-      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup">
+      <mat-button-toggle-group name="column" aria-label="Selected Column" multiple #group2="matButtonToggleGroup" >
         <mat-button-toggle *ngFor="let header of headersRow;let i = index;" [value]=header (click)="getColumnSelectedForDate(header); previz()">
           {{header}}
         </mat-button-toggle>
@@ -159,5 +159,5 @@
 
 
 
-<app-geocodeur  id="geocodeur" [parent]="csv_valid" [resGeocodageG]="resGeocodage" (enfant)="this.isGeocodageClicked()" (enfant2)="this.isPrevizClicked()" ></app-geocodeur>
+<app-geocodeur  id="geocodeur" [parent]="csv_valid"  [resGeocodageG]="resGeocodage" (enfant)="this.isGeocodageClicked()" (enfant2)="this.isPrevizClicked()" ></app-geocodeur>
 

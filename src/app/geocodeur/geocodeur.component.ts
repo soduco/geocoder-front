@@ -6,6 +6,7 @@ import { ApiService } from '../api.service';
 import { CsvDataGeo } from '../csv/csv.component';
 import { CsvServiceService } from '../csv-service.service';
 import { ParametreAvanceService } from '../parametre-avance.service';
+import { TransformCsvService } from '../transform-csv.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class GeocodeurComponent implements  OnChanges {
 
   public isPrevisClicked: boolean = false;
   public isClicked: boolean = false;
-  public csv_valid!: boolean;
+  public csv_valid!: number;
   display_button_exp:boolean = false;
   display_button_geo : boolean = true;
   public geocodage_done:boolean = false;
@@ -32,12 +33,29 @@ export class GeocodeurComponent implements  OnChanges {
   public chargement:boolean=false;
   public nb! : number;
 
-  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService) { }
+  constructor(private AdressesService:AdressesService, public apiService: ApiService,public csvService: CsvServiceService, public parameterService: ParametreAvanceService, public transformCSV : TransformCsvService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.csv_valid = changes['parent'].currentValue;
-    if (this.csv_valid == true){
-      this.display_button_geo=false;
+    
+    
+    if(changes && typeof(changes['parent']) != "undefined"){
+      this.csv_valid = changes['parent'].currentValue;
+      if (this.csv_valid >= 0 ){
+        this.display_button_geo=false;
+        this.display_button_exp=false;
+        this.geocodage_done=false;
+        
+      }
+    }
+
+    if (changes && typeof(changes['resGeocodageG']) != "undefined"){
+
+      this.resGeocodageG = changes['resGeocodageG'].currentValue;
+      if (this.resGeocodageG == -1){
+        this.chargement=false;
+        this.geocodage_done=false;
+      }
+
     }
   }
 
@@ -61,7 +79,6 @@ export class GeocodeurComponent implements  OnChanges {
     this.display_button_exp=true;
     this.geocodage_done=true;
     this.chargement=false;
-    
   }
   
   /**
@@ -117,8 +134,14 @@ export class GeocodeurComponent implements  OnChanges {
    * Function used when the button "geocodage" is presssed. It will fill the apiService by all the results. 
    */
   async geocodage() {
+    console.log("pas probleme")
     this.AdressesService.cleanAdresseGeo()
-    // this.chargement=true;
+    if (this.resGeocodageG != -1)
+      this.chargement=true;
+    else{
+      console.log("porbleme")
+      return
+    }
 
     // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.
 
@@ -126,38 +149,57 @@ export class GeocodeurComponent implements  OnChanges {
     const adresses = this.AdressesService.getAdresse();
     let nb_max = 0
     for (let x = 0 ; x<adresses.length ; x++){
-      if (adresses[x].text.trim().length == 0){
+      if (adresses[x].text.trim().length == 0){ // On passe si aucune adresse est donnée
         continue 
       }
       //depreciated 
       //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise();
+
+      // Ne marche pas 
+      // this.apiService.getAdressMass(adresses[x].softTime, this.selected_nb * adresses.length).subscribe(async (response) => {
+      //   console.log(response);
+      // });
+
       this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).subscribe(async (response) => {
       
         //const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
 
         for (let i = 0; i < this.selected_nb; i++) {
           try {
+            
             const dataGeo: CsvDataGeo = new CsvDataGeo();
             dataGeo.row_data = this.csvService.getCsvDataById(x);
             dataGeo.text = adresses[x].text;
             dataGeo.startingTime = adresses[x].startingTime;
             dataGeo.endingTime = adresses[x].endingTime;
             dataGeo.softTime = adresses[x].softTime;
-            dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
-          
-            dataGeo.precision = response.features[i].properties.layer
-            dataGeo.properties = response.features[i].properties
-            dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
-            dataGeo.long = response.features[i].geometry.coordinates[0].toString();
+            if(typeof(response) == "object"){
+              if(typeof(response.features[i]) != "undefined"){
+                dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
+                dataGeo.precision = response.features[i].properties.layer
+                dataGeo.properties = response.features[i].properties
+                dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
+                dataGeo.long = response.features[i].geometry.coordinates[0].toString();
+              } else {
+                continue;
+              }
+            } else {
+              continue;
+            }
             dataGeo.rang = (i + 1).toString();
             this.AdressesService.addAdresseGeo(dataGeo);
             nb_max += 1;
           } catch (error) {
+            console.error("Il y a eu une erreur : ", error);
+            if (error instanceof Error) {
+              let errorMessage = error.message;
+              console.log(errorMessage);
+            }
+            
             continue;
+
           }
         }  
-      
-
       }) 
       await this.sleep(1000);
       this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
@@ -165,9 +207,11 @@ export class GeocodeurComponent implements  OnChanges {
         this.AdressesService.getAdresseGeo().subscribe( res => this.nb = res.length)
         await this.sleep(500);
       }
-      this.display_button_exp=true;
-      this.geocodage_done=true;
-      this.chargement=false;
+      if(this.resGeocodageG == 1){
+        this.display_button_exp=true;
+        this.geocodage_done=true;
+        this.chargement=false;
+      }
     }
   }
 
@@ -178,4 +222,91 @@ export class GeocodeurComponent implements  OnChanges {
     this.isPrevisClicked = true;
     this.enfant2.emit(this.isPrevisClicked);
   }
+
+
+  /**
+   *  Fonction test pour récupérer mieux les erreurs mais marche pas
+   */
+  // async geocodageBIS(){
+  //   this.AdressesService.cleanAdresseGeo()
+  //   this.enfant.emit(this.isClicked);
+  //   const csvPrepared = this.csvService.getPreparedCSV();
+  //   for(let i=0; i<csvPrepared.length; i++){
+  //     if (csvPrepared[i].text.trim().length == 0){ // On passe si aucune adresse est donnée
+  //       continue 
+  //     } 
+  //     let result = await this.apiService.getAdressBIS(csvPrepared[i].text, csvPrepared[i].startingTime, csvPrepared[i].endingTime, csvPrepared[i].softTime, this.selected_nb);
+  //     console.log(result);
+  //   } 
+  // }
+
+  /**
+   * Function used when the button "geocodage" is presssed. It will fill the apiService by all the results. 
+   */
+   async geocodage_one_by_one() {
+    this.AdressesService.cleanAdresseGeo()
+    this.enfant.emit(this.isClicked);
+    
+    this.chargement=true;
+    
+    
+    // if(this.resGeocodageG == -1){console.log("dfsfsfd");return;} // On quitte la fonction si le geocodage n'a pas été fait.  
+    const adresses = this.AdressesService.getAdresse();
+    
+    if (adresses.length == 0){
+      this.chargement=false
+      this.display_button_exp=false
+      return 
+    }
+    for (let x = 0 ; x<adresses.length ; x++){
+      if (adresses[x].text.trim().length == 0){
+         // On passe si aucune adresse est donnée
+        continue 
+      }
+      const response = await this.apiService.getAdress(adresses[x].text, adresses[x].startingTime, adresses[x].endingTime, adresses[x].softTime, this.selected_nb).toPromise().catch(this.handleError);;
+
+        for (let i = 0; i < this.selected_nb; i++) {
+          try {
+            
+            const dataGeo: CsvDataGeo = new CsvDataGeo();
+            dataGeo.row_data = this.csvService.getCsvDataById(x);
+            dataGeo.text = adresses[x].text;
+            dataGeo.startingTime = adresses[x].startingTime;
+            dataGeo.endingTime = adresses[x].endingTime;
+            dataGeo.softTime = adresses[x].softTime;
+            if(typeof(response) == "object"){
+              if(typeof(response.features[i]) != "undefined"){
+                dataGeo.source = response.features[i].properties.source.toString().split(".").slice(1).join(' ')
+                dataGeo.precision = response.features[i].properties.layer
+                dataGeo.properties = response.features[i].properties
+                dataGeo.lat = response.features[i].geometry.coordinates[1].toString();
+                dataGeo.long = response.features[i].geometry.coordinates[0].toString();
+              } else {
+                continue;
+              }
+            } else {
+              continue;
+            }
+            dataGeo.rang = (i + 1).toString();
+            this.AdressesService.addAdresseGeo(dataGeo);
+           
+          } catch (error) {
+            console.error("Il y a eu une erreur : ", error);
+            if (error instanceof Error) {
+              let errorMessage = error.message;
+              console.log(errorMessage);
+            }
+            
+            continue;
+
+          }
+        }  
+      }
+      if(this.resGeocodageG == 1){
+        this.display_button_exp=true;
+        this.geocodage_done=true;
+        this.chargement=false;
+      }
+    }
+  
 }
